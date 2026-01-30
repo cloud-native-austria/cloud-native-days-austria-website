@@ -3,8 +3,19 @@
  * API documentation: https://sessionize.com/api-documentation
  */
 
+import fs from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+
 const SESSIONIZE_API_ID = 'fetamiym';
 const BASE_URL = `https://sessionize.com/api/v2/${SESSIONIZE_API_ID}/view`;
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const PUBLIC_DIR = path.resolve(__dirname, '../../public');
+const SPEAKERS_IMAGE_DIR = path.join(PUBLIC_DIR, 'images/speakers');
+const CACHE_DIR = path.join(PUBLIC_DIR, 'cache');
+const CACHE_FILE = path.join(CACHE_DIR, 'speakers-cache.json');
 
 export interface Speaker {
   id: string;
@@ -14,6 +25,7 @@ export interface Speaker {
   bio: string;
   tagLine: string;
   profilePicture: string;
+  localProfilePicture: string; // Local cached image path
   isTopSpeaker: boolean;
   links: Array<{
     title: string;
@@ -52,18 +64,94 @@ export interface SessionGroup {
 }
 
 /**
- * Fetch all speakers from Sessionize
+ * Download an image from URL and save it locally
  */
-export async function fetchSpeakers(): Promise<Speaker[]> {
+async function downloadImage(url: string, filepath: string): Promise<void> {
+  try {
+    const response = await fetch(url);
+    if (!response.ok) {
+      throw new Error(`Failed to download image: ${response.status}`);
+    }
+    const buffer = await response.arrayBuffer();
+    fs.writeFileSync(filepath, Buffer.from(buffer));
+  } catch (error) {
+    console.error(`Error downloading image from ${url}:`, error);
+    throw error;
+  }
+}
+
+/**
+ * Ensure directory exists
+ */
+function ensureDir(dirPath: string): void {
+  if (!fs.existsSync(dirPath)) {
+    fs.mkdirSync(dirPath, { recursive: true });
+  }
+}
+
+/**
+ * Cache speakers data with local images
+ */
+export async function cacheSpeakersData(): Promise<void> {
+  console.log('📥 Fetching speakers from Sessionize...');
+
   try {
     const response = await fetch(`${BASE_URL}/Speakers`);
     if (!response.ok) {
       throw new Error(`Failed to fetch speakers: ${response.status}`);
     }
-    return await response.json();
+    const speakers: Speaker[] = await response.json();
+
+    // Ensure directories exist
+    ensureDir(SPEAKERS_IMAGE_DIR);
+    ensureDir(CACHE_DIR);
+
+    console.log(`📸 Downloading ${speakers.length} speaker images...`);
+
+    // Download images and update local paths
+    const speakersWithLocalImages = await Promise.all(
+      speakers.map(async (speaker) => {
+        const ext = speaker.profilePicture.split('.').pop()?.split('?')[0] || 'jpg';
+        const filename = `${speaker.id}.${ext}`;
+        const filepath = path.join(SPEAKERS_IMAGE_DIR, filename);
+        const localPath = `/images/speakers/${filename}`;
+
+        // Download image
+        await downloadImage(speaker.profilePicture, filepath);
+
+        return {
+          ...speaker,
+          localProfilePicture: localPath,
+        };
+      })
+    );
+
+    // Save cached data
+    fs.writeFileSync(CACHE_FILE, JSON.stringify(speakersWithLocalImages, null, 2));
+    console.log(`✅ Successfully cached ${speakersWithLocalImages.length} speakers`);
   } catch (error) {
-    console.error('Error fetching speakers:', error);
-    return [];
+    console.error('❌ Error caching speakers data:', error);
+    throw error;
+  }
+}
+
+/**
+ * Fetch all speakers from Sessionize (uses local cache if available)
+ */
+export async function fetchSpeakers(): Promise<Speaker[]> {
+  // Read from cache - cache must exist (created by prebuild script)
+  if (!fs.existsSync(CACHE_FILE)) {
+    throw new Error(
+      'Speaker cache not found. Please run: bun run scripts/cache-sessionize.ts'
+    );
+  }
+
+  try {
+    const cached = fs.readFileSync(CACHE_FILE, 'utf-8');
+    return JSON.parse(cached);
+  } catch (error) {
+    console.error('Error reading speaker cache:', error);
+    throw error;
   }
 }
 

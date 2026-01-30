@@ -281,7 +281,7 @@ export function CurrentSessions() {
 
 ## File Structure
 
-```
+```text
 src/
 ├── components/          # Astro components (and one Preact)
 │   ├── Header.astro
@@ -325,4 +325,4 @@ See [ROADMAP.md](./ROADMAP.md) for current migration progress.
 - **Body Font**: Plus Jakarta Sans
 - **Heading Font**: Fira Code (monospace)
 
-Full brand guide: https://github.com/cloud-native-austria/cloud-native-days-austria/blob/main/Brand/CNDA_StyleGuide_v1.0.pdf
+Full brand guide: [CNDA Style Guide v1.0](https://github.com/cloud-native-austria/cloud-native-days-austria/blob/main/Brand/CNDA_StyleGuide_v1.0.pdf)

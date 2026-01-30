@@ -1,8 +1,10 @@
 # CNDA (Cloud Native Days Austria) Website
 
-    formerly known as KCD (Kubernetes Community Days) Austria
+formerly known as KCD (Kubernetes Community Days) Austria
 
 Website for the Cloud Native Days Austria available at [cloudnativedays.at](https://cloudnativedays.at).
+
+> **Note**: This project is being migrated from Gatsby to Astro. See [ROADMAP.md](./ROADMAP.md) for migration progress.
 
 > Forked from [KCDMunich/website](https://github.com/KCDMunich/website) -> Thank you! :)
 
@@ -12,32 +14,23 @@ Website for the Cloud Native Days Austria available at [cloudnativedays.at](http
 - [Usage](#usage)
   - [Run the website](#run-the-website)
   - [Build the website](#build-the-website)
-  - [Run the built website](#run-the-built-website)
-  - [Clean Gatsby cache](#clean-gatsby-cache)
+  - [Preview the built website](#preview-the-built-website)
 - [Project Structure](#project-structure)
-- [Code Style](#code-style)
-  - [ESLint](#eslint)
-  - [Prettier](#prettier)
-  - [VS Code](#vs-code)
+- [Sessionize Data Caching](#sessionize-data-caching)
+- [AI Agent Instructions](#ai-agent-instructions)
 
 ## Getting Started
 
-1. Clone this repository or hit "Use this template" button
+1. Clone this repository
 
 ```bash
 git clone git@github.com:cloud-native-austria/kcd-austria-website.git
 ```
 
-2. Install dependencies
+2. Install dependencies (using Bun)
 
 ```bash
-npm install
-```
-
-3. Fill environment variables
-
-```bash
-cp .env.example .env
+bun install
 ```
 
 ## Usage
@@ -45,143 +38,89 @@ cp .env.example .env
 ### Run the website
 
 ```bash
-npm run start
+bun run dev
 ```
+
+The site will be available at `http://localhost:4321/`
 
 ### Build the website
 
 ```bash
-npm run build
+bun run build
 ```
 
-### Run the built website
+This will:
+
+1. Run the prebuild script to cache Sessionize data and download speaker images
+2. Build the Astro site to the `dist/` directory
+
+### Preview the built website
 
 ```bash
-npm run serve
+bun run preview
 ```
-
-### Clean Gatsby cache
-
-```bash
-npm run clean
-```
-
-### Add Sponsors
-
-Navigate to [the sponsors definition](./src/components/pages/home/sponsors/sponsors.jsx) and add the sponsor to
-the `sponsors` list on top of the file. Once added, it'll appear automatically.
 
 ## Project Structure
 
 ```text
-├── src
-│   ├── components
-│   │  ├── pages — React components that are being used specifically on a certain page
-│   │  └── shared — React components that are being used across the whole website
-│   ├── hooks
-│   ├── images
-│   ├── pages
-│   ├── styles
-│   ├── templates
-│   ├── utils
-│   └── html.jsx — HTML template for all generated pages. Read more about it here — gatsbyjs.org/docs/custom-html
-├── static
-│   └── fonts
-├── gatsby-browser.js — Usage of the Gatsby browser APIs. Read more about it [here](gatsbyjs.org/docs/browser-apis)
-├── gatsby-config.js — Main configuration file for a Gatsby site. Read more about it [here](gatsbyjs.org/docs/gatsby-config)
-├── gatsby-node.js — Usage of the Gatsby Node APIs. [Read more about it here](gatsbyjs.org/docs/node-apis)
-└── gatsby-ssr.js — Usage of the Gatsby server-side rendering APIs. [Read more about it here](gatsbyjs.org/docs/ssr-apis)
+├── public/              # Static assets
+│   ├── fonts/          # Web fonts (Plus Jakarta Sans, Fira Code)
+│   ├── images/         # Static images (sponsors, etc.)
+│   └── cache/          # Generated: Cached Sessionize data (not in git)
+├── scripts/            # Build scripts
+│   └── cache-sessionize.ts  # Downloads speaker data and images
+├── src/
+│   ├── components/     # Astro components
+│   │   ├── sections/   # Homepage sections
+│   │   ├── Button.astro
+│   │   ├── Footer.astro
+│   │   ├── Header.astro
+│   │   ├── Person.astro
+│   │   └── SponsorLogo.astro
+│   ├── constants/      # TypeScript constants
+│   ├── layouts/        # Page layouts
+│   ├── lib/           # Utilities (Sessionize API)
+│   ├── pages/         # Astro pages (routes)
+│   └── styles/        # Global CSS and design tokens
+├── astro.config.ts    # Astro configuration
+├── tsconfig.json      # TypeScript configuration
+└── ROADMAP.md         # Migration progress tracking
 ```
 
-## Component Folder Structure
+## Sessionize Data Caching
 
-### Each component includes
+Speaker data and images are cached locally at build time to improve performance and reduce runtime dependencies on external services.
 
-1. Main JavaScript File
-2. Index File
+### How it works
 
-### Each component optionally may include
+1. **Prebuild script** (`scripts/cache-sessionize.ts`) runs before each build
+2. Fetches all speaker data from the Sessionize API
+3. Downloads speaker profile pictures to `public/images/speakers/`
+4. Saves the complete speaker data (with local image paths) to `public/cache/speakers-cache.json`
+5. The Astro site reads from the cache instead of making API calls at runtime
 
-1. Folder with images and icons
-2. Folder with data
+### Benefits
 
-Also, each component may include another component that follows all above listed rules.
+- ⚡ **Faster page loads**: Images served from the same domain
+- 🔒 **No runtime dependencies**: Site works even if Sessionize is down
+- 🎨 **Better optimization**: Can apply further image optimization if needed
+- 💾 **Consistent builds**: Data is frozen at build time
 
-### Example structure
+### Manual cache refresh
+
+To manually refresh the cached data:
 
 ```bash
-component
-├── nested-component
-│  ├── data
-│  │  └── nested-component-lottie-data.json
-│  ├── images
-│  │  ├── nested-component-image.jpg
-│  │  ├── nested-component-inline-svg.inline.svg
-│  │  └── nested-component-url-svg.url.svg
-│  ├── nested-component.js
-│  └── index.js
-├── data
-│  └── component-lottie-data.json
-├── images
-│  ├── component-image.jpg
-│  ├── component-inline-svg.inline.svg
-│  └── component-url-svg.url.svg
-├── component.js
-└── index.js
+bun run scripts/cache-sessionize.ts
 ```
 
-## Code Style
+The cache is automatically regenerated on every build via the `prebuild` script in `package.json`.
 
-### ESLint
+## AI Agent Instructions
 
-[ESLint](https://eslint.org/) helps find and fix code style issues and force developers to follow same rules. Current
-configuration is based on [Airbnb style guide](https://github.com/airbnb/javascript).
+For AI agents contributing to this project, see [AGENTS.md](./AGENTS.md) for detailed guidelines on:
 
-Additional commands:
-
-```bash
-npm run lint
-```
-
-Run it to check the current status of eslint issues across project.
-
-```bash
-npm run lint:fix
-```
-
-Run it to fix all possible issues.
-
-### Prettier
-
-[Prettier](https://prettier.io/) helps to format code based on defined
-rules. [Difference between Prettier and ESLint](https://prettier.io/docs/en/comparison.html).
-
-Additional commands:
-
-```bash
-npm run format
-```
-
-Run it to format all files across the project.
-
-### VS Code
-
-Following extensions required to simplify the process of keeping the same code style across the project:
-
-- [ESLint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint)
-- [Prettier](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode)
-
-After installation enable "ESLint on save" by adding to your VS Code settings.json the following line:
-
-```json
-"editor.codeActionsOnSave": {
-    "source.fixAll.eslint": true
-}
-```
-
-You can navigate to settings.json by using Command Pallete (CMD+Shift+P) and then type "Open settings.json".
-
-To enable Prettier go to Preferences -> Settings -> type "Format". Then check that you have esbenp.prettier-vscode as
-default formatter, and also enable "Format On Save".
-
-Reload VS Code and auto-format will work for you.
+- Project conventions (TypeScript, CSS, no JavaScript policy)
+- Component patterns
+- Code style requirements
+- Migration goals

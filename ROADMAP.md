@@ -76,12 +76,12 @@ This document tracks the migration progress from Gatsby to Astro with vanilla CS
   - ✅ Hardcoded API ID: `fetamiym`
   - ⏳ Pending deletion: `src/components/shared/data/`
 
-- [ ] **Step 10: Migrate Speakers page with popover modals**
-  - Create `src/pages/speakers.astro`
-  - Use `popover` attribute for CSS-only modals
-  - `<button popovertarget="speaker-{id}">` pattern
-  - No JavaScript required
-  - Delete: `src/components/pages/speakers/`, `src/components/shared/speaker/`
+- [x] **Step 10: Migrate Speakers page with popover modals**
+  - ✅ Created `src/pages/speakers.astro`
+  - ✅ Uses `popover` attribute for CSS-only modals
+  - ✅ `<button popovertarget="speaker-{id}">` pattern
+  - ✅ No JavaScript required
+  - ⏳ Pending deletion: `src/components/pages/speakers/`, `src/components/shared/speaker/`
 
 - [ ] **Step 11: Migrate Team page**
   - Create `src/pages/team.astro`
@@ -120,10 +120,20 @@ This document tracks the migration progress from Gatsby to Astro with vanilla CS
 
 ### Technical Debt / Improvements
 
+- [x] **Cache Sessionize images locally at build time**
+  - ✅ Created `scripts/cache-sessionize.ts` to download speaker images
+  - ✅ Images cached to `public/images/speakers/`
+  - ✅ Speaker data cached to `public/cache/speakers-cache.json`
+  - ✅ Added `prebuild` script to `package.json` to run before `build`
+  - ✅ Updated `.gitignore` to exclude generated cache files
+  - ✅ Updated `fetchSpeakers()` to use cached data
+  - Benefits: Faster loading, no runtime dependency on Sessionize CDN, better control
+
 - [ ] **Migrate from `<img>` to Astro `<Image>` component**
   - Update `SponsorLogo.astro` to use `<Image>` instead of `<img>`
   - Update any other components still using raw `<img>` tags
-  - Ensures automatic image optimization (WebP, lazy loading, etc.)
+  - Note: Speaker images use `<img>` as they're served from `public/` (already optimized during caching)
+  - Ensures automatic image optimization (WebP, lazy loading, etc.) for static images
 
 - [ ] **Simplify breakpoints to single mobile breakpoint**
   - Reduce from 5 breakpoints to 1 (e.g., `--breakpoint-mobile: 768px`)
@@ -200,7 +210,7 @@ After full migration, these Gatsby-specific files/folders should be removed:
 
 ## Current State Summary
 
-**Last Updated**: Session in progress
+**Last Updated**: Step 10 completed
 
 ### What Works ✅
 
@@ -211,19 +221,19 @@ After full migration, these Gatsby-specific files/folders should be removed:
 - Homepage renders with all sections (Hero, Sponsors, Venue, Previous Events)
 - Header with CSS-only mobile menu (details/summary)
 - Footer with navigation and social links
+- Speakers page with CSS-only popover modals
 - Global styles and design tokens applied
 
 ### What's Next
 
-1. **Step 10**: Speakers page with `popover` modals
-2. **Step 11**: Team page
-3. **Step 12**: Live page with Preact island
-4. **Step 13**: MDX content collections
-5. **Step 14**: 404 page and final cleanup
+1. **Step 11**: Team page
+2. **Step 12**: Live page with Preact island
+3. **Step 13**: MDX content collections
+4. **Step 14**: 404 page and final cleanup
 
 ### File Structure Created
 
-```
+```text
 src/
 ├── components/
 │   ├── Button.astro
@@ -246,7 +256,8 @@ src/
 ├── lib/
 │   └── sessionize.ts
 ├── pages/
-│   └── index.astro
+│   ├── index.astro
+│   └── speakers.astro
 └── styles/
     └── global.css
 

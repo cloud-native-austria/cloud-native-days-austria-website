@@ -62,6 +62,13 @@ typings/
 .cache/
 public
 
+# Astro build output
+dist/
+
+# Sessionize cached data (regenerated at build time)
+public/cache/
+public/images/speakers/
+
 # Mac files
 .DS_Store
 
