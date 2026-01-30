@@ -1,0 +1,132 @@
+---
+import venueImage from '@images/home/venue.webp';
+---
+
+<section class="venue">
+  <h2 id="venue">Venue</h2>
+
+  <div class="venue-content">
+    <div class="venue-image">
+      <img src={venueImage.src} alt="CDN Austria Venue - Cineplexx Wienerberg" />
+      <a href="https://maps.app.goo.gl/Q22METdvy3f1GFfx8" target="_blank" rel="noopener noreferrer">
+        <strong>Cineplexx Wienerberg</strong>
+        <span>Wienerbergstraße 11, 1100 Wien</span>
+      </a>
+    </div>
+
+    <div class="venue-description">
+      <p>
+        Cloud Native Days Austria are held at{' '}
+        <a
+          href="https://maps.app.goo.gl/Q22METdvy3f1GFfx8"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Cineplexx Wienerberg
+        </a>
+        . You'll enjoy two cinema-style stages with comfy seats, great sound, and clear visuals.
+      </p>
+      <p>
+        Grab a coffee or a bite to eat throughout the day and check out our sponsors for cool swag.
+        There's plenty of space to meet new people and catch up with friends.
+      </p>
+      <p>Stick around for our evening event – it's right nearby!</p>
+      <p>
+        <strong>We can't wait to see you there!</strong>
+      </p>
+    </div>
+  </div>
+</section>
+
+<style>
+  .venue {
+    max-width: var(--container-md);
+    margin-inline: auto;
+    padding: var(--space-12) var(--space-4);
+  }
+
+  @media (min-width: 768px) {
+    .venue {
+      padding-inline: var(--space-8);
+    }
+  }
+
+  h2 {
+    text-align: center;
+    margin-bottom: var(--space-8);
+  }
+
+  .venue-content {
+    display: flex;
+    gap: var(--space-8);
+    align-items: flex-start;
+  }
+
+  @media (max-width: 767px) {
+    .venue-content {
+      flex-direction: column;
+    }
+  }
+
+  .venue-image {
+    flex: 1;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-4);
+  }
+
+  .venue-image img {
+    max-height: 300px;
+    width: auto;
+    border-radius: var(--radius-md);
+    object-fit: contain;
+  }
+
+  .venue-image a {
+    display: block;
+    color: var(--color-text);
+    text-decoration: none;
+    transition: color var(--transition-fast);
+  }
+
+  .venue-image a:hover {
+    color: var(--color-pink);
+  }
+
+  .venue-image strong {
+    display: block;
+    font-family: var(--font-heading);
+  }
+
+  .venue-image span {
+    font-size: var(--text-sm);
+  }
+
+  .venue-description {
+    flex: 1;
+  }
+
+  .venue-description p {
+    margin-bottom: var(--space-4);
+  }
+
+  .venue-description p:last-child {
+    margin-bottom: 0;
+  }
+
+  .venue-description a {
+    color: var(--color-purple);
+  }
+
+  .venue-description a:hover {
+    color: var(--color-pink);
+  }
+
+  @media (max-width: 767px) {
+    .venue-description {
+      text-align: left;
+    }
+  }
+</style>

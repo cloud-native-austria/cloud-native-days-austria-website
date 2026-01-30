@@ -1,0 +1,71 @@
+---
+import Button from '@components/Button.astro';
+---
+
+<section class="sponsors">
+  <h2 id="call-for-sponsors">Call for Sponsors</h2>
+
+  <p>
+    Join us in making Cloud Native Days Austria a memorable and impactful event for all attendees.
+    To explore sponsorship opportunities, please don't hesitate to get in touch with us today. Your
+    support will help us create an unforgettable experience for the community while enhancing your
+    brand's visibility and recognition. Contact us at{' '}
+    <a href="mailto:organizers@cloudnativedays.at"> organizers@cloudnativedays.at </a>
+  </p>
+
+  <div class="buttons">
+    <Button href="/files/CND-Austria-2026-sponsor-prospectus.pdf" external>
+      Information Slides
+    </Button>
+    <Button href="/files/CND-Austria-2026-sponsor-agreement-form.pdf" external>
+      Agreement Form
+    </Button>
+    <Button href="mailto:organizers@cloudnativedays.at"> Get in touch </Button>
+  </div>
+</section>
+
+<style>
+  .sponsors {
+    max-width: var(--container-md);
+    margin-inline: auto;
+    padding: var(--space-12) var(--space-4);
+    text-align: center;
+  }
+
+  @media (min-width: 768px) {
+    .sponsors {
+      padding-inline: var(--space-8);
+    }
+  }
+
+  h2 {
+    margin-bottom: var(--space-4);
+  }
+
+  p {
+    margin-bottom: var(--space-6);
+  }
+
+  p a {
+    color: var(--color-purple);
+  }
+
+  p a:hover {
+    color: var(--color-pink);
+  }
+
+  .buttons {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--space-4);
+    margin-bottom: var(--space-12);
+  }
+
+  @media (max-width: 767px) {
+    .buttons {
+      flex-direction: column;
+      align-items: stretch;
+    }
+  }
+</style>

@@ -1,9 +1,29 @@
-import slugify from 'slugify';
 import { scheduleUrl } from './sessionize-app';
 
-const getAnchor = (str) => slugify(str).toLocaleLowerCase();
+const getAnchor = (str: string): string => str.toLowerCase();
 
-export default {
+interface Link {
+  to: string;
+  id?: string;
+  homeTo?: string;
+  target?: string;
+}
+
+interface Links {
+  home: Link;
+  live: Link;
+  schedule: Link;
+  tickets: Link;
+  venue: Link;
+  sponsors: Link;
+  keynoteSpeakers: Link;
+  speakers: Link;
+  team: Link;
+  privacy: Link;
+  conduct: Link;
+}
+
+const LINKS: Links = {
   // Pages and sections
   home: {
     to: '/',
@@ -48,22 +68,12 @@ export default {
     to: '/imprint-and-data-privacy',
     target: '_blank',
   },
-  conduct: {
-    to: 'https://events.linuxfoundation.org/about/code-of-conduct/',
-    target: '_blank',
-  },
 
-  // Social-links
-  linkedin: {
-    to: 'https://www.linkedin.com/company/cndaustria/',
-    target: '_blank',
-  },
-  googlemaps: {
-    to: 'https://maps.app.goo.gl/ow5DQBEXz6MJCyB97',
-    target: '_blank',
-  },
-  youtube: {
-    to: 'https://www.youtube.com/channel/UCs8vJuX9OkkXObKb5VCkYfA',
+  // Social
+  conduct: {
+    to: 'https://berlincodeofconduct.org/',
     target: '_blank',
   },
 };
+
+export default LINKS;

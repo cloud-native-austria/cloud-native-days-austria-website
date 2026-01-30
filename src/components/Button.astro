@@ -1,0 +1,101 @@
+---
+interface Props {
+  href?: string;
+  variant?: 'primary' | 'link';
+  size?: 'sm' | 'md' | 'lg';
+  external?: boolean;
+  class?: string;
+}
+
+const {
+  href,
+  variant = 'primary',
+  size = 'md',
+  external = false,
+  class: className = '',
+} = Astro.props;
+
+const Tag = href ? 'a' : 'button';
+const externalAttrs = external ? { target: '_blank', rel: 'noopener noreferrer' } : {};
+---
+
+<Tag
+  href={href}
+  class:list={['btn', `btn-${variant}`, `btn-${size}`, className]}
+  {...externalAttrs}
+>
+  <slot />
+</Tag>
+
+<style>
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-heading);
+    font-weight: 600;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    transition:
+      transform var(--transition-fast),
+      opacity var(--transition-fast);
+  }
+
+  .btn:hover {
+    transform: scale(1.05);
+  }
+
+  .btn:active {
+    transform: scale(0.98);
+  }
+
+  /* Primary variant - gradient background */
+  .btn-primary {
+    background: var(--gradient-brand);
+    background-size: 200% 100%;
+    color: var(--color-white);
+    border-radius: var(--radius-full);
+    transition:
+      background-position var(--transition-base),
+      transform var(--transition-fast);
+  }
+
+  .btn-primary:hover {
+    background-position: 100% 0;
+  }
+
+  /* Link variant - text only */
+  .btn-link {
+    background: none;
+    color: var(--color-text);
+    padding: 0;
+  }
+
+  .btn-link:hover {
+    color: var(--color-pink);
+  }
+
+  /* Sizes */
+  .btn-sm {
+    font-size: var(--text-sm);
+    padding: var(--space-2) var(--space-4);
+  }
+
+  .btn-md {
+    font-size: var(--text-base);
+    padding: var(--space-3) var(--space-6);
+  }
+
+  .btn-lg {
+    font-size: var(--text-lg);
+    padding: var(--space-4) var(--space-8);
+  }
+
+  /* Link variant ignores padding */
+  .btn-link.btn-sm,
+  .btn-link.btn-md,
+  .btn-link.btn-lg {
+    padding: var(--space-1) var(--space-2);
+  }
+</style>

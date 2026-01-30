@@ -1,6 +1,19 @@
-import LINKS from 'constants/links.js';
+import LINKS from './links';
 
-const MENUS = {
+interface MenuItem {
+  text: string;
+  to: string;
+  id?: string;
+  homeTo?: string;
+  target?: string;
+}
+
+interface Menus {
+  header: MenuItem[];
+  footer: MenuItem[];
+}
+
+const MENUS: Menus = {
   header: [
     // { text: 'Live', ...LINKS.live },
     // { text: 'Tickets', ...LINKS.tickets },

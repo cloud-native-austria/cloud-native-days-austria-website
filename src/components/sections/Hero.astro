@@ -1,0 +1,210 @@
+---
+import adrianajosh from '@images/home/adriana-josh.webp';
+import crowd from '@images/home/crowd.webp';
+import hands from '@images/home/hands.webp';
+import orgs from '@images/home/orgs.webp';
+---
+
+<section class="hero">
+  <div class="hero-container">
+    <div class="hero-content">
+      <h1>Cloud Native Days Austria</h1>
+      <p>
+        <strong class="highlight-purple">Mark your calendars!</strong>
+        <br />
+        On September <strong class="highlight-pink">29th and 30th</strong>, 2026 the Cloud Native
+        community will gather in Vienna, Austria. We will spend two days filled with exciting talks,
+        networking and partying.
+      </p>
+      <p>
+        Cloud Native Days Austria is a conference aimed at developers, platform people, and other IT
+        professionals interested in cloud native technologies.
+      </p>
+    </div>
+
+    <a
+      href="https://www.picdrop.com/giselataschner-carl-hohenbalken/bzmm9YBJW2"
+      target="_blank"
+      rel="noopener noreferrer"
+      class="slideshow"
+      aria-label="View photos from previous events"
+    >
+      <img src={adrianajosh.src} alt="Two speakers giving a talk" class="slide slide-1" />
+      <img
+        src={hands.src}
+        alt="The audience answering a speaker's question by a show of hands"
+        class="slide slide-2"
+      />
+      <img src={orgs.src} alt="The organizers of the event" class="slide slide-3" />
+      <img
+        src={crowd.src}
+        alt="Attendees networking and talking to each other"
+        class="slide slide-4"
+      />
+    </a>
+  </div>
+</section>
+
+<style>
+  .hero {
+    padding: var(--space-12) 0;
+  }
+
+  .hero-container {
+    max-width: var(--container-lg);
+    margin-inline: auto;
+    padding-inline: var(--space-4);
+    display: flex;
+    gap: var(--space-8);
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  @media (min-width: 768px) {
+    .hero-container {
+      padding-inline: var(--space-8);
+    }
+  }
+
+  @media (max-width: 1023px) {
+    .hero-container {
+      flex-direction: column;
+    }
+  }
+
+  .hero-content {
+    max-width: 580px;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+  }
+
+  @media (max-width: 1023px) {
+    .hero-content {
+      max-width: 100%;
+    }
+  }
+
+  .hero-content h1 {
+    text-align: start;
+    margin-bottom: 0;
+  }
+
+  .highlight-purple {
+    color: var(--color-purple);
+  }
+
+  .highlight-pink {
+    color: var(--color-pink);
+  }
+
+  /* Slideshow */
+  .slideshow {
+    position: relative;
+    width: 100%;
+    max-width: 500px;
+    height: 450px;
+    overflow: hidden;
+    border-radius: var(--radius-md);
+  }
+
+  @media (max-width: 767px) {
+    .slideshow {
+      height: 300px;
+    }
+  }
+
+  .slide {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .slide-1 {
+    animation: slide1 10s ease-in-out infinite;
+  }
+
+  .slide-2 {
+    animation: slide2 10s ease-in-out infinite;
+  }
+
+  .slide-3 {
+    animation: slide3 10s ease-in-out infinite;
+  }
+
+  .slide-4 {
+    animation: slide4 10s ease-in-out infinite;
+  }
+
+  @keyframes slide1 {
+    0%,
+    20%,
+    100% {
+      transform: translateX(0);
+      opacity: 1;
+    }
+    25% {
+      transform: translateX(500px);
+      opacity: 0;
+    }
+    95% {
+      transform: translateX(-500px);
+      opacity: 0;
+    }
+  }
+
+  @keyframes slide2 {
+    0%,
+    20% {
+      transform: translateX(-500px);
+      opacity: 0;
+    }
+    25%,
+    45% {
+      transform: translateX(0);
+      opacity: 1;
+    }
+    50%,
+    100% {
+      transform: translateX(500px);
+      opacity: 0;
+    }
+  }
+
+  @keyframes slide3 {
+    0%,
+    45% {
+      transform: translateX(-500px);
+      opacity: 0;
+    }
+    50%,
+    70% {
+      transform: translateX(0);
+      opacity: 1;
+    }
+    75%,
+    100% {
+      transform: translateX(500px);
+      opacity: 0;
+    }
+  }
+
+  @keyframes slide4 {
+    0%,
+    70% {
+      transform: translateX(-500px);
+      opacity: 0;
+    }
+    75%,
+    95% {
+      transform: translateX(0);
+      opacity: 1;
+    }
+    100% {
+      transform: translateX(500px);
+      opacity: 0;
+    }
+  }
+</style>

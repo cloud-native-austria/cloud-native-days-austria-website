@@ -1,0 +1,66 @@
+---
+interface Props {
+  name: string;
+  logo: string;
+  url?: string;
+  tier?: 'platinum' | 'gold' | 'silver' | 'bronze' | 'community';
+}
+
+const { name, logo, url, tier = 'silver' } = Astro.props;
+
+const sizes = {
+  platinum: 200,
+  gold: 160,
+  silver: 140,
+  bronze: 120,
+  community: 100,
+};
+
+const size = sizes[tier];
+---
+
+{
+  url ? (
+    <a href={url} target="_blank" rel="noopener noreferrer" class="sponsor-link" aria-label={name}>
+      <img
+        src={logo}
+        alt={name}
+        width={size}
+        loading="lazy"
+        decoding="async"
+        class="sponsor-logo"
+      />
+    </a>
+  ) : (
+    <div class="sponsor-link">
+      <img
+        src={logo}
+        alt={name}
+        width={size}
+        loading="lazy"
+        decoding="async"
+        class="sponsor-logo"
+      />
+    </div>
+  )
+}
+
+<style>
+  .sponsor-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-4);
+    transition: transform var(--transition-fast);
+  }
+
+  a.sponsor-link:hover {
+    transform: scale(1.05);
+  }
+
+  .sponsor-logo {
+    max-width: 100%;
+    height: auto;
+    object-fit: contain;
+  }
+</style>
