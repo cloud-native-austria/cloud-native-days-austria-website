@@ -117,7 +117,24 @@ const { title, variant = 'primary' } = Astro.props;
 
 ### Image Handling
 
-**ALWAYS** use Astro's `<Image>` component for images. Never use raw `<img>` tags.
+**ALWAYS** use Astro's `<Image>` or `<Picture>` component for images. Never use raw `<img>` tags.
+
+Use `<Picture>` when you want multiple format fallbacks (recommended for most cases):
+
+```astro
+---
+import { Picture } from 'astro:assets';
+import photo from '@images/speaker.jpg';
+---
+
+<!-- For people (speakers, team) - generates WebP and AVIF with fallbacks -->
+<Picture src={photo} alt="Speaker name" formats={['avif', 'webp']} />
+
+<!-- For sponsors -->
+<Picture src={logo} alt="Sponsor name" formats={['avif', 'webp']} />
+```
+
+Use `<Image>` for simpler cases when you only need a single format:
 
 ```astro
 ---
@@ -125,11 +142,8 @@ import { Image } from 'astro:assets';
 import photo from '@images/speaker.jpg';
 ---
 
-<!-- For people (speakers, team) -->
-<Image src={photo} alt="Speaker name" format="webp" fallbackFormat="jpg" />
-
-<!-- For sponsors -->
-<Image src={logo} alt="Sponsor name" format="webp" fallbackFormat="png" />
+<!-- Single format (WebP) -->
+<Image src={photo} alt="Speaker name" format="webp" />
 ```
 
 **Why?**

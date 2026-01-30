@@ -1,0 +1,170 @@
+---
+import { Image } from 'astro:assets';
+import Layout from '@layouts/Layout.astro';
+import Person from '@components/Person.astro';
+
+// Import team member images
+import AndiImage from '@images/team/AndreasGrabner.jpeg';
+import AndreasImage from '@images/team/AndreasTaranetz.jpg';
+import DanielImage from '@images/team/DanielDrack.jpeg';
+import ErikImage from '@images/team/ErikAuer.jpg';
+import JohannesImage from '@images/team/JohannesGrumboeck.jpeg';
+import OctavianImage from '@images/team/OctavianHelm.jpg';
+import PhilippImage from '@images/team/PhilippMaier.jpg';
+import SandraImage from '@images/team/SandraSchadenbauer.jpeg';
+
+interface TeamMember {
+  name: string;
+  role: string;
+  image: ImageMetadata;
+}
+
+const teamMembers: TeamMember[] = [
+  {
+    name: 'Andreas Grabner',
+    role: 'CNCF Ambassador, CNCF Keptn & Dynatrace DevRel',
+    image: AndiImage,
+  },
+  {
+    name: 'Andreas Taranetz',
+    role: 'Senior Software Engineer, Dynatrace',
+    image: AndreasImage,
+  },
+  {
+    name: 'Daniel Drack',
+    role: 'I host the community chapter in Graz, Austria',
+    image: DanielImage,
+  },
+  {
+    name: 'Erik Auer',
+    role: 'CEO, WhizUs',
+    image: ErikImage,
+  },
+  {
+    name: 'Johannes Grumböck',
+    role: 'Cloud Architect, Red Bull Media House',
+    image: JohannesImage,
+  },
+  {
+    name: 'Octavian Helm',
+    role: 'Senior Platform Engineer, BearingPoint',
+    image: OctavianImage,
+  },
+  {
+    name: 'Philipp Maier',
+    role: 'Senior Cloud Engineer, Dynatrace',
+    image: PhilippImage,
+  },
+  {
+    name: 'Sandra Schadenbauer',
+    role: 'Lecturer, FH JOANNEUM',
+    image: SandraImage,
+  },
+];
+---
+
+<Layout
+  title="Team | Cloud Native Days Austria"
+  description="Meet the team behind Cloud Native Days Austria. Our organizers are passionate about building the cloud native community in Austria."
+>
+  <main>
+    <section class="team-section">
+      <div class="container">
+        <h1>Team</h1>
+        <div class="team-grid">
+          {
+            teamMembers.map(({ name, role, image }) => (
+              <div class="team-member">
+                <div class="image-wrapper">
+                  <Image src={image} alt={name} format="webp" class="heptagon" />
+                </div>
+                <h3 class="name">{name}</h3>
+                <p class="role">{role}</p>
+              </div>
+            ))
+          }
+        </div>
+      </div>
+    </section>
+  </main>
+</Layout>
+
+<style>
+  .team-section {
+    padding-block: var(--space-20);
+  }
+
+  .container {
+    max-width: 1200px;
+    margin-inline: auto;
+    padding-inline: var(--space-6);
+  }
+
+  h1 {
+    font-family: var(--font-heading);
+    font-size: var(--text-4xl);
+    text-align: center;
+    margin-bottom: var(--space-16);
+    color: var(--color-text);
+  }
+
+  .team-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: var(--space-10);
+    justify-items: center;
+  }
+
+  .team-member {
+    text-align: center;
+    max-width: 300px;
+  }
+
+  .image-wrapper {
+    width: 180px;
+    height: 180px;
+    margin-inline: auto;
+    margin-bottom: var(--space-4);
+    filter: drop-shadow(0 8px 16px rgba(38, 47, 89, 0.15));
+  }
+
+  .image-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .name {
+    font-family: var(--font-heading);
+    font-size: var(--text-lg);
+    margin-bottom: var(--space-2);
+    color: var(--color-text);
+  }
+
+  .role {
+    font-size: var(--text-sm);
+    color: var(--color-text-light);
+    line-height: 1.5;
+  }
+
+  @media (max-width: 768px) {
+    .team-section {
+      padding-block: var(--space-12);
+    }
+
+    h1 {
+      font-size: var(--text-3xl);
+      margin-bottom: var(--space-12);
+    }
+
+    .team-grid {
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: var(--space-8);
+    }
+
+    .image-wrapper {
+      width: 150px;
+      height: 150px;
+    }
+  }
+</style>

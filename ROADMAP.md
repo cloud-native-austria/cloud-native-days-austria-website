@@ -83,11 +83,13 @@ This document tracks the migration progress from Gatsby to Astro with vanilla CS
   - ✅ No JavaScript required
   - ⏳ Pending deletion: `src/components/pages/speakers/`, `src/components/shared/speaker/`
 
-- [ ] **Step 11: Migrate Team page**
-  - Create `src/pages/team.astro`
-  - Extract team data from old component
-  - Use `Person.astro` component
-  - Delete: `src/components/pages/team/`
+- [x] **Step 11: Migrate Team page**
+  - ✅ Created `src/pages/team.astro`
+  - ✅ Extracted team data from old component with TypeScript interface
+  - ✅ Uses Astro `<Image>` component for optimized images
+  - ✅ Copied team member images to `src/images/team/`
+  - ✅ Heptagon clip-path for team member photos
+  - ⏳ Pending deletion: `src/components/pages/team/`
 
 - [ ] **Step 12: Migrate Live page as Preact island**
   - Create `src/pages/live.astro` (static content)
@@ -129,11 +131,17 @@ This document tracks the migration progress from Gatsby to Astro with vanilla CS
   - ✅ Updated `fetchSpeakers()` to use cached data
   - Benefits: Faster loading, no runtime dependency on Sessionize CDN, better control
 
-- [ ] **Migrate from `<img>` to Astro `<Image>` component**
-  - Update `SponsorLogo.astro` to use `<Image>` instead of `<img>`
-  - Update any other components still using raw `<img>` tags
+- [ ] **Migrate from `<img>` to Astro `<Picture>` component**
+  - Components needing update:
+    - `SponsorLogo.astro` - sponsor logos (priority)
+    - `Hero.astro` - slideshow images
+    - `Header.astro` - logo
+    - `Footer.astro` - logo
+    - `Venue.astro` - venue image
+    - `SponsorsList.astro` - sponsor logos
   - Note: Speaker images use `<img>` as they're served from `public/` (already optimized during caching)
-  - Ensures automatic image optimization (WebP, lazy loading, etc.) for static images
+  - `<Picture>` generates multiple formats (WebP, AVIF) with proper fallbacks for better browser compatibility
+  - Ensures automatic image optimization, lazy loading, and responsive srcsets
 
 - [ ] **Simplify breakpoints to single mobile breakpoint**
   - Reduce from 5 breakpoints to 1 (e.g., `--breakpoint-mobile: 768px`)
@@ -210,7 +218,7 @@ After full migration, these Gatsby-specific files/folders should be removed:
 
 ## Current State Summary
 
-**Last Updated**: Step 10 completed
+**Last Updated**: Step 11 completed
 
 ### What Works ✅
 
@@ -222,14 +230,14 @@ After full migration, these Gatsby-specific files/folders should be removed:
 - Header with CSS-only mobile menu (details/summary)
 - Footer with navigation and social links
 - Speakers page with CSS-only popover modals
+- Team page with optimized WebP images and heptagon clip-paths
 - Global styles and design tokens applied
 
 ### What's Next
 
-1. **Step 11**: Team page
-2. **Step 12**: Live page with Preact island
-3. **Step 13**: MDX content collections
-4. **Step 14**: 404 page and final cleanup
+1. **Step 12**: Live page with Preact island
+2. **Step 13**: MDX content collections
+3. **Step 14**: 404 page and final cleanup
 
 ### File Structure Created
 
@@ -251,13 +259,17 @@ src/
 │   ├── links.ts
 │   ├── menus.ts
 │   └── sessionize-app.ts
+├── images/
+│   ├── home/
+│   └── team/
 ├── layouts/
 │   └── Layout.astro
 ├── lib/
 │   └── sessionize.ts
 ├── pages/
 │   ├── index.astro
-│   └── speakers.astro
+│   ├── speakers.astro
+│   └── team.astro
 └── styles/
     └── global.css
 
