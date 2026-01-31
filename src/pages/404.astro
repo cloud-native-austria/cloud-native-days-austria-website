@@ -1,0 +1,91 @@
+---
+/**
+ * 404 Error Page
+ * Shown when a page is not found
+ */
+
+import Layout from '@layouts/Layout.astro';
+import Button from '@components/Button.astro';
+---
+
+<Layout title="Page Not Found | CNDA 2025" description="The page you're looking for doesn't exist.">
+  <div class="error-page">
+    <div class="error-content">
+      <h1 class="error-code">404</h1>
+      <h2 class="error-title">Page Not Found</h2>
+      <p class="error-message">The page you're looking for doesn't exist or has been moved.</p>
+      <div class="error-actions">
+        <Button href="/" variant="primary">Go to Homepage</Button>
+        <Button href="/speakers" variant="secondary">View Speakers</Button>
+      </div>
+    </div>
+  </div>
+</Layout>
+
+<style>
+  .error-page {
+    min-height: 70vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-8) var(--space-4);
+  }
+
+  .error-content {
+    text-align: center;
+    max-width: 600px;
+  }
+
+  .error-code {
+    font-family: var(--font-heading);
+    font-size: clamp(6rem, 15vw, 12rem);
+    font-weight: 700;
+    color: var(--color-purple);
+    margin: 0;
+    line-height: 1;
+    background: linear-gradient(135deg, var(--color-purple), var(--color-pink));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .error-title {
+    font-family: var(--font-heading);
+    font-size: clamp(2rem, 5vw, 3rem);
+    color: var(--color-text);
+    margin: var(--space-4) 0 var(--space-6);
+  }
+
+  .error-message {
+    font-size: 1.25rem;
+    color: var(--color-text);
+    margin-bottom: var(--space-8);
+    line-height: 1.6;
+  }
+
+  .error-actions {
+    display: flex;
+    gap: var(--space-4);
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  @media (max-width: 768px) {
+    .error-code {
+      font-size: 6rem;
+    }
+
+    .error-title {
+      font-size: 2rem;
+    }
+
+    .error-message {
+      font-size: 1rem;
+    }
+
+    .error-actions {
+      flex-direction: column;
+      align-items: center;
+    }
+  }
+</style>
