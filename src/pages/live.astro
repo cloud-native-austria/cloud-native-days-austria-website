@@ -17,14 +17,14 @@ const description = "Everything you need to know at the event.";
 				<p>{description}</p>
 			</header>
 
-			<div class="content-grid">
-				<section class="current-sessions-section">
+			<div>
+				<section>
 					<h2>Current and upcoming sessions</h2>
 					<CurrentSessions client:load />
 					<Button href={scheduleUrl} external variant="primary"> See the full schedule </Button>
 				</section>
 
-				<section class="info-card">
+				<section>
 					<h2>Wi-Fi access</h2>
 					<table>
 						<tbody>
@@ -40,7 +40,7 @@ const description = "Everything you need to know at the event.";
 					</table>
 				</section>
 
-				<section class="info-card">
+				<section>
 					<h2>Emergency numbers</h2>
 					<table>
 						<tbody>
@@ -86,13 +86,13 @@ const description = "Everything you need to know at the event.";
 		color: var(--color-text);
 	}
 
-	.content-grid {
+	main > :global(.container) > div {
 		display: grid;
 		grid-template-columns: 1fr 1fr;
 		gap: var(--space-6);
 	}
 
-	.current-sessions-section {
+	main > :global(.container) > div > section:first-child {
 		grid-column: 1 / -1;
 		background: var(--color-bg-light);
 		border-radius: var(--radius-md);

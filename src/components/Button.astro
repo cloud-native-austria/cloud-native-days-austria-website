@@ -4,33 +4,20 @@ interface Props {
 	variant?: "primary" | "link";
 	size?: "sm" | "md" | "lg";
 	external?: boolean;
-	class?: string;
 }
 
-const {
-	href,
-	variant = "primary",
-	size = "md",
-	external = false,
-	class: className = "",
-} = Astro.props;
+const { href, variant = "primary", size = "md", external = false } = Astro.props;
 
 const Tag = href ? "a" : "button";
 const externalAttrs = external ? { target: "_blank", rel: "noopener noreferrer" } : {};
 ---
 
-<Tag
-	href={href}
-	data-variant={variant}
-	data-size={size}
-	class:list={["btn", className]}
-	{...externalAttrs}
->
+<Tag href={href} data-variant={variant} data-size={size} {...externalAttrs}>
 	<slot />
 </Tag>
 
 <style>
-	.btn {
+	:where(a, button) {
 		display: inline-flex;
 		align-items: center;
 		justify-content: center;
@@ -44,16 +31,16 @@ const externalAttrs = external ? { target: "_blank", rel: "noopener noreferrer" 
 			opacity var(--transition-fast);
 	}
 
-	.btn:hover {
+	:where(a, button):hover {
 		transform: scale(1.05);
 	}
 
-	.btn:active {
+	:where(a, button):active {
 		transform: scale(0.98);
 	}
 
 	/* Primary variant - gradient background */
-	.btn[data-variant="primary"] {
+	:where(a, button)[data-variant="primary"] {
 		background: var(--gradient-brand);
 		background-size: 200% 100%;
 		color: var(--color-white);
@@ -63,41 +50,41 @@ const externalAttrs = external ? { target: "_blank", rel: "noopener noreferrer" 
 			transform var(--transition-fast);
 	}
 
-	.btn[data-variant="primary"]:hover {
+	:where(a, button)[data-variant="primary"]:hover {
 		background-position: 100% 0;
 	}
 
 	/* Link variant - text only */
-	.btn[data-variant="link"] {
+	:where(a, button)[data-variant="link"] {
 		background: none;
 		color: var(--color-text);
 		padding: 0;
 	}
 
-	.btn[data-variant="link"]:hover {
+	:where(a, button)[data-variant="link"]:hover {
 		color: var(--color-pink);
 	}
 
 	/* Sizes */
-	.btn[data-size="sm"] {
+	:where(a, button)[data-size="sm"] {
 		font-size: var(--text-sm);
 		padding: var(--space-2) var(--space-4);
 	}
 
-	.btn[data-size="md"] {
+	:where(a, button)[data-size="md"] {
 		font-size: var(--text-base);
 		padding: var(--space-3) var(--space-6);
 	}
 
-	.btn[data-size="lg"] {
+	:where(a, button)[data-size="lg"] {
 		font-size: var(--text-lg);
 		padding: var(--space-4) var(--space-8);
 	}
 
 	/* Link variant ignores padding */
-	.btn[data-variant="link"][data-size="sm"],
-	.btn[data-variant="link"][data-size="md"],
-	.btn[data-variant="link"][data-size="lg"] {
+	:where(a, button)[data-variant="link"][data-size="sm"],
+	:where(a, button)[data-variant="link"][data-size="md"],
+	:where(a, button)[data-variant="link"][data-size="lg"] {
 		padding: var(--space-1) var(--space-2);
 	}
 </style>

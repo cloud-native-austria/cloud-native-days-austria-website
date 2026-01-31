@@ -15,30 +15,25 @@ const speakers = await fetchSpeakers();
 	<main>
 		<Container>
 			<h1>Speakers of 2025</h1>
-			<div class="speakers-grid">
+			<div>
 				{
 					speakers.map((speaker) => (
-						<article class="speaker-card">
-							<button
-								popovertarget={`speaker-${speaker.id}`}
-								class="speaker-button"
-								aria-label={`View details for ${speaker.fullName}`}
-							>
-								<div class="image-wrapper">
-									<img
-										src={speaker.localProfilePicture}
-										alt={speaker.fullName}
-										class="heptagon"
-										loading="lazy"
-										decoding="async"
-										width="180"
-										height="180"
-									/>
-								</div>
-								<h2>{speaker.fullName}</h2>
-								{speaker.tagLine && <p>{speaker.tagLine}</p>}
-							</button>
-						</article>
+						<button
+							popovertarget={`speaker-${speaker.id}`}
+							aria-label={`View details for ${speaker.fullName}`}
+						>
+							<img
+								src={speaker.localProfilePicture}
+								alt={speaker.fullName}
+								class="heptagon"
+								loading="lazy"
+								decoding="async"
+								width="180"
+								height="180"
+							/>
+							<h2>{speaker.fullName}</h2>
+							{speaker.tagLine && <p>{speaker.tagLine}</p>}
+						</button>
 					))
 				}
 			</div>
@@ -46,25 +41,23 @@ const speakers = await fetchSpeakers();
 			<!-- Speaker modals -->
 			{
 				speakers.map((speaker) => (
-					<div id={`speaker-${speaker.id}`} popover class="speaker-modal">
-						<div class="modal-header">
-							<div class="modal-title">
-								<div class="modal-image-wrapper">
-									<img
-										src={speaker.localProfilePicture}
-										alt={speaker.fullName}
-										class="heptagon"
-										width="80"
-										height="80"
-									/>
-								</div>
+						<div id={`speaker-${speaker.id}`} popover>
+						<header>
+							<div>
+								<img
+									src={speaker.localProfilePicture}
+									alt={speaker.fullName}
+									class="heptagon"
+									width="80"
+									height="80"
+								/>
 								<div>
 									<h2>
 										<a href={getSpeakerUrl(speaker.id)} target="_blank" rel="noopener noreferrer">
 											{speaker.fullName}
 										</a>
 									</h2>
-									{speaker.tagLine && <p class="modal-tagline">{speaker.tagLine}</p>}
+									{speaker.tagLine && <p>{speaker.tagLine}</p>}
 								</div>
 							</div>
 							<button
@@ -75,18 +68,18 @@ const speakers = await fetchSpeakers();
 							>
 								✕
 							</button>
-						</div>
+						</header>
 
-						<div class="modal-content">
-							{speaker.bio && (
-								<div class="bio">
-									<h3>Bio</h3>
-									<p>{speaker.bio}</p>
-								</div>
-							)}
+							<div>
+								{speaker.bio && (
+									<section>
+										<h3>Bio</h3>
+										<p>{speaker.bio}</p>
+									</section>
+								)}
 
-							{speaker.sessions && speaker.sessions.length > 0 && (
-								<div class="sessions">
+								{speaker.sessions && speaker.sessions.length > 0 && (
+									<section>
 									<h3>Sessions</h3>
 									<ul>
 										{speaker.sessions.map((session) => (
@@ -101,10 +94,8 @@ const speakers = await fetchSpeakers();
 											</li>
 										))}
 									</ul>
-								</div>
+								</section>
 							)}
-
-							{speaker.links && speaker.links.length > 0 && (
 								<div class="social-links">
 									<h3>Connect</h3>
 									<div class="links-grid">
@@ -143,64 +134,56 @@ const speakers = await fetchSpeakers();
 		color: var(--color-text);
 	}
 
-	.speakers-grid {
+	main > :global(.container) > div {
 		display: grid;
 		grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
 		gap: var(--space-8);
 		margin-bottom: var(--space-12);
 	}
 
-	.speaker-card {
-		text-align: center;
-	}
-
-	.speaker-button {
+	main > :global(.container) > div > button {
 		all: unset;
 		cursor: pointer;
 		display: block;
 		width: 100%;
+		text-align: center;
 		transition: transform 0.2s ease;
 	}
 
-	.speaker-button:hover {
+	main > :global(.container) > div > button:hover {
 		transform: translateY(-4px);
 	}
 
-	.speaker-button:focus-visible {
+	main > :global(.container) > div > button:focus-visible {
 		outline: 2px solid var(--color-purple);
 		outline-offset: 4px;
 		border-radius: var(--radius-md);
 	}
 
-	.image-wrapper {
+	main > :global(.container) > div > button img {
 		width: 180px;
 		height: 180px;
 		margin-inline: auto;
 		margin-bottom: var(--space-4);
 		filter: drop-shadow(0 8px 16px rgba(38, 47, 89, 0.15));
-	}
-
-	.image-wrapper img {
-		width: 100%;
-		height: 100%;
 		object-fit: cover;
 	}
 
-	.speaker-button h2 {
+	main > :global(.container) > div > button h2 {
 		font-size: var(--text-lg);
 		font-weight: 600;
 		margin-bottom: var(--space-2);
 		color: var(--color-text);
 	}
 
-	.speaker-button p {
+	main > :global(.container) > div > button p {
 		font-size: var(--text-sm);
 		color: var(--color-text-light);
 		line-height: 1.4;
 	}
 
 	/* Modal styles */
-	.speaker-modal {
+	[popover] {
 		margin: auto;
 		padding: 0;
 		border: none;
@@ -211,12 +194,12 @@ const speakers = await fetchSpeakers();
 		box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
 	}
 
-	.speaker-modal::backdrop {
+	[popover]::backdrop {
 		background: rgba(0, 0, 0, 0.6);
 		backdrop-filter: blur(4px);
 	}
 
-	.modal-header {
+	[popover] header {
 		display: flex;
 		justify-content: space-between;
 		align-items: flex-start;
@@ -229,43 +212,38 @@ const speakers = await fetchSpeakers();
 		z-index: 1;
 	}
 
-	.modal-title {
+	[popover] header > div {
 		display: flex;
 		gap: var(--space-4);
 		align-items: center;
 		flex: 1;
 	}
 
-	.modal-image-wrapper {
+	[popover] header img {
 		width: 80px;
 		height: 80px;
 		flex-shrink: 0;
 		filter: drop-shadow(0 4px 8px rgba(38, 47, 89, 0.15));
-	}
-
-	.modal-image-wrapper img {
-		width: 100%;
-		height: 100%;
 		object-fit: cover;
 	}
 
-	.modal-header h2 {
+	[popover] header h2 {
 		font-size: var(--text-xl);
 		font-weight: 600;
 		margin-bottom: var(--space-1);
 	}
 
-	.modal-header h2 a {
+	[popover] header h2 a {
 		color: var(--color-purple);
 		text-decoration: none;
 	}
 
-	.modal-header h2 a:hover {
+	[popover] header h2 a:hover {
 		color: var(--color-pink);
 		text-decoration: underline;
 	}
 
-	.modal-tagline {
+	[popover] header p {
 		font-size: var(--text-sm);
 		color: var(--color-text-light);
 	}
@@ -291,53 +269,53 @@ const speakers = await fetchSpeakers();
 		border-radius: var(--radius-sm);
 	}
 
-	.modal-content {
+	[popover] > div {
 		padding: var(--space-6);
 	}
 
-	.modal-content h3 {
+	[popover] > div h3 {
 		font-size: var(--text-lg);
 		font-weight: 600;
 		margin-bottom: var(--space-3);
 		color: var(--color-text);
 	}
 
-	.bio {
+	[popover] > div > section:first-child {
 		margin-bottom: var(--space-6);
 	}
 
-	.bio p {
+	[popover] > div > section:first-child p {
 		line-height: 1.6;
 		color: var(--color-text);
 		white-space: pre-wrap;
 	}
 
-	.sessions {
+	[popover] > div > section:nth-child(2) {
 		margin-bottom: var(--space-6);
 	}
 
-	.sessions ul {
+	[popover] > div > section:nth-child(2) ul {
 		list-style: none;
 		padding: 0;
 		margin: 0;
 	}
 
-	.sessions li {
+	[popover] > div > section:nth-child(2) li {
 		margin-bottom: var(--space-2);
 	}
 
-	.sessions a {
+	[popover] > div > section:nth-child(2) a {
 		color: var(--color-purple);
 		text-decoration: none;
 		transition: color 0.2s ease;
 	}
 
-	.sessions a:hover {
+	[popover] > div > section:nth-child(2) a:hover {
 		color: var(--color-pink);
 		text-decoration: underline;
 	}
 
-	.social-links {
+	[popover] > div > section:nth-child(3) {
 		margin-bottom: var(--space-4);
 	}
 
@@ -371,8 +349,8 @@ const speakers = await fetchSpeakers();
 	}
 
 	@media (max-width: 768px) {
-		.container {
-			padding: var(--space-6) var(--space-4);
+		main {
+			padding: var(--space-12) 0;
 		}
 
 		h1 {
@@ -380,31 +358,31 @@ const speakers = await fetchSpeakers();
 			margin-bottom: var(--space-8);
 		}
 
-		.speakers-grid {
+		main > :global(.container) > div {
 			grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
 			gap: var(--space-6);
 		}
 
-		.image-wrapper {
+		main > :global(.container) > div > button img {
 			width: 140px;
 			height: 140px;
 		}
 
-		.modal-header {
+		[popover] header {
 			padding: var(--space-4);
 		}
 
-		.modal-title {
+		[popover] header > div {
 			flex-direction: column;
 			align-items: flex-start;
 		}
 
-		.modal-image-wrapper {
+		[popover] header img {
 			width: 60px;
 			height: 60px;
 		}
 
-		.modal-content {
+		[popover] > div {
 			padding: var(--space-4);
 		}
 	}

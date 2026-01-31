@@ -289,22 +289,8 @@ a:hover {
    Utility Classes
    -------------------------------------------------------------------------- */
 
-.visually-hidden {
-	position: absolute;
-	width: 1px;
-	height: 1px;
-	padding: 0;
-	margin: -1px;
-	overflow: hidden;
-	clip: rect(0, 0, 0, 0);
-	white-space: nowrap;
-	border: 0;
-}
-
-/* --------------------------------------------------------------------------
-   Heptagon Clip Path (for profile images)
-   -------------------------------------------------------------------------- */
-
+/* Heptagon Clip Path (for profile images)
+   Used in: team.astro, speakers.astro */
 .heptagon {
 	clip-path: polygon(
 		50% 0%,
@@ -315,17 +301,6 @@ a:hover {
 		0% 60%,
 		10% 20%
 	);
-}
-
-/* --------------------------------------------------------------------------
-   Gradient Text
-   -------------------------------------------------------------------------- */
-
-.gradient-text {
-	background: var(--gradient-brand);
-	background-clip: text;
-	-webkit-background-clip: text;
-	-webkit-text-fill-color: transparent;
 }
 
 /* --------------------------------------------------------------------------

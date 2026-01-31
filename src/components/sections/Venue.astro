@@ -5,11 +5,11 @@ import venueImage from "@images/home/venue.webp";
 ---
 
 <section class="venue">
-	<Container class="venue-wrapper">
+	<Container>
 		<h2 id="venue">Venue</h2>
 
-		<div class="venue-content">
-			<div class="venue-image">
+		<div>
+			<div>
 				<Picture
 					src={venueImage}
 					alt="CDN Austria Venue - Cineplexx Wienerberg"
@@ -25,7 +25,7 @@ import venueImage from "@images/home/venue.webp";
 				</a>
 			</div>
 
-			<div class="venue-description">
+			<div>
 				<p>
 					Cloud Native Days Austria are held at{" "}
 					<a
@@ -55,7 +55,7 @@ import venueImage from "@images/home/venue.webp";
 		padding: var(--space-12) 0;
 	}
 
-	.venue-wrapper {
+	.venue :global(.container) {
 		max-width: var(--container-md);
 	}
 
@@ -64,19 +64,19 @@ import venueImage from "@images/home/venue.webp";
 		margin-bottom: var(--space-8);
 	}
 
-	.venue-content {
+	.venue > :global(.container) > div {
 		display: flex;
 		gap: var(--space-8);
 		align-items: flex-start;
 	}
 
 	@media (max-width: 768px) {
-		.venue-content {
+		.venue > :global(.container) > div {
 			flex-direction: column;
 		}
 	}
 
-	.venue-image {
+	.venue > :global(.container) > div > div:first-child {
 		flex: 1;
 		text-align: center;
 		display: flex;
@@ -85,55 +85,55 @@ import venueImage from "@images/home/venue.webp";
 		gap: var(--space-4);
 	}
 
-	.venue-image img {
+	.venue > :global(.container) > div > div:first-child img {
 		max-height: 300px;
 		width: auto;
 		border-radius: var(--radius-md);
 		object-fit: contain;
 	}
 
-	.venue-image a {
+	.venue > :global(.container) > div > div:first-child a {
 		display: block;
 		color: var(--color-text);
 		text-decoration: none;
 		transition: color var(--transition-fast);
 	}
 
-	.venue-image a:hover {
+	.venue > :global(.container) > div > div:first-child a:hover {
 		color: var(--color-pink);
 	}
 
-	.venue-image strong {
+	.venue > :global(.container) > div > div:first-child strong {
 		display: block;
 		font-family: var(--font-heading);
 	}
 
-	.venue-image span {
+	.venue > :global(.container) > div > div:first-child span {
 		font-size: var(--text-sm);
 	}
 
-	.venue-description {
+	.venue > :global(.container) > div > div:last-child {
 		flex: 1;
 	}
 
-	.venue-description p {
+	.venue > :global(.container) > div > div:last-child p {
 		margin-bottom: var(--space-4);
 	}
 
-	.venue-description p:last-child {
+	.venue > :global(.container) > div > div:last-child p:last-child {
 		margin-bottom: 0;
 	}
 
-	.venue-description a {
+	.venue > :global(.container) > div > div:last-child a {
 		color: var(--color-purple);
 	}
 
-	.venue-description a:hover {
+	.venue > :global(.container) > div > div:last-child a:hover {
 		color: var(--color-pink);
 	}
 
 	@media (max-width: 768px) {
-		.venue-description {
+		.venue > :global(.container) > div > div:last-child {
 			text-align: left;
 		}
 	}

@@ -93,17 +93,11 @@ function shuffleArray<T>(array: T[]): T[] {
 
 		{
 			sponsors.map(({ title, tier, sponsors: tierSponsors }) => (
-				<div class="tier">
+				<article data-tier={tier}>
 					<h3>{title}</h3>
-					<div class:list={["tier-logos", `tier-${tier}`]}>
+					<div>
 						{shuffleArray(tierSponsors).map(({ name, url, logo }) => (
-							<a
-								href={url}
-								target="_blank"
-								rel="noopener noreferrer"
-								class="sponsor-link"
-								aria-label={name}
-							>
+							<a href={url} target="_blank" rel="noopener noreferrer" aria-label={name}>
 								<Picture
 									src={logo}
 									alt={name}
@@ -114,7 +108,7 @@ function shuffleArray<T>(array: T[]): T[] {
 							</a>
 						))}
 					</div>
-				</div>
+				</article>
 			))
 		}
 	</Container>
@@ -135,7 +129,7 @@ function shuffleArray<T>(array: T[]): T[] {
 		margin-bottom: var(--space-8);
 	}
 
-	.tier {
+	article {
 		margin-bottom: var(--space-12);
 	}
 
@@ -143,14 +137,14 @@ function shuffleArray<T>(array: T[]): T[] {
 		margin-bottom: var(--space-4);
 	}
 
-	.tier-logos {
+	article > div {
 		display: flex;
 		flex-wrap: wrap;
 		justify-content: center;
 		gap: var(--space-4);
 	}
 
-	.sponsor-link {
+	article a {
 		display: flex;
 		align-items: center;
 		justify-content: center;
@@ -158,11 +152,11 @@ function shuffleArray<T>(array: T[]): T[] {
 		transition: transform var(--transition-fast);
 	}
 
-	.sponsor-link:hover {
+	article a:hover {
 		transform: scale(1.05);
 	}
 
-	.sponsor-link img {
+	article a img {
 		height: 70px;
 		width: auto;
 		max-width: 180px;
@@ -170,23 +164,23 @@ function shuffleArray<T>(array: T[]): T[] {
 	}
 
 	/* Gold tier - larger logos */
-	.tier-gold .sponsor-link img {
+	article[data-tier="gold"] a img {
 		height: 80px;
 		max-width: 200px;
 	}
 
 	/* Community tier - smaller logos */
-	.tier-community .sponsor-link img {
+	article[data-tier="community"] a img {
 		height: 50px;
 		max-width: 140px;
 	}
 
 	@media (max-width: 768px) {
-		.sponsor-link {
+		article a {
 			width: 50%;
 		}
 
-		.sponsor-link img {
+		article a img {
 			max-width: 100%;
 		}
 	}

@@ -33,12 +33,16 @@ This phase is done
   - ✅ Removed global `.container` class from `src/styles/global.css`
   - Benefits: DRY principle, consistent centering, easier maintenance, cleaner HTML
 
-- [ ] **Remove wrapper divs and prefer semantic element styling**
-  - `live.astro`: Remove `.live-page` wrapper div, style `<main>` directly
-  - `team.astro`: Remove unnecessary `.team-section` and `.container` nesting
-  - `speakers.astro`: Simplify `.speakers-grid` to target semantic elements
-  - Section components: Remove inner container divs (`.hero-container`, etc.) - apply centering to `<section>` directly using Container component
-  - Benefits: Cleaner HTML, less CSS, better semantics
+- [x] **Remove wrapper divs and prefer semantic element styling**
+  - ✅ `team.astro`: Removed `.team-member` wrapper div, style `<article>` directly with images
+  - ✅ `speakers.astro`: Removed `.speaker-card` article wrapper and `.image-wrapper` divs, style button and images directly
+  - ✅ `speakers.astro` modals: Removed `.modal-header`, `.modal-title`, `.modal-image-wrapper` wrappers, use semantic `<header>` element
+  - ✅ `Hero.astro`: Removed `.hero-content` wrapper, style direct children
+  - ✅ `Venue.astro`: Removed `.venue-wrapper`, `.venue-content`, `.venue-image`, `.venue-description` wrappers
+  - ✅ `Sponsors.astro`: Removed `.sponsors-wrapper` and `.buttons` wrappers
+  - ✅ `PreviousEvents.astro`: Removed `.previous-events-wrapper`, `.event` and `.buttons` wrappers, use semantic `<article>` elements
+  - ✅ `SponsorsList.astro`: Removed `.tier`, `.tier-logos`, `.sponsor-link` classes, use semantic `<article>` with `data-tier` attributes
+  - Benefits: Cleaner HTML (removed 15+ wrapper classes), less CSS, better semantics, easier to maintain
 
 - [ ] **Prefer simple semantic selectors over classes**
   - Leverage Astro's scoped CSS - use `h1`, `h2`, `section`, `article` instead of creating classes
@@ -46,11 +50,13 @@ This phase is done
   - Only add classes when targeting multiple elements of same type with different styles
   - Benefits: Less class naming overhead, cleaner markup, Astro scoping provides isolation
 
-- [ ] **Refactor Button component to use data attributes**
-  - Replace `btn`, `btn-${variant}`, `btn-${size}` class pattern
-  - Use `data-variant="primary"` and `data-size="md"` attributes instead
-  - Update CSS selectors: `.btn[data-variant="primary"]` instead of `.btn-primary`
-  - Benefits: Semantic HTML, clearer intent, easier to maintain
+- [x] **Refactor Button component to use data attributes**
+  - ✅ Removed `.btn` class entirely from Button component
+  - ✅ Removed `class` prop from Props interface (no longer needed)
+  - ✅ Updated CSS selectors to use `:where(a, button)` element selectors with data attributes
+  - ✅ Changed from `.btn[data-variant="primary"]` to `:where(a, button)[data-variant="primary"]`
+  - ✅ Component now uses pure semantic HTML with data attributes for variants and sizes
+  - Benefits: Semantic HTML, clearer intent, easier to maintain, no class naming overhead
 
 - [x] **Delete legacy Tailwind CSS files**
   - ✅ Removed `src/styles/container.css` (used `@apply` directive)
@@ -66,12 +72,12 @@ This phase is done
   - ✅ Removed `src/components/Person.astro` (imported but never used)
   - Benefits: Clean codebase, only vanilla CSS remains
 
-- [ ] **Audit and remove unused global utilities**
-  - Check if `.visually-hidden` is used anywhere (grep found no usage)
-  - Check if `.gradient-text` is used anywhere (grep found no usage)
-  - Remove if unused, or document if intentionally kept for future use
-  - Keep `.heptagon` - legitimate utility used in team.astro and speakers.astro
-  - Benefits: Minimal global.css, only essential design tokens and utilities
+- [x] **Audit and remove unused global utilities**
+  - ✅ Removed `.visually-hidden` utility class (unused - found only in global.css)
+  - ✅ Removed `.gradient-text` utility class (unused - found only in global.css)
+  - ✅ Kept `.heptagon` shape utility (legitimately used in team.astro and speakers.astro for profile images)
+  - ✅ Added documentation comment to `.heptagon` indicating usage locations
+  - Benefits: Minimal global.css with only essential design tokens and legitimate utilities
 
 ### Content Collections
 

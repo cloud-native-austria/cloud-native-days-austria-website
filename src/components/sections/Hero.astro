@@ -9,7 +9,7 @@ import orgs from "@images/home/orgs.webp";
 
 <section class="hero">
 	<Container>
-		<div class="hero-content">
+		<div>
 			<h1>Cloud Native Days Austria</h1>
 			<p>
 				<strong class="highlight-purple">Mark your calendars!</strong>
@@ -78,19 +78,19 @@ import orgs from "@images/home/orgs.webp";
 			flex-direction: column;
 		}
 
-		.hero-content {
+		.hero :global(.container) > div:first-child {
 			max-width: 100%;
 		}
 	}
 
-	.hero-content {
+	.hero :global(.container) > div:first-child {
 		max-width: 580px;
 		display: flex;
 		flex-direction: column;
 		gap: var(--space-4);
 	}
 
-	.hero-content h1 {
+	.hero :global(.container) > div:first-child h1 {
 		text-align: start;
 		margin-bottom: 0;
 	}

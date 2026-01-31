@@ -4,7 +4,7 @@ import Button from "@components/Button.astro";
 ---
 
 <section class="sponsors">
-	<Container class="sponsors-wrapper">
+	<Container>
 		<h2 id="call-for-sponsors">Call for Sponsors</h2>
 
 		<p>
@@ -15,7 +15,7 @@ import Button from "@components/Button.astro";
 			<a href="mailto:organizers@cloudnativedays.at"> organizers@cloudnativedays.at </a>
 		</p>
 
-		<div class="buttons">
+		<div>
 			<Button href="/files/CND-Austria-2026-sponsor-prospectus.pdf" external>
 				Information Slides
 			</Button>
@@ -32,7 +32,7 @@ import Button from "@components/Button.astro";
 		padding: var(--space-12) 0;
 	}
 
-	.sponsors-wrapper {
+	.sponsors :global(.container) {
 		max-width: var(--container-md);
 		text-align: center;
 	}
@@ -53,7 +53,7 @@ import Button from "@components/Button.astro";
 		color: var(--color-pink);
 	}
 
-	.buttons {
+	.sponsors > :global(.container) > div {
 		display: flex;
 		flex-wrap: wrap;
 		justify-content: center;
@@ -62,7 +62,7 @@ import Button from "@components/Button.astro";
 	}
 
 	@media (max-width: 768px) {
-		.buttons {
+		.sponsors > :global(.container) > div {
 			flex-direction: column;
 			align-items: stretch;
 		}
