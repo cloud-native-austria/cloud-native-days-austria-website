@@ -128,8 +128,7 @@
 	--space-20: 5rem; /* 80px */
 
 	/* Container Widths */
-	--container-md: 1008px;
-	--container-lg: 1216px;
+	--container: 1216px;
 
 	/* Border Radius */
 	--radius-sm: 0.25rem;

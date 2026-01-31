@@ -3,7 +3,7 @@ import Container from "@components/Container.astro";
 import Button from "@components/Button.astro";
 ---
 
-<section class="previous-events">
+<section>
 	<Container>
 		<h2>Previous Events</h2>
 		<p>Thank you all for making the Cloud Native Days Austria 2025 a fantastic event!</p>
@@ -45,12 +45,12 @@ import Button from "@components/Button.astro";
 </section>
 
 <style>
-	.previous-events {
+	section {
 		padding: var(--space-12) 0;
 	}
 
-	.previous-events :global(.container) {
-		max-width: var(--container-md);
+	section :global(.container) {
+		max-width: var(--container);
 		text-align: center;
 		display: flex;
 		flex-direction: column;

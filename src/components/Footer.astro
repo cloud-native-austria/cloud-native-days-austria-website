@@ -32,17 +32,11 @@ const socialLinks = [
 
 <footer>
 	<Container>
-		<a href="/" class="logo-link" aria-label="Go to Homepage">
-			<img
-				src="/images/logo.svg"
-				alt="Cloud Native Days Austria"
-				class="logo"
-				width="176"
-				height="32"
-			/>
+		<a href="/" aria-label="Go to Homepage">
+			<img src="/images/logo.svg" alt="Cloud Native Days Austria" width="176" height="32" />
 		</a>
 
-		<nav class="footer-nav" aria-label="Footer navigation">
+		<nav aria-label="Footer navigation">
 			{
 				footerLinks.map(({ text, to, external }) => (
 					<a
@@ -56,21 +50,13 @@ const socialLinks = [
 			}
 		</nav>
 
-		<div class="contact">
-			<a href="mailto:organizers@cloudnativedays.at" class="email">
-				organizers@cloudnativedays.at
-			</a>
+		<div>
+			<a href="mailto:organizers@cloudnativedays.at"> organizers@cloudnativedays.at </a>
 
-			<div class="social-links">
+			<div>
 				{
 					socialLinks.map(({ label, url, icon }) => (
-						<a
-							href={url}
-							target="_blank"
-							rel="noopener noreferrer"
-							aria-label={label}
-							class="social-link"
-						>
+						<a href={url} target="_blank" rel="noopener noreferrer" aria-label={label}>
 							{icon === "linkedin" && (
 								<svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
 									<path
@@ -146,24 +132,24 @@ const socialLinks = [
 		}
 	}
 
-	.logo {
+	footer img {
 		height: 32px;
 		width: auto;
 	}
 
-	.footer-nav {
+	nav {
 		display: flex;
 		gap: var(--space-4);
 	}
 
 	@media (max-width: 768px) {
-		.footer-nav {
+		nav {
 			flex-direction: column;
 			gap: var(--space-2);
 		}
 	}
 
-	.footer-nav a {
+	nav a {
 		font-family: var(--font-heading);
 		font-size: var(--text-xs);
 		font-weight: 600;
@@ -172,21 +158,21 @@ const socialLinks = [
 		transition: color var(--transition-fast);
 	}
 
-	.footer-nav a:hover {
+	nav a:hover {
 		color: var(--color-pink);
 	}
 
-	.contact {
+	footer > :global(.container) > div {
 		text-align: right;
 	}
 
 	@media (max-width: 768px) {
-		.contact {
+		footer > :global(.container) > div {
 			text-align: center;
 		}
 	}
 
-	.email {
+	footer > :global(.container) > div > a {
 		font-size: var(--text-sm);
 		color: var(--color-text);
 		text-decoration: none;
@@ -195,23 +181,23 @@ const socialLinks = [
 		transition: color var(--transition-fast);
 	}
 
-	.email:hover {
+	footer > :global(.container) > div > a:hover {
 		color: var(--color-pink);
 	}
 
-	.social-links {
+	footer > :global(.container) > div > div {
 		display: flex;
 		gap: var(--space-4);
 		justify-content: flex-end;
 	}
 
 	@media (max-width: 768px) {
-		.social-links {
+		footer > :global(.container) > div > div {
 			justify-content: center;
 		}
 	}
 
-	.social-link {
+	footer > :global(.container) > div > div > a {
 		display: flex;
 		align-items: center;
 		justify-content: center;
@@ -219,11 +205,11 @@ const socialLinks = [
 		transition: transform var(--transition-fast);
 	}
 
-	.social-link:hover {
+	footer > :global(.container) > div > div > a:hover {
 		transform: scale(1.1);
 	}
 
-	.social-link svg {
+	footer > :global(.container) > div > div > a svg {
 		width: 16px;
 		height: 16px;
 	}

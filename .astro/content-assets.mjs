@@ -1,1 +1,11 @@
-export default new Map();
+
+import __ASTRO_IMAGE_IMPORT_ZCBEgN from "../../images/team/AndreasGrabner.jpeg?astroContentImageFlag=&importer=src%2Fcontent%2Fteam%2Fmembers.json";
+import __ASTRO_IMAGE_IMPORT_13Uki7 from "../../images/team/AndreasTaranetz.jpg?astroContentImageFlag=&importer=src%2Fcontent%2Fteam%2Fmembers.json";
+import __ASTRO_IMAGE_IMPORT_ZSoMkV from "../../images/team/DanielDrack.jpeg?astroContentImageFlag=&importer=src%2Fcontent%2Fteam%2Fmembers.json";
+import __ASTRO_IMAGE_IMPORT_1340AC from "../../images/team/ErikAuer.jpg?astroContentImageFlag=&importer=src%2Fcontent%2Fteam%2Fmembers.json";
+import __ASTRO_IMAGE_IMPORT_Zl1vyR from "../../images/team/JohannesGrumboeck.jpeg?astroContentImageFlag=&importer=src%2Fcontent%2Fteam%2Fmembers.json";
+import __ASTRO_IMAGE_IMPORT_22iNAq from "../../images/team/OctavianHelm.jpg?astroContentImageFlag=&importer=src%2Fcontent%2Fteam%2Fmembers.json";
+import __ASTRO_IMAGE_IMPORT_1xqVGL from "../../images/team/PhilippMaier.jpg?astroContentImageFlag=&importer=src%2Fcontent%2Fteam%2Fmembers.json";
+import __ASTRO_IMAGE_IMPORT_Z1yBdNt from "../../images/team/SandraSchadenbauer.jpeg?astroContentImageFlag=&importer=src%2Fcontent%2Fteam%2Fmembers.json";
+export default new Map([["../../images/team/AndreasGrabner.jpeg?astroContentImageFlag=&importer=src%2Fcontent%2Fteam%2Fmembers.json", __ASTRO_IMAGE_IMPORT_ZCBEgN], ["../../images/team/AndreasTaranetz.jpg?astroContentImageFlag=&importer=src%2Fcontent%2Fteam%2Fmembers.json", __ASTRO_IMAGE_IMPORT_13Uki7], ["../../images/team/DanielDrack.jpeg?astroContentImageFlag=&importer=src%2Fcontent%2Fteam%2Fmembers.json", __ASTRO_IMAGE_IMPORT_ZSoMkV], ["../../images/team/ErikAuer.jpg?astroContentImageFlag=&importer=src%2Fcontent%2Fteam%2Fmembers.json", __ASTRO_IMAGE_IMPORT_1340AC], ["../../images/team/JohannesGrumboeck.jpeg?astroContentImageFlag=&importer=src%2Fcontent%2Fteam%2Fmembers.json", __ASTRO_IMAGE_IMPORT_Zl1vyR], ["../../images/team/OctavianHelm.jpg?astroContentImageFlag=&importer=src%2Fcontent%2Fteam%2Fmembers.json", __ASTRO_IMAGE_IMPORT_22iNAq], ["../../images/team/PhilippMaier.jpg?astroContentImageFlag=&importer=src%2Fcontent%2Fteam%2Fmembers.json", __ASTRO_IMAGE_IMPORT_1xqVGL], ["../../images/team/SandraSchadenbauer.jpeg?astroContentImageFlag=&importer=src%2Fcontent%2Fteam%2Fmembers.json", __ASTRO_IMAGE_IMPORT_Z1yBdNt]]);
+		

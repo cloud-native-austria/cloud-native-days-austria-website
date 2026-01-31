@@ -18,7 +18,7 @@ This phase is done
 
 - [x] **Create Container utility component**
   - ✅ Created `src/components/Container.astro` for unified centering pattern
-  - ✅ Standardized on `--container-lg` width (1280px) with responsive padding
+  - ✅ Standardized on `--container` width (1280px) with responsive padding
   - ✅ Replaced 18+ duplicated container/centering patterns across components:
     - `Header.astro` (removed `.header-container`)
     - `Footer.astro` (removed `.footer-container`)
@@ -44,11 +44,31 @@ This phase is done
   - ✅ `SponsorsList.astro`: Removed `.tier`, `.tier-logos`, `.sponsor-link` classes, use semantic `<article>` with `data-tier` attributes
   - Benefits: Cleaner HTML (removed 15+ wrapper classes), less CSS, better semantics, easier to maintain
 
-- [ ] **Prefer simple semantic selectors over classes**
-  - Leverage Astro's scoped CSS - use `h1`, `h2`, `section`, `article` instead of creating classes
-  - Example: `h1 { }` instead of `.hero-title { }` when scope is clear
-  - Only add classes when targeting multiple elements of same type with different styles
-  - Benefits: Less class naming overhead, cleaner markup, Astro scoping provides isolation
+- [x] **Prefer simple semantic selectors over classes**
+  - ✅ `Header.astro`: Removed `.logo-link`, `.logo`, `.desktop-nav`, `.mobile-menu`, `.burger`, `.burger-line`, `.mobile-nav` classes
+    - Desktop nav uses `nav:first-of-type` selector
+    - Mobile menu uses `details`, `summary`, `summary > span` selectors
+    - Burger animation now targets semantic elements with pseudo-selectors
+  - ✅ `Footer.astro`: Removed `.logo`, `.footer-nav`, `.contact`, `.email`, `.social-links`, `.social-link` classes
+    - Nav uses semantic `nav` selector
+    - Contact section uses `footer > :global(.container) > div` selector
+    - Social links use nested div selectors
+  - ✅ `Hero.astro`: Removed `.hero` class, refactored highlight classes to data attributes
+    - Section uses semantic `section` selector
+    - Changed `.highlight-purple` and `.highlight-pink` to `strong[data-color="purple"]` and `strong[data-color="pink"]`
+    - Kept slideshow classes (needed for different animations on multiple Picture elements)
+  - ✅ `Venue.astro`: Removed `.venue` class, uses semantic `section` selector throughout
+  - ✅ `Sponsors.astro`: Removed `.sponsors` class, uses semantic `section` selector
+  - ✅ `PreviousEvents.astro`: Removed `.previous-events` class, uses semantic `section` selector
+  - ✅ `SponsorsList.astro`: Removed `.sponsors-list` and `.subtitle` classes
+    - Section uses semantic `section` selector
+    - Subtitle uses `section > :global(.container) > p` selector
+  - ✅ `SponsorLogo.astro`: Removed `.sponsor-link` and `.sponsor-logo` classes
+    - Uses semantic `a`, `div`, and `img` selectors
+  - ✅ `live.astro`: Cleaned up unused classes (`.current-sessions-section`, `.info-card`, `.content-grid`)
+    - Uses semantic `section`, `table`, `td`, `a` selectors
+    - Better structured CSS with section:first-child for current sessions
+  - Benefits: Removed 20+ unnecessary classes, cleaner HTML markup, better use of Astro's scoped CSS, easier to maintain
 
 - [x] **Refactor Button component to use data attributes**
   - ✅ Removed `.btn` class entirely from Button component
@@ -81,30 +101,23 @@ This phase is done
 
 ### Content Collections
 
-- [ ] **Migrate team data to Astro content collection**
-  - Create team collection in `src/content/config.ts`:
-    - Type: `'data'` (JSON/YAML files, not MDX)
+- [x] **Migrate team data to Astro content collection**
+  - ✅ Created team collection in `src/content/config.ts`:
+    - Type: `'data'` (JSON array)
     - Schema: Array of objects with `name` (string), `role` (string), `image` (via `image()` helper)
-    - Optional fields for future: `bio`, `social` (LinkedIn, GitHub, Twitter)
-  - Convert hardcoded team array from `team.astro` to a single JSON file
-  - Create `src/content/team/members.json` with all team members in alphabetical order by name:
-    ```json
-    [
-      { "name": "Andreas Grabner", "role": "...", "image": "../../images/team/AndreasGrabner.jpeg" },
-      { "name": "Andreas Taranetz", "role": "...", "image": "../../images/team/AndreasTaranetz.jpg" },
-      { "name": "Daniel Drack", "role": "...", "image": "../../images/team/DanielDrack.jpeg" },
-      ...
-    ]
-    ```
-  - Update `team.astro` to use `getEntry('team', 'members')` (no sorting needed - already alphabetical)
+  - ✅ Created `src/content/team/members.json` with all 8 team members in alphabetical order
+  - ✅ Updated `team.astro` to use `getEntry('team', 'members')`
+  - ✅ Added null check to handle case where entry might be undefined
   - Benefits: Separates data from presentation, single file easier to maintain for small team, alphabetical order is intuitive, type-safe with Zod validation
 
-- [ ] **Document collection usage patterns in AGENTS.md**
-  - When to use collections: Static/semi-static content (team, blog posts, docs)
-  - When NOT to use collections: Dynamic external data (Sessionize speakers - use build-time API fetching)
-  - Collection types: `'content'` (MDX) vs `'data'` (JSON/YAML)
-  - Using `image()` schema helper for validated image paths
-  - File naming conventions for collection entries
+- [x] **Document collection usage patterns in AGENTS.md**
+  - ✅ Added comprehensive "Content Collections" section before "Data Fetching"
+  - ✅ Documented when to use collections vs API fetching
+  - ✅ Explained collection types: `'content'` (MDX) vs `'data'` (JSON/YAML)
+  - ✅ Provided examples of using `image()` schema helper
+  - ✅ Documented file naming conventions and fetching patterns
+  - ✅ Included example of single-file array collection (team) vs multi-file collections
+  - Benefits: Clear guidelines for AI agents and developers on proper collection usage
 
 ### Speaker Image Optimization
 

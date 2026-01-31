@@ -41,7 +41,7 @@ const speakers = await fetchSpeakers();
 			<!-- Speaker modals -->
 			{
 				speakers.map((speaker) => (
-						<div id={`speaker-${speaker.id}`} popover>
+					<div id={`speaker-${speaker.id}`} popover>
 						<header>
 							<div>
 								<img
@@ -69,17 +69,15 @@ const speakers = await fetchSpeakers();
 								✕
 							</button>
 						</header>
-
-							<div>
-								{speaker.bio && (
-									<section>
-										<h3>Bio</h3>
-										<p>{speaker.bio}</p>
-									</section>
-								)}
-
-								{speaker.sessions && speaker.sessions.length > 0 && (
-									<section>
+						<div>
+							{speaker.bio && (
+								<section>
+									<h3>Bio</h3>
+									<p>{speaker.bio}</p>
+								</section>
+							)}
+							{speaker.sessions && speaker.sessions.length > 0 && (
+								<section>
 									<h3>Sessions</h3>
 									<ul>
 										{speaker.sessions.map((session) => (
@@ -96,23 +94,23 @@ const speakers = await fetchSpeakers();
 									</ul>
 								</section>
 							)}
-								<div class="social-links">
-									<h3>Connect</h3>
-									<div class="links-grid">
-										{speaker.links.map((link) => (
-											<a
-												href={link.url}
-												target="_blank"
-												rel="noopener noreferrer"
-												class="social-link"
-												title={link.title}
-											>
-												<span class="link-type">{link.linkType}</span>
-											</a>
-										))}
-									</div>
+							<div class="social-links">
+								<h3>Connect</h3>
+								<div class="links-grid">
+									{speaker.links.map((link) => (
+										<a
+											href={link.url}
+											target="_blank"
+											rel="noopener noreferrer"
+											class="social-link"
+											title={link.title}
+										>
+											<span class="link-type">{link.linkType}</span>
+										</a>
+									))}
 								</div>
-							)}
+							</div>
+							)
 						</div>
 					</div>
 				))
@@ -151,7 +149,7 @@ const speakers = await fetchSpeakers();
 	}
 
 	main > :global(.container) > div > button:hover {
-		transform: translateY(-4px);
+		transform: scale(1.05);
 	}
 
 	main > :global(.container) > div > button:focus-visible {
@@ -183,6 +181,10 @@ const speakers = await fetchSpeakers();
 	}
 
 	/* Modal styles */
+	[popover]:not(:popover-open) {
+		display: none !important;
+	}
+
 	[popover] {
 		margin: auto;
 		padding: 0;
@@ -209,7 +211,6 @@ const speakers = await fetchSpeakers();
 		position: sticky;
 		top: 0;
 		background: var(--color-white);
-		z-index: 1;
 	}
 
 	[popover] header > div {

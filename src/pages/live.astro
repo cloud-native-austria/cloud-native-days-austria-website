@@ -92,47 +92,55 @@ const description = "Everything you need to know at the event.";
 		gap: var(--space-6);
 	}
 
-	main > :global(.container) > div > section:first-child {
-		grid-column: 1 / -1;
+	section {
 		background: var(--color-bg-light);
 		border-radius: var(--radius-md);
 		padding: var(--space-6);
 		text-align: center;
 	}
 
-	.current-sessions-section h2 {
+	section:first-child {
+		grid-column: 1 / -1;
+	}
+
+	section h2 {
 		font-family: var(--font-heading);
 		font-size: 1.5rem;
+		margin-bottom: var(--space-4);
+	}
+
+	section:first-child h2 {
 		margin-bottom: var(--space-6);
 	}
 
-	.current-sessions-section :global(.rooms-grid) {
+	/* CurrentSessions component styles */
+	section:first-child :global(.rooms-grid) {
 		display: grid;
 		grid-template-columns: 1fr 1fr;
 		gap: var(--space-6);
 		margin-bottom: var(--space-6);
 	}
 
-	.current-sessions-section :global(.room-sessions) {
+	section:first-child :global(.room-sessions) {
 		text-align: left;
 	}
 
-	.current-sessions-section :global(.room-sessions h3) {
+	section:first-child :global(.room-sessions h3) {
 		font-family: var(--font-heading);
 		font-size: 1.25rem;
 		margin-bottom: var(--space-4);
 	}
 
-	.current-sessions-section :global(.session) {
+	section:first-child :global(.session) {
 		padding: var(--space-4) 0;
 		border-bottom: 1px solid var(--color-gray-10);
 	}
 
-	.current-sessions-section :global(.session:last-child) {
+	section:first-child :global(.session:last-child) {
 		border-bottom: none;
 	}
 
-	.current-sessions-section :global(.session-time) {
+	section:first-child :global(.session-time) {
 		display: inline-block;
 		background: var(--color-pink);
 		color: var(--color-white);
@@ -143,11 +151,11 @@ const description = "Everything you need to know at the event.";
 		margin-bottom: var(--space-2);
 	}
 
-	.current-sessions-section :global(.session-title) {
+	section:first-child :global(.session-title) {
 		margin-top: var(--space-2);
 	}
 
-	.current-sessions-section :global(.session-title a) {
+	section:first-child :global(.session-title a) {
 		color: var(--color-purple);
 		text-decoration: none;
 		display: -webkit-box;
@@ -156,44 +164,32 @@ const description = "Everything you need to know at the event.";
 		overflow: hidden;
 	}
 
-	.current-sessions-section :global(.session-title a:hover) {
+	section:first-child :global(.session-title a:hover) {
 		color: var(--color-pink);
 	}
 
-	.info-card {
-		background: var(--color-bg-light);
-		border-radius: var(--radius-md);
-		padding: var(--space-6);
-		text-align: center;
-	}
-
-	.info-card h2 {
-		font-family: var(--font-heading);
-		font-size: 1.5rem;
-		margin-bottom: var(--space-4);
-	}
-
-	.info-card table {
+	/* Table styles for Wi-Fi and Emergency sections */
+	table {
 		margin: 0 auto;
 		border-spacing: var(--space-3);
 	}
 
-	.info-card td:first-child {
+	td:first-child {
 		text-align: right;
 		font-weight: 600;
 		padding-right: var(--space-4);
 	}
 
-	.info-card td:last-child {
+	td:last-child {
 		text-align: left;
 	}
 
-	.info-card a {
+	a {
 		color: var(--color-purple);
 		text-decoration: none;
 	}
 
-	.info-card a:hover {
+	a:hover {
 		color: var(--color-pink);
 	}
 
@@ -210,15 +206,15 @@ const description = "Everything you need to know at the event.";
 			font-size: 1rem;
 		}
 
-		.content-grid {
+		main > :global(.container) > div {
 			grid-template-columns: 1fr;
 		}
 
-		.current-sessions-section :global(.rooms-grid) {
+		section:first-child :global(.rooms-grid) {
 			grid-template-columns: 1fr;
 		}
 
-		.info-card table {
+		table {
 			font-size: var(--text-sm);
 		}
 	}

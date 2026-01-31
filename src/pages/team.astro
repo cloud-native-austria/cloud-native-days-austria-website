@@ -1,66 +1,15 @@
 ---
 import { Image } from "astro:assets";
+import { getEntry } from "astro:content";
 import Container from "@components/Container.astro";
 import Layout from "@layouts/Layout.astro";
 
-// Import team member images
-import AndiImage from "@images/team/AndreasGrabner.jpeg";
-import AndreasImage from "@images/team/AndreasTaranetz.jpg";
-import DanielImage from "@images/team/DanielDrack.jpeg";
-import ErikImage from "@images/team/ErikAuer.jpg";
-import JohannesImage from "@images/team/JohannesGrumboeck.jpeg";
-import OctavianImage from "@images/team/OctavianHelm.jpg";
-import PhilippImage from "@images/team/PhilippMaier.jpg";
-import SandraImage from "@images/team/SandraSchadenbauer.jpeg";
-
-interface TeamMember {
-	name: string;
-	role: string;
-	image: ImageMetadata;
+// Fetch team members from content collection
+const teamMembersEntry = await getEntry("team", "members");
+if (!teamMembersEntry) {
+	throw new Error("Team members data not found in content collection");
 }
-
-const teamMembers: TeamMember[] = [
-	{
-		name: "Andreas Grabner",
-		role: "CNCF Ambassador, CNCF Keptn & Dynatrace DevRel",
-		image: AndiImage,
-	},
-	{
-		name: "Andreas Taranetz",
-		role: "Senior Software Engineer, Dynatrace",
-		image: AndreasImage,
-	},
-	{
-		name: "Daniel Drack",
-		role: "I host the community chapter in Graz, Austria",
-		image: DanielImage,
-	},
-	{
-		name: "Erik Auer",
-		role: "CEO, WhizUs",
-		image: ErikImage,
-	},
-	{
-		name: "Johannes Grumböck",
-		role: "Cloud Architect, Red Bull Media House",
-		image: JohannesImage,
-	},
-	{
-		name: "Octavian Helm",
-		role: "Senior Platform Engineer, BearingPoint",
-		image: OctavianImage,
-	},
-	{
-		name: "Philipp Maier",
-		role: "Senior Cloud Engineer, Dynatrace",
-		image: PhilippImage,
-	},
-	{
-		name: "Sandra Schadenbauer",
-		role: "Lecturer, FH JOANNEUM",
-		image: SandraImage,
-	},
-];
+const teamMembers = teamMembersEntry.data;
 ---
 
 <Layout

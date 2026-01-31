@@ -16,17 +16,11 @@ const menuItems = [
 
 <header>
 	<Container>
-		<a href="/" class="logo-link" aria-label="Go to Homepage">
-			<img
-				src="/images/logo.svg"
-				alt="Cloud Native Days Austria"
-				class="logo"
-				width="176"
-				height="48"
-			/>
+		<a href="/" aria-label="Go to Homepage">
+			<img src="/images/logo.svg" alt="Cloud Native Days Austria" width="176" height="48" />
 		</a>
 
-		<nav class="desktop-nav" aria-label="Main navigation">
+		<nav aria-label="Main navigation">
 			<ul>
 				{
 					menuItems.map(({ text, to, homeTo }) => (
@@ -38,11 +32,11 @@ const menuItems = [
 			</ul>
 		</nav>
 
-		<details class="mobile-menu">
-			<summary class="burger" aria-label="Toggle menu">
-				<span class="burger-line"></span>
+		<details>
+			<summary aria-label="Toggle menu">
+				<span></span>
 			</summary>
-			<nav class="mobile-nav" aria-label="Mobile navigation">
+			<nav aria-label="Mobile navigation">
 				<ul>
 					{
 						menuItems.map(({ text, to, homeTo }) => (
@@ -74,24 +68,24 @@ const menuItems = [
 		justify-content: space-between;
 	}
 
-	.logo-link {
+	header > :global(.container) > a {
 		z-index: 60;
 	}
 
-	.logo {
+	header img {
 		height: 48px;
 		width: auto;
 	}
 
 	/* Desktop Navigation */
-	.desktop-nav ul {
+	nav:first-of-type ul {
 		display: flex;
 		gap: var(--space-6);
 		list-style: none;
 		padding: 0;
 	}
 
-	.desktop-nav a {
+	nav:first-of-type a {
 		font-family: var(--font-heading);
 		font-size: var(--text-sm);
 		font-weight: 600;
@@ -100,29 +94,29 @@ const menuItems = [
 		transition: color var(--transition-fast);
 	}
 
-	.desktop-nav a:hover {
+	nav:first-of-type a:hover {
 		color: var(--color-pink);
 	}
 
 	@media (max-width: 768px) {
-		.desktop-nav {
+		nav:first-of-type {
 			display: none;
 		}
 	}
 
 	/* Mobile Menu */
-	.mobile-menu {
+	details {
 		display: none;
 		z-index: 60;
 	}
 
 	@media (max-width: 768px) {
-		.mobile-menu {
+		details {
 			display: block;
 		}
 	}
 
-	.burger {
+	summary {
 		display: flex;
 		align-items: center;
 		justify-content: center;
@@ -132,13 +126,13 @@ const menuItems = [
 		list-style: none;
 	}
 
-	.burger::-webkit-details-marker {
+	summary::-webkit-details-marker {
 		display: none;
 	}
 
-	.burger-line,
-	.burger-line::before,
-	.burger-line::after {
+	summary > span,
+	summary > span::before,
+	summary > span::after {
 		display: block;
 		width: 24px;
 		height: 2px;
@@ -148,40 +142,40 @@ const menuItems = [
 			opacity var(--transition-base);
 	}
 
-	.burger-line {
+	summary > span {
 		position: relative;
 	}
 
-	.burger-line::before,
-	.burger-line::after {
+	summary > span::before,
+	summary > span::after {
 		content: "";
 		position: absolute;
 		left: 0;
 	}
 
-	.burger-line::before {
+	summary > span::before {
 		top: -8px;
 	}
 
-	.burger-line::after {
+	summary > span::after {
 		top: 8px;
 	}
 
 	/* Burger animation when open */
-	.mobile-menu[open] .burger-line {
+	details[open] summary > span {
 		background-color: transparent;
 	}
 
-	.mobile-menu[open] .burger-line::before {
+	details[open] summary > span::before {
 		transform: translateY(8px) rotate(45deg);
 	}
 
-	.mobile-menu[open] .burger-line::after {
+	details[open] summary > span::after {
 		transform: translateY(-8px) rotate(-45deg);
 	}
 
 	/* Mobile Navigation Panel */
-	.mobile-nav {
+	details > nav {
 		position: fixed;
 		top: 81px;
 		left: 0;
@@ -203,7 +197,7 @@ const menuItems = [
 		}
 	}
 
-	.mobile-nav ul {
+	details > nav ul {
 		list-style: none;
 		padding: 0;
 		display: flex;
@@ -211,7 +205,7 @@ const menuItems = [
 		gap: var(--space-6);
 	}
 
-	.mobile-nav a {
+	details > nav a {
 		font-family: var(--font-heading);
 		font-size: var(--text-xl);
 		font-weight: 600;
@@ -221,7 +215,7 @@ const menuItems = [
 		padding: var(--space-2) 0;
 	}
 
-	.mobile-nav a:hover {
+	details > nav a:hover {
 		color: var(--color-pink);
 	}
 </style>

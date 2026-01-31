@@ -33,8 +33,8 @@ interface Link {
 }
 
 const LINKS: Record<string, Link> = {
-  home: { to: '/' },
-  speakers: { to: '/speakers' },
+  home: { to: "/" },
+  speakers: { to: "/speakers" },
 };
 
 export default LINKS;
@@ -364,7 +364,7 @@ Use Astro content collections for **static or semi-static content** that's manag
 
 ```typescript
 const blog = defineCollection({
-  type: 'content',
+  type: "content",
   schema: z.object({
     title: z.string(),
     publishDate: z.date(),
@@ -376,7 +376,7 @@ const blog = defineCollection({
 
 ```typescript
 const team = defineCollection({
-  type: 'data',
+  type: "data",
   schema: ({ image }) =>
     z.object({
       name: z.string(),
@@ -393,10 +393,10 @@ For collections with images, use Astro's `image()` schema helper:
 
 ```typescript
 // src/content/config.ts
-import { defineCollection, z } from 'astro:content';
+import { defineCollection, z } from "astro:content";
 
 const team = defineCollection({
-  type: 'data',
+  type: "data",
   schema: ({ image }) =>
     z.object({
       name: z.string(),
@@ -461,7 +461,7 @@ const speakers = await fetchSpeakers();
 - Data that changes frequently and shouldn't be committed to repo
 - Large datasets that would bloat the repository
 
-**Example: Speakers**
+#### Example: Speakers
 
 - Fetched from Sessionize API at build time
 - Data cached during prebuild step
@@ -473,7 +473,7 @@ The live page polls Sessionize every 30 seconds for current sessions:
 
 ```tsx
 // src/components/CurrentSessions.tsx
-import { useState, useEffect } from 'preact/hooks';
+import { useState, useEffect } from "preact/hooks";
 
 export function CurrentSessions() {
   const [sessions, setSessions] = useState([]);

@@ -86,10 +86,10 @@ function shuffleArray<T>(array: T[]): T[] {
 }
 ---
 
-<section class="sponsors-list">
+<section>
 	<Container>
 		<h2 id="sponsors">Our Sponsors of CNDA 2025</h2>
-		<p class="subtitle">Without them this event wouldn't have been possible</p>
+		<p>Without them this event wouldn't have been possible</p>
 
 		{
 			sponsors.map(({ title, tier, sponsors: tierSponsors }) => (
@@ -115,7 +115,7 @@ function shuffleArray<T>(array: T[]): T[] {
 </section>
 
 <style>
-	.sponsors-list {
+	section {
 		padding: var(--space-12) 0;
 		text-align: center;
 	}
@@ -124,7 +124,7 @@ function shuffleArray<T>(array: T[]): T[] {
 		margin-bottom: var(--space-2);
 	}
 
-	.subtitle {
+	section > :global(.container) > p {
 		color: var(--color-text-light);
 		margin-bottom: var(--space-8);
 	}
