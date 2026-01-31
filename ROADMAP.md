@@ -58,7 +58,9 @@ This document tracks the migration progress from Gatsby to Astro with vanilla CS
   - ✅ `Button.astro` - gradient background, hover scale
   - ✅ `Person.astro` - heptagon clip-path
   - ✅ `SponsorLogo.astro` - image optimization for sponsors
-  - ⏳ Pending: Use Astro `<Image>` component (currently using `<img>`)
+  - ✅ Migrated `Hero.astro` and `Venue.astro` to use Astro `<Picture>` component
+  - ℹ️ Note: Logos (Header, Footer, SponsorLogo, SponsorsList) stay as `<img>` - served from `public/`
+  - ℹ️ Note: Speaker images stay as `<img>` - optimized during caching from Sessionize
   - ⏳ Pending deletion: `src/components/shared/button/`, `src/components/shared/person/`, `src/components/shared/link/`
 
 ### Phase 3: Pages
@@ -129,43 +131,168 @@ This document tracks the migration progress from Gatsby to Astro with vanilla CS
   - ✅ Updated `fetchSpeakers()` to use cached data
   - Benefits: Faster loading, no runtime dependency on Sessionize CDN, better control
 
-- [ ] **Migrate from `<img>` to Astro `<Picture>` component**
-  - Components needing update:
-    - `SponsorLogo.astro` - sponsor logos (priority)
-    - `Hero.astro` - slideshow images
-    - `Header.astro` - logo
-    - `Footer.astro` - logo
-    - `Venue.astro` - venue image
-    - `SponsorsList.astro` - sponsor logos
+- [x] **Migrate from `<img>` to Astro `<Picture>` component**
+  - ✅ `SponsorLogo.astro` - replaced `<img>` with `<Picture>` for sponsor logos
+  - ✅ `Hero.astro` - already using `<Picture>` for slideshow images
+  - ✅ `Venue.astro` - already using `<Picture>` for venue image
+  - ✅ `SponsorsList.astro` - replaced `<img>` with `<Picture>` for sponsor logos
   - Note: Speaker images use `<img>` as they're served from `public/` (already optimized during caching)
   - `<Picture>` generates multiple formats (WebP, AVIF) with proper fallbacks for better browser compatibility
   - Ensures automatic image optimization, lazy loading, and responsive srcsets
 
-- [ ] **Simplify breakpoints to single mobile breakpoint**
-  - Reduce from 5 breakpoints to 1 (e.g., `--breakpoint-mobile: 768px`)
-  - Use CSS container queries (`@container`) for component-level responsiveness
-  - Update `global.css` to remove unused breakpoint variables
-  - Audit existing components and convert media queries to container queries where appropriate
+- [x] **Simplify breakpoints to single mobile breakpoint**
+  - ✅ Reduced from multiple breakpoints (767px, 1023px) to single 768px breakpoint
+  - ✅ Updated `global.css` to use 768px for responsive typography
+  - ✅ Standardized all media queries across components to use 768px consistently
+  - ✅ Introduced CSS container queries in `Hero.astro` for component-level responsiveness
+  - ✅ Verified dev server runs without errors
+  - Benefits: Simpler responsive design, more consistent breakpoints, better component encapsulation with container queries
 
-- [ ] **Audit and remove unnecessary CSS rules**
-  - Remove superfluous font-size declarations (rely on semantic HTML defaults where possible)
-  - Consolidate duplicate spacing values
-  - Remove unused CSS custom properties from `global.css`
-  - Check for redundant color definitions
-  - Ensure only actively used design tokens remain
+- [x] **Audit and remove unnecessary CSS rules**
+  - ✅ Removed unused CSS custom properties from `global.css`:
+    - Unused colors: `--color-teal`, `--color-blue`, `--color-text-muted`, `--color-bg-muted`, `--color-gray-1`, `--color-gray-6`, `--color-gray-9`, `--color-gray-12`
+    - Unused text sizes: `--text-6xl`, `--text-8xl`
+    - Unused spacing: `--space-24`
+    - Unused containers: `--container-sm`, `--container-xl`
+    - Unused shadows: `--shadow-xl`
+    - Unused transitions: `--transition-slow`
+  - ✅ Fixed undefined CSS variables in `live.astro` (`--color-gray-light` → `--color-bg-light`, `--color-gray` → `--color-gray-10`)
+  - ✅ Replaced hardcoded `white` color with `var(--color-white)` in `live.astro`
+  - ✅ Verified build and dev server work correctly after changes
+  - Benefits: Cleaner CSS, faster parsing, no undefined variables, better maintainability
+
+## Future Improvements
+
+### CSS Architecture Refactoring
+
+- [ ] **Create Container utility component**
+  - Create `src/components/Container.astro` for unified centering pattern
+  - Standardize on current `--container-lg` width (1280px)
+  - Replace 18+ duplicated container/centering patterns across components:
+    - `Header.astro` (`.header-container`)
+    - `Footer.astro` (`.footer-container`)
+    - `Hero.astro` (`.hero-container`)
+    - `Venue.astro` (`.venue`)
+    - `Sponsors.astro` (`.sponsors`)
+    - `SponsorsList.astro` (`.sponsors-list`)
+    - `PreviousEvents.astro` (`.previous-events`)
+    - `speakers.astro` (`.container`)
+    - `team.astro` (`.container`)
+    - `live.astro` (`.live-page`)
+  - Remove global `.container` class from `src/styles/global.css` once utility component is adopted
+  - Benefits: DRY principle, consistent centering, easier maintenance
+
+- [ ] **Remove wrapper divs and prefer semantic element styling**
+  - `live.astro`: Remove `.live-page` wrapper div, style `<main>` directly
+  - `team.astro`: Remove unnecessary `.team-section` and `.container` nesting
+  - `speakers.astro`: Simplify `.speakers-grid` to target semantic elements
+  - Section components: Remove inner container divs (`.hero-container`, etc.) - apply centering to `<section>` directly using Container component
+  - Benefits: Cleaner HTML, less CSS, better semantics
+
+- [ ] **Prefer simple semantic selectors over classes**
+  - Leverage Astro's scoped CSS - use `h1`, `h2`, `section`, `article` instead of creating classes
+  - Example: `h1 { }` instead of `.hero-title { }` when scope is clear
+  - Only add classes when targeting multiple elements of same type with different styles
+  - Benefits: Less class naming overhead, cleaner markup, Astro scoping provides isolation
+
+- [ ] **Refactor Button component to use data attributes**
+  - Replace `btn`, `btn-${variant}`, `btn-${size}` class pattern
+  - Use `data-variant="primary"` and `data-size="md"` attributes instead
+  - Update CSS selectors: `.btn[data-variant="primary"]` instead of `.btn-primary`
+  - Benefits: Semantic HTML, clearer intent, easier to maintain
+
+- [ ] **Delete legacy Tailwind CSS files**
+  - Remove `src/styles/container.css` (uses `@apply` directive)
+  - Remove `src/styles/content.css` (uses `@apply` directive)
+  - Remove `src/styles/safe-paddings.css` (uses `@apply` directive)
+  - Remove `src/styles/main.css` (imports Tailwind CSS)
+  - These files contradict the vanilla CSS migration goal
+  - Note: These files exist but are NOT currently imported in the Astro project
+
+- [ ] **Audit and remove unused global utilities**
+  - Check if `.visually-hidden` is used anywhere (grep found no usage)
+  - Check if `.gradient-text` is used anywhere (grep found no usage)
+  - Remove if unused, or document if intentionally kept for future use
+  - Keep `.heptagon` - legitimate utility used in team.astro and speakers.astro
+  - Benefits: Minimal global.css, only essential design tokens and utilities
+
+### Content Collections
+
+- [ ] **Migrate team data to Astro content collection**
+  - Create team collection in `src/content/config.ts`:
+    - Type: `'data'` (JSON/YAML files, not MDX)
+    - Schema: `name` (string), `role` (string), `image` (via `image()` helper), `order` (number)
+    - Optional fields for future: `bio`, `social` (LinkedIn, GitHub, Twitter)
+  - Convert hardcoded team array from `team.astro` to individual JSON files
+  - Create `src/content/team/` directory with one JSON file per team member:
+    - `andreas-grabner.json`
+    - `andreas-taranetz.json`
+    - `daniel-drack.json`
+    - `erik-auer.json`
+    - `johannes-grumboeck.json`
+    - `octavian-helm.json`
+    - `philipp-maier.json`
+    - `sandra-schadenbauer.json`
+  - Update `team.astro` to use `getCollection('team')` and sort by `order` field
+  - Benefits: Separates data from presentation, easier to maintain team roster, type-safe with Zod validation
+
+- [ ] **Document collection usage patterns in AGENTS.md**
+  - When to use collections: Static/semi-static content (team, blog posts, docs)
+  - When NOT to use collections: Dynamic external data (Sessionize speakers - use build-time API fetching)
+  - Collection types: `'content'` (MDX) vs `'data'` (JSON/YAML)
+  - Using `image()` schema helper for validated image paths
+  - File naming conventions for collection entries
+
+### Speaker Image Optimization
+
+- [ ] **Eliminate speaker image pre-downloading**
+  - Current approach downloads 100+ speaker images during prebuild
+  - Adds complexity: ~70 lines of download logic in `sessionize.ts` and `cache-sessionize.ts`
+  - Build already depends on Sessionize API being available
+  - Astro can optimize remote images directly at build time
+
+- [ ] **Configure remote image optimization in astro.config.ts**
+  - Add `image.remotePatterns` configuration:
+    ```typescript
+    image: {
+      remotePatterns: [{ protocol: 'https' }];
+    }
+    ```
+  - Allows Astro to fetch and optimize images from any HTTPS URL at build time
+  - Consider restricting to specific domains for security if needed
+
+- [ ] **Remove image download logic from sessionize utilities**
+  - Delete `getExtensionFromMimeType()` function from `src/lib/sessionize.ts` (lines 66-77)
+  - Delete `downloadAndSaveImage()` function from `src/lib/sessionize.ts` (lines 82-87)
+  - Remove image download loop from `scripts/cache-sessionize.ts` (lines 108-125)
+  - Remove `localProfilePicture` field from `Speaker` interface
+  - Simplify caching script to only cache speaker data JSON
+
+- [ ] **Update speakers page to use Astro Image component**
+  - Replace plain `<img>` tags with Astro's `<Image>` component
+  - Use `speaker.profilePicture` (remote URL) directly
+  - Add `width={180}`, `height={180}`, `format="webp"` props
+  - Benefits:
+    - Automatic WebP/AVIF conversion
+    - Responsive srcset generation
+    - Lazy loading optimization
+    - Layout shift prevention
+    - Simpler codebase (~70 lines removed)
+    - Consistent with team page approach
+    - No manual image download complexity
 
 ## Design Tokens Reference
 
-### Colors
+### Colors (Active)
 
 | Token            | Value     | Usage                   |
 | ---------------- | --------- | ----------------------- |
 | `--color-purple` | `#531CB3` | Primary brand, links    |
 | `--color-pink`   | `#E30282` | Secondary accent, hover |
 | `--color-orange` | `#FFBC42` | Tertiary accent         |
-| `--color-teal`   | `#0DD8B5` | Accent                  |
-| `--color-blue`   | `#0086FF` | Accent                  |
 | `--color-text`   | `#262F59` | Body text               |
+
+_Note: Removed unused color tokens (teal, blue) during CSS audit._
 
 ### Typography
 
@@ -196,9 +323,6 @@ After full migration, these Gatsby-specific files/folders should be removed:
 - `src/constants/menus.js` (replaced with `menus.ts`)
 - `src/constants/sessionize-app.js` (replaced with `sessionize-app.ts`)
 - `src/constants/seo-data.js`
-
-### Pending Deletion ⏳
-
 - `gatsby-browser.js`
 - `gatsby-config.js`
 - `gatsby-node.js`
@@ -211,6 +335,10 @@ After full migration, these Gatsby-specific files/folders should be removed:
 - `src/components/shared/` (all subfolders)
 - `src/components/pages/` (all subfolders)
 - `src/pages/_old_*.jsx` files (renamed from original `.jsx`)
+
+### Pending Deletion ⏳
+
+**None** - All Gatsby-specific files have been removed
 
 ---
 

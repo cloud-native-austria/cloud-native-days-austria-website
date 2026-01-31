@@ -82,26 +82,18 @@
   --color-purple: #531cb3;
   --color-pink: #e30282;
   --color-orange: #ffbc42;
-  --color-teal: #0dd8b5;
-  --color-blue: #0086ff;
 
   /* Text Colors */
   --color-text: #262f59;
   --color-text-light: rgba(38, 47, 89, 0.8);
-  --color-text-muted: rgba(38, 47, 89, 0.3);
 
   /* Background Colors */
   --color-white: #ffffff;
   --color-black: #000000;
   --color-bg-light: rgba(38, 47, 89, 0.03);
-  --color-bg-muted: rgba(38, 47, 89, 0.1);
 
   /* Gray Scale */
-  --color-gray-1: #0d0d0d;
-  --color-gray-6: #666666;
-  --color-gray-9: #cccccc;
   --color-gray-10: #e6e6e6;
-  --color-gray-12: #f5f5f5;
 
   /* Typography */
   --font-body: 'Plus Jakarta Sans', system-ui, sans-serif;
@@ -117,9 +109,7 @@
   --text-3xl: 1.75rem; /* 28px */
   --text-4xl: 2.25rem; /* 36px */
   --text-5xl: 2.5rem; /* 40px */
-  --text-6xl: 3.125rem; /* 50px */
   --text-7xl: 3.5rem; /* 56px */
-  --text-8xl: 5rem; /* 80px */
 
   /* Spacing */
   --space-1: 0.25rem; /* 4px */
@@ -133,13 +123,10 @@
   --space-12: 3rem; /* 48px */
   --space-16: 4rem; /* 64px */
   --space-20: 5rem; /* 80px */
-  --space-24: 6rem; /* 96px */
 
   /* Container Widths */
-  --container-sm: 800px;
   --container-md: 1008px;
   --container-lg: 1216px;
-  --container-xl: 1472px;
 
   /* Border Radius */
   --radius-sm: 0.25rem;
@@ -149,12 +136,10 @@
 
   /* Shadows */
   --shadow-lg: 0px 14px 20px rgba(38, 47, 89, 0.1);
-  --shadow-xl: 0px 15px 40px #999999;
 
   /* Transitions */
   --transition-fast: 150ms ease;
   --transition-base: 200ms ease;
-  --transition-slow: 300ms ease;
 
   /* Gradients */
   --gradient-brand: linear-gradient(
@@ -349,17 +334,7 @@ a:hover {
    Responsive Typography
    -------------------------------------------------------------------------- */
 
-@media (max-width: 1023px) {
-  h1 {
-    font-size: var(--text-5xl);
-  }
-
-  h2 {
-    font-size: var(--text-4xl);
-  }
-}
-
-@media (max-width: 767px) {
+@media (max-width: 768px) {
   :root {
     --text-base: 1rem;
   }

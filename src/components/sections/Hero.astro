@@ -1,4 +1,5 @@
 ---
+import { Picture } from 'astro:assets';
 import adrianajosh from '@images/home/adriana-josh.webp';
 import crowd from '@images/home/crowd.webp';
 import hands from '@images/home/hands.webp';
@@ -29,16 +30,28 @@ import orgs from '@images/home/orgs.webp';
       class="slideshow"
       aria-label="View photos from previous events"
     >
-      <img src={adrianajosh.src} alt="Two speakers giving a talk" class="slide slide-1" />
-      <img
-        src={hands.src}
+      <Picture
+        src={adrianajosh}
+        alt="Two speakers giving a talk"
+        formats={['avif', 'webp']}
+        class="slide slide-1"
+      />
+      <Picture
+        src={hands}
         alt="The audience answering a speaker's question by a show of hands"
+        formats={['avif', 'webp']}
         class="slide slide-2"
       />
-      <img src={orgs.src} alt="The organizers of the event" class="slide slide-3" />
-      <img
-        src={crowd.src}
+      <Picture
+        src={orgs}
+        alt="The organizers of the event"
+        formats={['avif', 'webp']}
+        class="slide slide-3"
+      />
+      <Picture
+        src={crowd}
         alt="Attendees networking and talking to each other"
+        formats={['avif', 'webp']}
         class="slide slide-4"
       />
     </a>
@@ -48,6 +61,8 @@ import orgs from '@images/home/orgs.webp';
 <style>
   .hero {
     padding: var(--space-12) 0;
+    container-type: inline-size;
+    container-name: hero;
   }
 
   .hero-container {
@@ -66,9 +81,13 @@ import orgs from '@images/home/orgs.webp';
     }
   }
 
-  @media (max-width: 1023px) {
+  @container hero (max-width: 1024px) {
     .hero-container {
       flex-direction: column;
+    }
+
+    .hero-content {
+      max-width: 100%;
     }
   }
 
@@ -77,12 +96,6 @@ import orgs from '@images/home/orgs.webp';
     display: flex;
     flex-direction: column;
     gap: var(--space-4);
-  }
-
-  @media (max-width: 1023px) {
-    .hero-content {
-      max-width: 100%;
-    }
   }
 
   .hero-content h1 {
@@ -108,7 +121,7 @@ import orgs from '@images/home/orgs.webp';
     border-radius: var(--radius-md);
   }
 
-  @media (max-width: 767px) {
+  @media (max-width: 768px) {
     .slideshow {
       height: 300px;
     }
@@ -117,6 +130,11 @@ import orgs from '@images/home/orgs.webp';
   .slide {
     position: absolute;
     inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  .slide img {
     width: 100%;
     height: 100%;
     object-fit: cover;

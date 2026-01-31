@@ -1,4 +1,5 @@
 ---
+import { Picture } from 'astro:assets';
 import venueImage from '@images/home/venue.webp';
 ---
 
@@ -7,7 +8,11 @@ import venueImage from '@images/home/venue.webp';
 
   <div class="venue-content">
     <div class="venue-image">
-      <img src={venueImage.src} alt="CDN Austria Venue - Cineplexx Wienerberg" />
+      <Picture
+        src={venueImage}
+        alt="CDN Austria Venue - Cineplexx Wienerberg"
+        formats={['avif', 'webp']}
+      />
       <a href="https://maps.app.goo.gl/Q22METdvy3f1GFfx8" target="_blank" rel="noopener noreferrer">
         <strong>Cineplexx Wienerberg</strong>
         <span>Wienerbergstraße 11, 1100 Wien</span>
@@ -62,7 +67,7 @@ import venueImage from '@images/home/venue.webp';
     align-items: flex-start;
   }
 
-  @media (max-width: 767px) {
+  @media (max-width: 768px) {
     .venue-content {
       flex-direction: column;
     }
@@ -124,7 +129,7 @@ import venueImage from '@images/home/venue.webp';
     color: var(--color-pink);
   }
 
-  @media (max-width: 767px) {
+  @media (max-width: 768px) {
     .venue-description {
       text-align: left;
     }

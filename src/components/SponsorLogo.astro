@@ -1,4 +1,6 @@
 ---
+import { Picture } from 'astro:assets';
+
 interface Props {
   name: string;
   logo: string;
@@ -22,23 +24,23 @@ const size = sizes[tier];
 {
   url ? (
     <a href={url} target="_blank" rel="noopener noreferrer" class="sponsor-link" aria-label={name}>
-      <img
+      <Picture
         src={logo}
         alt={name}
         width={size}
-        loading="lazy"
-        decoding="async"
+        height={size}
+        formats={['avif', 'webp']}
         class="sponsor-logo"
       />
     </a>
   ) : (
     <div class="sponsor-link">
-      <img
+      <Picture
         src={logo}
         alt={name}
         width={size}
-        loading="lazy"
-        decoding="async"
+        height={size}
+        formats={['avif', 'webp']}
         class="sponsor-logo"
       />
     </div>

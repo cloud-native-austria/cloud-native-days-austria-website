@@ -12,7 +12,7 @@ console.log('🚀 Starting Sessionize data caching...\n');
 
 try {
   await cacheSpeakersData();
-  console.log('\n✅ Sesionize data cached successfully!');
+  console.log('\n✅ Sessionize data cached successfully!');
   process.exit(0);
 } catch (error) {
   console.error('\n❌ Failed to cache Sessionize data:', error);

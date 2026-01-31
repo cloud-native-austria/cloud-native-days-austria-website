@@ -1,4 +1,6 @@
 ---
+import { Picture } from 'astro:assets';
+
 // Sponsor data - logos are served from public/images/sponsors/
 const sponsors = [
   {
@@ -100,7 +102,7 @@ function shuffleArray<T>(array: T[]): T[] {
               class="sponsor-link"
               aria-label={name}
             >
-              <img src={logo} alt={name} loading="lazy" decoding="async" />
+              <Picture src={logo} alt={name} width={200} height={100} formats={['avif', 'webp']} />
             </a>
           ))}
         </div>
@@ -178,7 +180,7 @@ function shuffleArray<T>(array: T[]): T[] {
     max-width: 140px;
   }
 
-  @media (max-width: 767px) {
+  @media (max-width: 768px) {
     .sponsor-link {
       width: 50%;
     }

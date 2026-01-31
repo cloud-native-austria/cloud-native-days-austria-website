@@ -9,17 +9,10 @@ import Button from '@components/Button.astro';
 ---
 
 <Layout title="Page Not Found | CNDA 2025" description="The page you're looking for doesn't exist.">
-  <div class="error-page">
-    <div class="error-content">
-      <h1 class="error-code">404</h1>
-      <h2 class="error-title">Page Not Found</h2>
-      <p class="error-message">The page you're looking for doesn't exist or has been moved.</p>
-      <div class="error-actions">
-        <Button href="/" variant="primary">Go to Homepage</Button>
-        <Button href="/speakers" variant="secondary">View Speakers</Button>
-      </div>
-    </div>
-  </div>
+  <h1 class="error-code">404</h1>
+  <h2 class="error-title">Page Not Found</h2>
+  <p class="error-message">The page you're looking for doesn't exist or has been moved.</p>
+  <Button href="/" variant="primary">Go to Homepage</Button>
 </Layout>
 
 <style>
