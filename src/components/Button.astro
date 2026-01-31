@@ -1,101 +1,103 @@
 ---
 interface Props {
-  href?: string;
-  variant?: 'primary' | 'link';
-  size?: 'sm' | 'md' | 'lg';
-  external?: boolean;
-  class?: string;
+	href?: string;
+	variant?: "primary" | "link";
+	size?: "sm" | "md" | "lg";
+	external?: boolean;
+	class?: string;
 }
 
 const {
-  href,
-  variant = 'primary',
-  size = 'md',
-  external = false,
-  class: className = '',
+	href,
+	variant = "primary",
+	size = "md",
+	external = false,
+	class: className = "",
 } = Astro.props;
 
-const Tag = href ? 'a' : 'button';
-const externalAttrs = external ? { target: '_blank', rel: 'noopener noreferrer' } : {};
+const Tag = href ? "a" : "button";
+const externalAttrs = external ? { target: "_blank", rel: "noopener noreferrer" } : {};
 ---
 
 <Tag
-  href={href}
-  class:list={['btn', `btn-${variant}`, `btn-${size}`, className]}
-  {...externalAttrs}
+	href={href}
+	data-variant={variant}
+	data-size={size}
+	class:list={["btn", className]}
+	{...externalAttrs}
 >
-  <slot />
+	<slot />
 </Tag>
 
 <style>
-  .btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    font-family: var(--font-heading);
-    font-weight: 600;
-    text-decoration: none;
-    border: none;
-    cursor: pointer;
-    transition:
-      transform var(--transition-fast),
-      opacity var(--transition-fast);
-  }
+	.btn {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		font-family: var(--font-heading);
+		font-weight: 600;
+		text-decoration: none;
+		border: none;
+		cursor: pointer;
+		transition:
+			transform var(--transition-fast),
+			opacity var(--transition-fast);
+	}
 
-  .btn:hover {
-    transform: scale(1.05);
-  }
+	.btn:hover {
+		transform: scale(1.05);
+	}
 
-  .btn:active {
-    transform: scale(0.98);
-  }
+	.btn:active {
+		transform: scale(0.98);
+	}
 
-  /* Primary variant - gradient background */
-  .btn-primary {
-    background: var(--gradient-brand);
-    background-size: 200% 100%;
-    color: var(--color-white);
-    border-radius: var(--radius-full);
-    transition:
-      background-position var(--transition-base),
-      transform var(--transition-fast);
-  }
+	/* Primary variant - gradient background */
+	.btn[data-variant="primary"] {
+		background: var(--gradient-brand);
+		background-size: 200% 100%;
+		color: var(--color-white);
+		border-radius: var(--radius-full);
+		transition:
+			background-position var(--transition-base),
+			transform var(--transition-fast);
+	}
 
-  .btn-primary:hover {
-    background-position: 100% 0;
-  }
+	.btn[data-variant="primary"]:hover {
+		background-position: 100% 0;
+	}
 
-  /* Link variant - text only */
-  .btn-link {
-    background: none;
-    color: var(--color-text);
-    padding: 0;
-  }
+	/* Link variant - text only */
+	.btn[data-variant="link"] {
+		background: none;
+		color: var(--color-text);
+		padding: 0;
+	}
 
-  .btn-link:hover {
-    color: var(--color-pink);
-  }
+	.btn[data-variant="link"]:hover {
+		color: var(--color-pink);
+	}
 
-  /* Sizes */
-  .btn-sm {
-    font-size: var(--text-sm);
-    padding: var(--space-2) var(--space-4);
-  }
+	/* Sizes */
+	.btn[data-size="sm"] {
+		font-size: var(--text-sm);
+		padding: var(--space-2) var(--space-4);
+	}
 
-  .btn-md {
-    font-size: var(--text-base);
-    padding: var(--space-3) var(--space-6);
-  }
+	.btn[data-size="md"] {
+		font-size: var(--text-base);
+		padding: var(--space-3) var(--space-6);
+	}
 
-  .btn-lg {
-    font-size: var(--text-lg);
-    padding: var(--space-4) var(--space-8);
-  }
+	.btn[data-size="lg"] {
+		font-size: var(--text-lg);
+		padding: var(--space-4) var(--space-8);
+	}
 
-  /* Link variant ignores padding */
-  .btn-link.btn-sm,
-  .btn-link.btn-md,
-  .btn-link.btn-lg {
-    padding: var(--space-1) var(--space-2);
-  }
+	/* Link variant ignores padding */
+	.btn[data-variant="link"][data-size="sm"],
+	.btn[data-variant="link"][data-size="md"],
+	.btn[data-variant="link"][data-size="lg"] {
+		padding: var(--space-1) var(--space-2);
+	}
 </style>

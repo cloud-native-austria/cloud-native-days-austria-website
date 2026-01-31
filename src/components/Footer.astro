@@ -1,237 +1,230 @@
 ---
+import Container from "@components/Container.astro";
+
 const footerLinks = [
-  {
-    text: 'Code of Conduct',
-    to: 'https://events.linuxfoundation.org/about/code-of-conduct/',
-    external: true,
-  },
-  { text: 'Team', to: '/team' },
-  { text: 'Impressum & Data Privacy', to: '/imprint-and-data-privacy', external: true },
+	{
+		text: "Code of Conduct",
+		to: "https://events.linuxfoundation.org/about/code-of-conduct/",
+		external: true,
+	},
+	{ text: "Team", to: "/team" },
+	{ text: "Impressum & Data Privacy", to: "/imprint-and-data-privacy", external: true },
 ];
 
 const socialLinks = [
-  {
-    label: 'LinkedIn',
-    url: 'https://www.linkedin.com/company/cndaustria/',
-    icon: 'linkedin',
-  },
-  {
-    label: 'Google Maps',
-    url: 'https://maps.app.goo.gl/ow5DQBEXz6MJCyB97',
-    icon: 'maps',
-  },
-  {
-    label: 'YouTube',
-    url: 'https://www.youtube.com/channel/UCs8vJuX9OkkXObKb5VCkYfA',
-    icon: 'youtube',
-  },
+	{
+		label: "LinkedIn",
+		url: "https://www.linkedin.com/company/cndaustria/",
+		icon: "linkedin",
+	},
+	{
+		label: "Google Maps",
+		url: "https://maps.app.goo.gl/ow5DQBEXz6MJCyB97",
+		icon: "maps",
+	},
+	{
+		label: "YouTube",
+		url: "https://www.youtube.com/channel/UCs8vJuX9OkkXObKb5VCkYfA",
+		icon: "youtube",
+	},
 ];
 ---
 
 <footer>
-  <div class="footer-container">
-    <a href="/" class="logo-link" aria-label="Go to Homepage">
-      <img
-        src="/images/logo.svg"
-        alt="Cloud Native Days Austria"
-        class="logo"
-        width="176"
-        height="32"
-      />
-    </a>
+	<Container>
+		<a href="/" class="logo-link" aria-label="Go to Homepage">
+			<img
+				src="/images/logo.svg"
+				alt="Cloud Native Days Austria"
+				class="logo"
+				width="176"
+				height="32"
+			/>
+		</a>
 
-    <nav class="footer-nav" aria-label="Footer navigation">
-      {
-        footerLinks.map(({ text, to, external }) => (
-          <a
-            href={to}
-            target={external ? '_blank' : undefined}
-            rel={external ? 'noopener noreferrer' : undefined}
-          >
-            {text}
-          </a>
-        ))
-      }
-    </nav>
+		<nav class="footer-nav" aria-label="Footer navigation">
+			{
+				footerLinks.map(({ text, to, external }) => (
+					<a
+						href={to}
+						target={external ? "_blank" : undefined}
+						rel={external ? "noopener noreferrer" : undefined}
+					>
+						{text}
+					</a>
+				))
+			}
+		</nav>
 
-    <div class="contact">
-      <a href="mailto:organizers@cloudnativedays.at" class="email">
-        organizers@cloudnativedays.at
-      </a>
+		<div class="contact">
+			<a href="mailto:organizers@cloudnativedays.at" class="email">
+				organizers@cloudnativedays.at
+			</a>
 
-      <div class="social-links">
-        {
-          socialLinks.map(({ label, url, icon }) => (
-            <a
-              href={url}
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label={label}
-              class="social-link"
-            >
-              {icon === 'linkedin' && (
-                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                  <path
-                    d="M4.29739 15.6914H1.17509V5.60414H4.29739V15.6914ZM2.72136 4.28314C1.70165 4.28314 0.875 3.44975 0.875 2.42187C0.875 1.39388 1.70177 0.560547 2.72136 0.560547C3.74095 0.560547 4.56761 1.39388 4.56761 2.42187C4.56766 3.44981 3.74101 4.28314 2.72136 4.28314ZM15.9982 15.6914H12.891V10.3964C12.891 8.94416 12.3394 8.1335 11.1911 8.1335C9.94128 8.1335 9.28837 8.97781 9.28837 10.3964V15.6914H6.29373V5.60414H9.28837V6.96272C9.28837 6.96272 10.1892 5.29645 12.3281 5.29645C14.467 5.29645 15.9982 6.60249 15.9982 9.30429L15.9982 15.6914Z"
-                    fill="currentColor"
-                  />
-                </svg>
-              )}
-              {icon === 'maps' && (
-                <svg
-                  width="16"
-                  height="16"
-                  viewBox="-116.685 -278.925 1011.27 1673.55"
-                  aria-hidden="true"
-                >
-                  <g fill="none">
-                    <path
-                      fill="#34A853"
-                      d="M214.3 826.7c34.5 43.1 69.5 97.1 87.9 129.8 22.4 42.5 31.6 71.2 48.3 122.4 9.8 28.2 19 36.8 38.5 36.8 21.3 0 31-14.4 38.5-36.8 15.5-48.3 27.6-85 46.5-120.1 37.3-67.2 84.5-127 130.4-184.4 12.6-16.1 93.1-110.9 129.3-186.1 0 0 44.2-82.2 44.2-197.1 0-107.4-43.7-182.1-43.7-182.1L607.8 243l-77 202.2-19 27.6-4 5.2-5.2 6.3-8.6 10.3-12.6 12.6-68.4 55.7-170.6 98.8z"
-                    />
-                    <path
-                      fill="#FBBC04"
-                      d="M37.9 574.5c41.9 95.4 121.8 178.7 176.4 252.2l289-342.4s-40.8 53.4-114.3 53.4c-82.2 0-148.8-65.5-148.8-148.2 0-56.9 33.9-95.9 33.9-95.9l-196 52.3z"
-                    />
-                    <path
-                      fill="#4285F4"
-                      d="M506.7 17.8c95.9 31 178.1 95.9 227.5 191.9l-231 275.2s33.9-39.6 33.9-95.9c0-84.5-71.2-148.2-148.2-148.2-73 0-114.9 52.9-114.9 52.9V120.1z"
-                    />
-                    <path
-                      fill="#1A73E8"
-                      d="M90.7 139c57.4-68.4 158-139 297-139C454.9 0 506 17.8 506 17.8L274 293.6H109.7z"
-                    />
-                    <path
-                      fill="#EA4335"
-                      d="M37.9 574.5S0 499.2 0 390.7c0-102.8 40.2-192.5 91.3-251.1l183.3 154.5z"
-                    />
-                  </g>
-                </svg>
-              )}
-              {icon === 'youtube' && (
-                <svg width="20" height="16" viewBox="0 0 24 22" fill="none" aria-hidden="true">
-                  <path
-                    d="M12.5317 19.5904L7.60784 19.5003C6.0136 19.4689 4.41539 19.5315 2.85241 19.2062C0.474754 18.7202 0.306312 16.3371 0.130056 14.3381C-0.112807 11.5278 -0.0187875 8.66643 0.439526 5.87957C0.69826 4.31584 1.71648 3.38275 3.29112 3.28122C8.6067 2.91272 13.9576 2.95639 19.2614 3.12831C19.8216 3.14407 20.3856 3.23021 20.9379 3.32826C23.6643 3.80647 23.7308 6.50708 23.9076 8.78048C24.0838 11.0773 24.0094 13.386 23.6725 15.6672C23.4022 17.556 22.8851 19.14 20.7028 19.2929C17.9686 19.4928 15.2971 19.6538 12.5552 19.6025C12.5553 19.5904 12.5395 19.5904 12.5317 19.5904ZM9.63694 14.8085C11.6974 13.6247 13.7186 12.4606 15.7673 11.2848C13.703 10.101 11.6857 8.93688 9.63694 7.76102V14.8085Z"
-                    fill="#FF0000"
-                  />
-                </svg>
-              )}
-            </a>
-          ))
-        }
-      </div>
-    </div>
-  </div>
+			<div class="social-links">
+				{
+					socialLinks.map(({ label, url, icon }) => (
+						<a
+							href={url}
+							target="_blank"
+							rel="noopener noreferrer"
+							aria-label={label}
+							class="social-link"
+						>
+							{icon === "linkedin" && (
+								<svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+									<path
+										d="M4.29739 15.6914H1.17509V5.60414H4.29739V15.6914ZM2.72136 4.28314C1.70165 4.28314 0.875 3.44975 0.875 2.42187C0.875 1.39388 1.70177 0.560547 2.72136 0.560547C3.74095 0.560547 4.56761 1.39388 4.56761 2.42187C4.56766 3.44981 3.74101 4.28314 2.72136 4.28314ZM15.9982 15.6914H12.891V10.3964C12.891 8.94416 12.3394 8.1335 11.1911 8.1335C9.94128 8.1335 9.28837 8.97781 9.28837 10.3964V15.6914H6.29373V5.60414H9.28837V6.96272C9.28837 6.96272 10.1892 5.29645 12.3281 5.29645C14.467 5.29645 15.9982 6.60249 15.9982 9.30429L15.9982 15.6914Z"
+										fill="currentColor"
+									/>
+								</svg>
+							)}
+							{icon === "maps" && (
+								<svg
+									width="16"
+									height="16"
+									viewBox="-116.685 -278.925 1011.27 1673.55"
+									aria-hidden="true"
+								>
+									<g fill="none">
+										<path
+											fill="#34A853"
+											d="M214.3 826.7c34.5 43.1 69.5 97.1 87.9 129.8 22.4 42.5 31.6 71.2 48.3 122.4 9.8 28.2 19 36.8 38.5 36.8 21.3 0 31-14.4 38.5-36.8 15.5-48.3 27.6-85 46.5-120.1 37.3-67.2 84.5-127 130.4-184.4 12.6-16.1 93.1-110.9 129.3-186.1 0 0 44.2-82.2 44.2-197.1 0-107.4-43.7-182.1-43.7-182.1L607.8 243l-77 202.2-19 27.6-4 5.2-5.2 6.3-8.6 10.3-12.6 12.6-68.4 55.7-170.6 98.8z"
+										/>
+										<path
+											fill="#FBBC04"
+											d="M37.9 574.5c41.9 95.4 121.8 178.7 176.4 252.2l289-342.4s-40.8 53.4-114.3 53.4c-82.2 0-148.8-65.5-148.8-148.2 0-56.9 33.9-95.9 33.9-95.9l-196 52.3z"
+										/>
+										<path
+											fill="#4285F4"
+											d="M506.7 17.8c95.9 31 178.1 95.9 227.5 191.9l-231 275.2s33.9-39.6 33.9-95.9c0-84.5-71.2-148.2-148.2-148.2-73 0-114.9 52.9-114.9 52.9V120.1z"
+										/>
+										<path
+											fill="#1A73E8"
+											d="M90.7 139c57.4-68.4 158-139 297-139C454.9 0 506 17.8 506 17.8L274 293.6H109.7z"
+										/>
+										<path
+											fill="#EA4335"
+											d="M37.9 574.5S0 499.2 0 390.7c0-102.8 40.2-192.5 91.3-251.1l183.3 154.5z"
+										/>
+									</g>
+								</svg>
+							)}
+							{icon === "youtube" && (
+								<svg width="20" height="16" viewBox="0 0 24 22" fill="none" aria-hidden="true">
+									<path
+										d="M12.5317 19.5904L7.60784 19.5003C6.0136 19.4689 4.41539 19.5315 2.85241 19.2062C0.474754 18.7202 0.306312 16.3371 0.130056 14.3381C-0.112807 11.5278 -0.0187875 8.66643 0.439526 5.87957C0.69826 4.31584 1.71648 3.38275 3.29112 3.28122C8.6067 2.91272 13.9576 2.95639 19.2614 3.12831C19.8216 3.14407 20.3856 3.23021 20.9379 3.32826C23.6643 3.80647 23.7308 6.50708 23.9076 8.78048C24.0838 11.0773 24.0094 13.386 23.6725 15.6672C23.4022 17.556 22.8851 19.14 20.7028 19.2929C17.9686 19.4928 15.2971 19.6538 12.5552 19.6025C12.5553 19.5904 12.5395 19.5904 12.5317 19.5904ZM9.63694 14.8085C11.6974 13.6247 13.7186 12.4606 15.7673 11.2848C13.703 10.101 11.6857 8.93688 9.63694 7.76102V14.8085Z"
+										fill="#FF0000"
+									/>
+								</svg>
+							)}
+						</a>
+					))
+				}
+			</div>
+		</div>
+	</Container>
 </footer>
 
 <style>
-  footer {
-    border-top: 1px solid var(--color-gray-10);
-    padding: var(--space-4) 0;
-  }
+	footer {
+		border-top: 1px solid var(--color-gray-10);
+		padding: var(--space-4) 0;
+	}
 
-  .footer-container {
-    max-width: var(--container-lg);
-    margin-inline: auto;
-    padding-inline: var(--space-4);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: var(--space-6);
-  }
+	footer :global(.container) {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: var(--space-6);
+	}
 
-  @media (min-width: 768px) {
-    .footer-container {
-      padding-inline: var(--space-8);
-    }
-  }
+	@media (max-width: 768px) {
+		footer :global(.container) {
+			flex-direction: column;
+			text-align: center;
+		}
+	}
 
-  @media (max-width: 768px) {
-    .footer-container {
-      flex-direction: column;
-      text-align: center;
-    }
-  }
+	.logo {
+		height: 32px;
+		width: auto;
+	}
 
-  .logo {
-    height: 32px;
-    width: auto;
-  }
+	.footer-nav {
+		display: flex;
+		gap: var(--space-4);
+	}
 
-  .footer-nav {
-    display: flex;
-    gap: var(--space-4);
-  }
+	@media (max-width: 768px) {
+		.footer-nav {
+			flex-direction: column;
+			gap: var(--space-2);
+		}
+	}
 
-  @media (max-width: 768px) {
-    .footer-nav {
-      flex-direction: column;
-      gap: var(--space-2);
-    }
-  }
+	.footer-nav a {
+		font-family: var(--font-heading);
+		font-size: var(--text-xs);
+		font-weight: 600;
+		color: var(--color-text);
+		text-decoration: none;
+		transition: color var(--transition-fast);
+	}
 
-  .footer-nav a {
-    font-family: var(--font-heading);
-    font-size: var(--text-xs);
-    font-weight: 600;
-    color: var(--color-text);
-    text-decoration: none;
-    transition: color var(--transition-fast);
-  }
+	.footer-nav a:hover {
+		color: var(--color-pink);
+	}
 
-  .footer-nav a:hover {
-    color: var(--color-pink);
-  }
+	.contact {
+		text-align: right;
+	}
 
-  .contact {
-    text-align: right;
-  }
+	@media (max-width: 768px) {
+		.contact {
+			text-align: center;
+		}
+	}
 
-  @media (max-width: 768px) {
-    .contact {
-      text-align: center;
-    }
-  }
+	.email {
+		font-size: var(--text-sm);
+		color: var(--color-text);
+		text-decoration: none;
+		display: block;
+		margin-bottom: var(--space-2);
+		transition: color var(--transition-fast);
+	}
 
-  .email {
-    font-size: var(--text-sm);
-    color: var(--color-text);
-    text-decoration: none;
-    display: block;
-    margin-bottom: var(--space-2);
-    transition: color var(--transition-fast);
-  }
+	.email:hover {
+		color: var(--color-pink);
+	}
 
-  .email:hover {
-    color: var(--color-pink);
-  }
+	.social-links {
+		display: flex;
+		gap: var(--space-4);
+		justify-content: flex-end;
+	}
 
-  .social-links {
-    display: flex;
-    gap: var(--space-4);
-    justify-content: flex-end;
-  }
+	@media (max-width: 768px) {
+		.social-links {
+			justify-content: center;
+		}
+	}
 
-  @media (max-width: 768px) {
-    .social-links {
-      justify-content: center;
-    }
-  }
+	.social-link {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		color: var(--color-text);
+		transition: transform var(--transition-fast);
+	}
 
-  .social-link {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--color-text);
-    transition: transform var(--transition-fast);
-  }
+	.social-link:hover {
+		transform: scale(1.1);
+	}
 
-  .social-link:hover {
-    transform: scale(1.1);
-  }
-
-  .social-link svg {
-    width: 16px;
-    height: 16px;
-  }
+	.social-link svg {
+		width: 16px;
+		height: 16px;
+	}
 </style>

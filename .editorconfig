@@ -1,0 +1,30 @@
+# EditorConfig is awesome: https://EditorConfig.org
+
+# Top-most EditorConfig file
+root = true
+
+# All files
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+indent_style = tab
+indent_size = 2
+
+# YAML files (require spaces)
+[*.{yml,yaml}]
+indent_style = space
+
+# Markdown files (preserve trailing spaces for line breaks)
+[*.md]
+indent_style = space
+trim_trailing_whitespace = false
+
+# TypeScript/JavaScript files
+[*.{ts,tsx,js,jsx,mjs,cjs}]
+max_line_length = 100
+
+# Astro files
+[*.astro]
+max_line_length = 100

@@ -1,233 +1,227 @@
 ---
+import Container from "@components/Container.astro";
+
 interface Props {
-  homepage?: boolean;
+	homepage?: boolean;
 }
 
 const { homepage = false } = Astro.props;
 
 const menuItems = [
-  { text: 'Speakers', to: '/speakers' },
-  { text: 'Venue', to: '/#venue', homeTo: '/' },
-  { text: 'Sponsors', to: '/#sponsors', homeTo: '/' },
+	{ text: "Speakers", to: "/speakers" },
+	{ text: "Venue", to: "/#venue", homeTo: "/" },
+	{ text: "Sponsors", to: "/#sponsors", homeTo: "/" },
 ];
 ---
 
 <header>
-  <div class="header-container">
-    <a href="/" class="logo-link" aria-label="Go to Homepage">
-      <img
-        src="/images/logo.svg"
-        alt="Cloud Native Days Austria"
-        class="logo"
-        width="176"
-        height="48"
-      />
-    </a>
+	<Container>
+		<a href="/" class="logo-link" aria-label="Go to Homepage">
+			<img
+				src="/images/logo.svg"
+				alt="Cloud Native Days Austria"
+				class="logo"
+				width="176"
+				height="48"
+			/>
+		</a>
 
-    <nav class="desktop-nav" aria-label="Main navigation">
-      <ul>
-        {
-          menuItems.map(({ text, to, homeTo }) => (
-            <li>
-              <a href={homepage && homeTo ? homeTo : to}>{text}</a>
-            </li>
-          ))
-        }
-      </ul>
-    </nav>
+		<nav class="desktop-nav" aria-label="Main navigation">
+			<ul>
+				{
+					menuItems.map(({ text, to, homeTo }) => (
+						<li>
+							<a href={homepage && homeTo ? homeTo : to}>{text}</a>
+						</li>
+					))
+				}
+			</ul>
+		</nav>
 
-    <details class="mobile-menu">
-      <summary class="burger" aria-label="Toggle menu">
-        <span class="burger-line"></span>
-      </summary>
-      <nav class="mobile-nav" aria-label="Mobile navigation">
-        <ul>
-          {
-            menuItems.map(({ text, to, homeTo }) => (
-              <li>
-                <a href={homepage && homeTo ? homeTo : to}>{text}</a>
-              </li>
-            ))
-          }
-        </ul>
-      </nav>
-    </details>
-  </div>
+		<details class="mobile-menu">
+			<summary class="burger" aria-label="Toggle menu">
+				<span class="burger-line"></span>
+			</summary>
+			<nav class="mobile-nav" aria-label="Mobile navigation">
+				<ul>
+					{
+						menuItems.map(({ text, to, homeTo }) => (
+							<li>
+								<a href={homepage && homeTo ? homeTo : to}>{text}</a>
+							</li>
+						))
+					}
+				</ul>
+			</nav>
+		</details>
+	</Container>
 </header>
 
 <style>
-  header {
-    position: sticky;
-    top: 0;
-    z-index: 50;
-    background: rgba(255, 255, 255, 0.95);
-    backdrop-filter: blur(8px);
-    border-bottom: 1px solid var(--color-gray-10);
-  }
+	header {
+		position: sticky;
+		top: 0;
+		z-index: 50;
+		background: rgba(255, 255, 255, 0.95);
+		backdrop-filter: blur(8px);
+		border-bottom: 1px solid var(--color-gray-10);
+		padding: var(--space-4) 0;
+	}
 
-  .header-container {
-    max-width: var(--container-lg);
-    margin-inline: auto;
-    padding: var(--space-4) var(--space-4);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
+	header :global(.container) {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+	}
 
-  @media (min-width: 768px) {
-    .header-container {
-      padding-inline: var(--space-8);
-    }
-  }
+	.logo-link {
+		z-index: 60;
+	}
 
-  .logo-link {
-    z-index: 60;
-  }
+	.logo {
+		height: 48px;
+		width: auto;
+	}
 
-  .logo {
-    height: 48px;
-    width: auto;
-  }
+	/* Desktop Navigation */
+	.desktop-nav ul {
+		display: flex;
+		gap: var(--space-6);
+		list-style: none;
+		padding: 0;
+	}
 
-  /* Desktop Navigation */
-  .desktop-nav ul {
-    display: flex;
-    gap: var(--space-6);
-    list-style: none;
-    padding: 0;
-  }
+	.desktop-nav a {
+		font-family: var(--font-heading);
+		font-size: var(--text-sm);
+		font-weight: 600;
+		color: var(--color-text);
+		text-decoration: none;
+		transition: color var(--transition-fast);
+	}
 
-  .desktop-nav a {
-    font-family: var(--font-heading);
-    font-size: var(--text-sm);
-    font-weight: 600;
-    color: var(--color-text);
-    text-decoration: none;
-    transition: color var(--transition-fast);
-  }
+	.desktop-nav a:hover {
+		color: var(--color-pink);
+	}
 
-  .desktop-nav a:hover {
-    color: var(--color-pink);
-  }
+	@media (max-width: 768px) {
+		.desktop-nav {
+			display: none;
+		}
+	}
 
-  @media (max-width: 768px) {
-    .desktop-nav {
-      display: none;
-    }
-  }
+	/* Mobile Menu */
+	.mobile-menu {
+		display: none;
+		z-index: 60;
+	}
 
-  /* Mobile Menu */
-  .mobile-menu {
-    display: none;
-    z-index: 60;
-  }
+	@media (max-width: 768px) {
+		.mobile-menu {
+			display: block;
+		}
+	}
 
-  @media (max-width: 768px) {
-    .mobile-menu {
-      display: block;
-    }
-  }
+	.burger {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 44px;
+		height: 44px;
+		cursor: pointer;
+		list-style: none;
+	}
 
-  .burger {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 44px;
-    height: 44px;
-    cursor: pointer;
-    list-style: none;
-  }
+	.burger::-webkit-details-marker {
+		display: none;
+	}
 
-  .burger::-webkit-details-marker {
-    display: none;
-  }
+	.burger-line,
+	.burger-line::before,
+	.burger-line::after {
+		display: block;
+		width: 24px;
+		height: 2px;
+		background-color: var(--color-text);
+		transition:
+			transform var(--transition-base),
+			opacity var(--transition-base);
+	}
 
-  .burger-line,
-  .burger-line::before,
-  .burger-line::after {
-    display: block;
-    width: 24px;
-    height: 2px;
-    background-color: var(--color-text);
-    transition:
-      transform var(--transition-base),
-      opacity var(--transition-base);
-  }
+	.burger-line {
+		position: relative;
+	}
 
-  .burger-line {
-    position: relative;
-  }
+	.burger-line::before,
+	.burger-line::after {
+		content: "";
+		position: absolute;
+		left: 0;
+	}
 
-  .burger-line::before,
-  .burger-line::after {
-    content: '';
-    position: absolute;
-    left: 0;
-  }
+	.burger-line::before {
+		top: -8px;
+	}
 
-  .burger-line::before {
-    top: -8px;
-  }
+	.burger-line::after {
+		top: 8px;
+	}
 
-  .burger-line::after {
-    top: 8px;
-  }
+	/* Burger animation when open */
+	.mobile-menu[open] .burger-line {
+		background-color: transparent;
+	}
 
-  /* Burger animation when open */
-  .mobile-menu[open] .burger-line {
-    background-color: transparent;
-  }
+	.mobile-menu[open] .burger-line::before {
+		transform: translateY(8px) rotate(45deg);
+	}
 
-  .mobile-menu[open] .burger-line::before {
-    transform: translateY(8px) rotate(45deg);
-  }
+	.mobile-menu[open] .burger-line::after {
+		transform: translateY(-8px) rotate(-45deg);
+	}
 
-  .mobile-menu[open] .burger-line::after {
-    transform: translateY(-8px) rotate(-45deg);
-  }
+	/* Mobile Navigation Panel */
+	.mobile-nav {
+		position: fixed;
+		top: 81px;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		background: var(--color-white);
+		padding: var(--space-8);
+		animation: slideIn var(--transition-base);
+	}
 
-  /* Mobile Navigation Panel */
-  .mobile-nav {
-    position: fixed;
-    top: 81px;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: var(--color-white);
-    padding: var(--space-8);
-    animation: slideIn var(--transition-base);
-  }
+	@keyframes slideIn {
+		from {
+			opacity: 0;
+			transform: translateY(-10px);
+		}
+		to {
+			opacity: 1;
+			transform: translateY(0);
+		}
+	}
 
-  @keyframes slideIn {
-    from {
-      opacity: 0;
-      transform: translateY(-10px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
+	.mobile-nav ul {
+		list-style: none;
+		padding: 0;
+		display: flex;
+		flex-direction: column;
+		gap: var(--space-6);
+	}
 
-  .mobile-nav ul {
-    list-style: none;
-    padding: 0;
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-6);
-  }
+	.mobile-nav a {
+		font-family: var(--font-heading);
+		font-size: var(--text-xl);
+		font-weight: 600;
+		color: var(--color-text);
+		text-decoration: none;
+		display: block;
+		padding: var(--space-2) 0;
+	}
 
-  .mobile-nav a {
-    font-family: var(--font-heading);
-    font-size: var(--text-xl);
-    font-weight: 600;
-    color: var(--color-text);
-    text-decoration: none;
-    display: block;
-    padding: var(--space-2) 0;
-  }
-
-  .mobile-nav a:hover {
-    color: var(--color-pink);
-  }
+	.mobile-nav a:hover {
+		color: var(--color-pink);
+	}
 </style>

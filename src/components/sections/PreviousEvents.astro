@@ -1,80 +1,79 @@
 ---
-import Button from '@components/Button.astro';
+import Container from "@components/Container.astro";
+import Button from "@components/Button.astro";
 ---
 
 <section class="previous-events">
-  <h2>Previous Events</h2>
-  <p>Thank you all for making the Cloud Native Days Austria 2025 a fantastic event!</p>
-  <p>In case you want to review previous events, check out the following links:</p>
+	<Container class="previous-events-wrapper">
+		<h2>Previous Events</h2>
+		<p>Thank you all for making the Cloud Native Days Austria 2025 a fantastic event!</p>
+		<p>In case you want to review previous events, check out the following links:</p>
 
-  <div class="event">
-    <h3>Cloud Native Days Austria 2025</h3>
-    <div class="buttons">
-      <Button href="https://www.picdrop.com/giselataschner-carl-hohenbalken/bzmm9YBJW2" external>
-        Photos of the event
-      </Button>
-      <Button
-        href="https://youtube.com/playlist?list=PLtLBTEzR4SqU9GwgWiaDt10-yOVIN0nzM&si=yQP0zXuHcyH01bHq"
-        external
-      >
-        Recordings of the talks
-      </Button>
-    </div>
-  </div>
+		<div class="event">
+			<h3>Cloud Native Days Austria 2025</h3>
+			<div class="buttons">
+				<Button href="https://www.picdrop.com/giselataschner-carl-hohenbalken/bzmm9YBJW2" external>
+					Photos of the event
+				</Button>
+				<Button
+					href="https://youtube.com/playlist?list=PLtLBTEzR4SqU9GwgWiaDt10-yOVIN0nzM&si=yQP0zXuHcyH01bHq"
+					external
+				>
+					Recordings of the talks
+				</Button>
+			</div>
+		</div>
 
-  <div class="event">
-    <h3>Kubernetes Community Days Austria 2023 & 2024</h3>
-    <div class="buttons">
-      <Button
-        href="https://youtube.com/playlist?list=PLtLBTEzR4SqWKGuUBiRm_IuRZf2--CCDt&si=7ZkAV333DhWSpHp0"
-        external
-      >
-        Recordings of 2023
-      </Button>
-      <Button
-        href="https://www.youtube.com/playlist?list=PLtLBTEzR4SqXICiZEESHcElCqQYgjmfYR"
-        external
-      >
-        Recordings of 2024
-      </Button>
-    </div>
-  </div>
+		<div class="event">
+			<h3>Kubernetes Community Days Austria 2023 & 2024</h3>
+			<div class="buttons">
+				<Button
+					href="https://youtube.com/playlist?list=PLtLBTEzR4SqWKGuUBiRm_IuRZf2--CCDt&si=7ZkAV333DhWSpHp0"
+					external
+				>
+					Recordings of 2023
+				</Button>
+				<Button
+					href="https://www.youtube.com/playlist?list=PLtLBTEzR4SqXICiZEESHcElCqQYgjmfYR"
+					external
+				>
+					Recordings of 2024
+				</Button>
+			</div>
+		</div>
+	</Container>
 </section>
 
 <style>
-  .previous-events {
-    max-width: var(--container-md);
-    margin-inline: auto;
-    padding: var(--space-12) var(--space-4);
-    text-align: center;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: var(--space-4);
-  }
+	.previous-events {
+		padding: var(--space-12) 0;
+	}
 
-  @media (min-width: 768px) {
-    .previous-events {
-      padding-inline: var(--space-8);
-    }
-  }
+	.previous-events-wrapper {
+		max-width: var(--container-md);
+		text-align: center;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: var(--space-4);
+	}
 
-  h2 {
-    margin-bottom: var(--space-2);
-  }
+	h2 {
+		margin-bottom: var(--space-2);
+	}
 
-  .event {
-    margin-top: var(--space-4);
-  }
+	.event {
+		margin-top: var(--space-4);
+	}
 
-  h3 {
-    margin-bottom: var(--space-4);
-  }
+	h3 {
+		margin-bottom: var(--space-4);
+	}
 
-  .buttons {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: var(--space-2);
-  }
+	.buttons {
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: center;
+		gap: var(--space-2);
+	}
 </style>

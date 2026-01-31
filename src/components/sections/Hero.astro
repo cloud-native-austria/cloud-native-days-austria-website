@@ -1,228 +1,220 @@
 ---
-import { Picture } from 'astro:assets';
-import adrianajosh from '@images/home/adriana-josh.webp';
-import crowd from '@images/home/crowd.webp';
-import hands from '@images/home/hands.webp';
-import orgs from '@images/home/orgs.webp';
+import Container from "@components/Container.astro";
+import { Picture } from "astro:assets";
+import adrianajosh from "@images/home/adriana-josh.webp";
+import crowd from "@images/home/crowd.webp";
+import hands from "@images/home/hands.webp";
+import orgs from "@images/home/orgs.webp";
 ---
 
 <section class="hero">
-  <div class="hero-container">
-    <div class="hero-content">
-      <h1>Cloud Native Days Austria</h1>
-      <p>
-        <strong class="highlight-purple">Mark your calendars!</strong>
-        <br />
-        On September <strong class="highlight-pink">29th and 30th</strong>, 2026 the Cloud Native
-        community will gather in Vienna, Austria. We will spend two days filled with exciting talks,
-        networking and partying.
-      </p>
-      <p>
-        Cloud Native Days Austria is a conference aimed at developers, platform people, and other IT
-        professionals interested in cloud native technologies.
-      </p>
-    </div>
+	<Container>
+		<div class="hero-content">
+			<h1>Cloud Native Days Austria</h1>
+			<p>
+				<strong class="highlight-purple">Mark your calendars!</strong>
+				<br />
+				On September <strong class="highlight-pink">29th and 30th</strong>, 2026 the Cloud Native
+				community will gather in Vienna, Austria. We will spend two days filled with exciting talks,
+				networking and partying.
+			</p>
+			<p>
+				Cloud Native Days Austria is a conference aimed at developers, platform people, and other IT
+				professionals interested in cloud native technologies.
+			</p>
+		</div>
 
-    <a
-      href="https://www.picdrop.com/giselataschner-carl-hohenbalken/bzmm9YBJW2"
-      target="_blank"
-      rel="noopener noreferrer"
-      class="slideshow"
-      aria-label="View photos from previous events"
-    >
-      <Picture
-        src={adrianajosh}
-        alt="Two speakers giving a talk"
-        formats={['avif', 'webp']}
-        class="slide slide-1"
-      />
-      <Picture
-        src={hands}
-        alt="The audience answering a speaker's question by a show of hands"
-        formats={['avif', 'webp']}
-        class="slide slide-2"
-      />
-      <Picture
-        src={orgs}
-        alt="The organizers of the event"
-        formats={['avif', 'webp']}
-        class="slide slide-3"
-      />
-      <Picture
-        src={crowd}
-        alt="Attendees networking and talking to each other"
-        formats={['avif', 'webp']}
-        class="slide slide-4"
-      />
-    </a>
-  </div>
+		<a
+			href="https://www.picdrop.com/giselataschner-carl-hohenbalken/bzmm9YBJW2"
+			target="_blank"
+			rel="noopener noreferrer"
+			class="slideshow"
+			aria-label="View photos from previous events"
+		>
+			<Picture
+				src={adrianajosh}
+				alt="Two speakers giving a talk"
+				formats={["avif", "webp"]}
+				class="slide slide-1"
+			/>
+			<Picture
+				src={hands}
+				alt="The audience answering a speaker's question by a show of hands"
+				formats={["avif", "webp"]}
+				class="slide slide-2"
+			/>
+			<Picture
+				src={orgs}
+				alt="The organizers of the event"
+				formats={["avif", "webp"]}
+				class="slide slide-3"
+			/>
+			<Picture
+				src={crowd}
+				alt="Attendees networking and talking to each other"
+				formats={["avif", "webp"]}
+				class="slide slide-4"
+			/>
+		</a>
+	</Container>
 </section>
 
 <style>
-  .hero {
-    padding: var(--space-12) 0;
-    container-type: inline-size;
-    container-name: hero;
-  }
+	.hero {
+		padding: var(--space-12) 0;
+		container-type: inline-size;
+		container-name: hero;
+	}
 
-  .hero-container {
-    max-width: var(--container-lg);
-    margin-inline: auto;
-    padding-inline: var(--space-4);
-    display: flex;
-    gap: var(--space-8);
-    justify-content: space-between;
-    align-items: center;
-  }
+	.hero :global(.container) {
+		display: flex;
+		gap: var(--space-8);
+		justify-content: space-between;
+		align-items: center;
+	}
 
-  @media (min-width: 768px) {
-    .hero-container {
-      padding-inline: var(--space-8);
-    }
-  }
+	@container hero (max-width: 1024px) {
+		.hero :global(.container) {
+			flex-direction: column;
+		}
 
-  @container hero (max-width: 1024px) {
-    .hero-container {
-      flex-direction: column;
-    }
+		.hero-content {
+			max-width: 100%;
+		}
+	}
 
-    .hero-content {
-      max-width: 100%;
-    }
-  }
+	.hero-content {
+		max-width: 580px;
+		display: flex;
+		flex-direction: column;
+		gap: var(--space-4);
+	}
 
-  .hero-content {
-    max-width: 580px;
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-4);
-  }
+	.hero-content h1 {
+		text-align: start;
+		margin-bottom: 0;
+	}
 
-  .hero-content h1 {
-    text-align: start;
-    margin-bottom: 0;
-  }
+	.highlight-purple {
+		color: var(--color-purple);
+	}
 
-  .highlight-purple {
-    color: var(--color-purple);
-  }
+	.highlight-pink {
+		color: var(--color-pink);
+	}
 
-  .highlight-pink {
-    color: var(--color-pink);
-  }
+	/* Slideshow */
+	.slideshow {
+		position: relative;
+		width: 100%;
+		max-width: 500px;
+		height: 450px;
+		overflow: hidden;
+		border-radius: var(--radius-md);
+	}
 
-  /* Slideshow */
-  .slideshow {
-    position: relative;
-    width: 100%;
-    max-width: 500px;
-    height: 450px;
-    overflow: hidden;
-    border-radius: var(--radius-md);
-  }
+	@media (max-width: 768px) {
+		.slideshow {
+			height: 300px;
+		}
+	}
 
-  @media (max-width: 768px) {
-    .slideshow {
-      height: 300px;
-    }
-  }
+	.slide {
+		position: absolute;
+		inset: 0;
+		width: 100%;
+		height: 100%;
+	}
 
-  .slide {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-  }
+	.slide img {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+	}
 
-  .slide img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
+	.slide-1 {
+		animation: slide1 10s ease-in-out infinite;
+	}
 
-  .slide-1 {
-    animation: slide1 10s ease-in-out infinite;
-  }
+	.slide-2 {
+		animation: slide2 10s ease-in-out infinite;
+	}
 
-  .slide-2 {
-    animation: slide2 10s ease-in-out infinite;
-  }
+	.slide-3 {
+		animation: slide3 10s ease-in-out infinite;
+	}
 
-  .slide-3 {
-    animation: slide3 10s ease-in-out infinite;
-  }
+	.slide-4 {
+		animation: slide4 10s ease-in-out infinite;
+	}
 
-  .slide-4 {
-    animation: slide4 10s ease-in-out infinite;
-  }
+	@keyframes slide1 {
+		0%,
+		20%,
+		100% {
+			transform: translateX(0);
+			opacity: 1;
+		}
+		25% {
+			transform: translateX(500px);
+			opacity: 0;
+		}
+		95% {
+			transform: translateX(-500px);
+			opacity: 0;
+		}
+	}
 
-  @keyframes slide1 {
-    0%,
-    20%,
-    100% {
-      transform: translateX(0);
-      opacity: 1;
-    }
-    25% {
-      transform: translateX(500px);
-      opacity: 0;
-    }
-    95% {
-      transform: translateX(-500px);
-      opacity: 0;
-    }
-  }
+	@keyframes slide2 {
+		0%,
+		20% {
+			transform: translateX(-500px);
+			opacity: 0;
+		}
+		25%,
+		45% {
+			transform: translateX(0);
+			opacity: 1;
+		}
+		50%,
+		100% {
+			transform: translateX(500px);
+			opacity: 0;
+		}
+	}
 
-  @keyframes slide2 {
-    0%,
-    20% {
-      transform: translateX(-500px);
-      opacity: 0;
-    }
-    25%,
-    45% {
-      transform: translateX(0);
-      opacity: 1;
-    }
-    50%,
-    100% {
-      transform: translateX(500px);
-      opacity: 0;
-    }
-  }
+	@keyframes slide3 {
+		0%,
+		45% {
+			transform: translateX(-500px);
+			opacity: 0;
+		}
+		50%,
+		70% {
+			transform: translateX(0);
+			opacity: 1;
+		}
+		75%,
+		100% {
+			transform: translateX(500px);
+			opacity: 0;
+		}
+	}
 
-  @keyframes slide3 {
-    0%,
-    45% {
-      transform: translateX(-500px);
-      opacity: 0;
-    }
-    50%,
-    70% {
-      transform: translateX(0);
-      opacity: 1;
-    }
-    75%,
-    100% {
-      transform: translateX(500px);
-      opacity: 0;
-    }
-  }
-
-  @keyframes slide4 {
-    0%,
-    70% {
-      transform: translateX(-500px);
-      opacity: 0;
-    }
-    75%,
-    95% {
-      transform: translateX(0);
-      opacity: 1;
-    }
-    100% {
-      transform: translateX(500px);
-      opacity: 0;
-    }
-  }
+	@keyframes slide4 {
+		0%,
+		70% {
+			transform: translateX(-500px);
+			opacity: 0;
+		}
+		75%,
+		95% {
+			transform: translateX(0);
+			opacity: 1;
+		}
+		100% {
+			transform: translateX(500px);
+			opacity: 0;
+		}
+	}
 </style>

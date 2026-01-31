@@ -4,8 +4,6 @@ formerly known as KCD (Kubernetes Community Days) Austria
 
 Website for the Cloud Native Days Austria available at [cloudnativedays.at](https://cloudnativedays.at).
 
-> **Note**: This project is being migrated from Gatsby to Astro. See [ROADMAP.md](./ROADMAP.md) for migration progress.
-
 > Forked from [KCDMunich/website](https://github.com/KCDMunich/website) -> Thank you! :)
 
 ## Table of Contents

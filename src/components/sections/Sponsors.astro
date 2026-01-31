@@ -1,71 +1,70 @@
 ---
-import Button from '@components/Button.astro';
+import Container from "@components/Container.astro";
+import Button from "@components/Button.astro";
 ---
 
 <section class="sponsors">
-  <h2 id="call-for-sponsors">Call for Sponsors</h2>
+	<Container class="sponsors-wrapper">
+		<h2 id="call-for-sponsors">Call for Sponsors</h2>
 
-  <p>
-    Join us in making Cloud Native Days Austria a memorable and impactful event for all attendees.
-    To explore sponsorship opportunities, please don't hesitate to get in touch with us today. Your
-    support will help us create an unforgettable experience for the community while enhancing your
-    brand's visibility and recognition. Contact us at{' '}
-    <a href="mailto:organizers@cloudnativedays.at"> organizers@cloudnativedays.at </a>
-  </p>
+		<p>
+			Join us in making Cloud Native Days Austria a memorable and impactful event for all attendees.
+			To explore sponsorship opportunities, please don't hesitate to get in touch with us today.
+			Your support will help us create an unforgettable experience for the community while enhancing
+			your brand's visibility and recognition. Contact us at{" "}
+			<a href="mailto:organizers@cloudnativedays.at"> organizers@cloudnativedays.at </a>
+		</p>
 
-  <div class="buttons">
-    <Button href="/files/CND-Austria-2026-sponsor-prospectus.pdf" external>
-      Information Slides
-    </Button>
-    <Button href="/files/CND-Austria-2026-sponsor-agreement-form.pdf" external>
-      Agreement Form
-    </Button>
-    <Button href="mailto:organizers@cloudnativedays.at"> Get in touch </Button>
-  </div>
+		<div class="buttons">
+			<Button href="/files/CND-Austria-2026-sponsor-prospectus.pdf" external>
+				Information Slides
+			</Button>
+			<Button href="/files/CND-Austria-2026-sponsor-agreement-form.pdf" external>
+				Agreement Form
+			</Button>
+			<Button href="mailto:organizers@cloudnativedays.at"> Get in touch </Button>
+		</div>
+	</Container>
 </section>
 
 <style>
-  .sponsors {
-    max-width: var(--container-md);
-    margin-inline: auto;
-    padding: var(--space-12) var(--space-4);
-    text-align: center;
-  }
+	.sponsors {
+		padding: var(--space-12) 0;
+	}
 
-  @media (min-width: 768px) {
-    .sponsors {
-      padding-inline: var(--space-8);
-    }
-  }
+	.sponsors-wrapper {
+		max-width: var(--container-md);
+		text-align: center;
+	}
 
-  h2 {
-    margin-bottom: var(--space-4);
-  }
+	h2 {
+		margin-bottom: var(--space-4);
+	}
 
-  p {
-    margin-bottom: var(--space-6);
-  }
+	p {
+		margin-bottom: var(--space-6);
+	}
 
-  p a {
-    color: var(--color-purple);
-  }
+	p a {
+		color: var(--color-purple);
+	}
 
-  p a:hover {
-    color: var(--color-pink);
-  }
+	p a:hover {
+		color: var(--color-pink);
+	}
 
-  .buttons {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: var(--space-4);
-    margin-bottom: var(--space-12);
-  }
+	.buttons {
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: center;
+		gap: var(--space-4);
+		margin-bottom: var(--space-12);
+	}
 
-  @media (max-width: 768px) {
-    .buttons {
-      flex-direction: column;
-      align-items: stretch;
-    }
-  }
+	@media (max-width: 768px) {
+		.buttons {
+			flex-direction: column;
+			align-items: stretch;
+		}
+	}
 </style>
