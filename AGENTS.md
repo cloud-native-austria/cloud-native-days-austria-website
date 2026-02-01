@@ -343,20 +343,39 @@ bun run preview
 
 ### When to Use Collections
 
-Use Astro content collections for **static or semi-static content** that's managed as files in the repository:
+Use Astro content collections for **content that is static at build time**, regardless of its source:
 
 ✅ **Good candidates for collections:**
 
 - Team members (rarely changes, managed by developers)
+- **Speakers** (semi-static for event, fetched at prebuild from Sessionize API)
 - Blog posts or articles
 - Documentation pages
 - Static pages (privacy policy, code of conduct) - already using collections
+- Sponsors (if updated occasionally and committed to repo)
 
 ❌ **NOT for collections:**
 
-- Speakers from Sessionize API (dynamic external data)
-- Sponsors (frequently updated, may come from CMS)
-- Live session data (real-time external API)
+- Live session data (real-time, changes during event, requires client-side polling)
+- Any data requiring real-time updates during runtime
+
+### The Key Distinction
+
+The real question isn't "Where does the data come from?" but:
+
+**Is it static at build time, or does it need runtime updates?**
+
+- ✅ **Speakers** - Semi-static for a specific event, fetched once at prebuild → Use collections
+- ✅ **Team members** - Rarely changes, edited in repo → Use collections
+- ❌ **Live sessions** - Real-time, changes every minute during event → Use client-side fetching
+
+**Benefits of using collections for external data:**
+
+1. **Schema validation** - Zod catches API changes at build time
+2. **Image optimization** - Astro's `image()` helper works with remote URLs
+3. **Build fails fast** - Bad data breaks the build, not production
+4. **Type safety** - Full TypeScript types from Zod schemas
+5. **Git versioning** - Changes are tracked and reviewable
 
 ### Collection Types
 
@@ -442,30 +461,47 @@ const sortedTeam = teamMembers.sort((a, b) => a.data.order - b.data.order);
 
 ## Data Fetching
 
-### Build-time API Fetching (Astro)
+### Prebuild Scripts for External Data → Collections
 
-For **dynamic external data** (not collections), fetch at build time in page frontmatter:
+For **external data that should become collections**, use a prebuild script:
+
+```typescript
+// scripts/fetch-speakers.ts
+import { fetchSpeakersFromSessionize } from "../src/lib/sessionize";
+import fs from "node:fs";
+
+const speakers = await fetchSpeakersFromSessionize();
+
+// Generate individual JSON files for each speaker
+for (const speaker of speakers) {
+  const filePath = `src/content/speakers/${speaker.id}.json`;
+  fs.writeFileSync(filePath, JSON.stringify(speaker, null, 2));
+}
+```
+
+Then in your page:
 
 ```astro
 ---
-import { fetchSpeakers } from '@lib/sessionize';
+import { getCollection } from 'astro:content';
 
-// Fetched once at build time
-const speakers = await fetchSpeakers();
+// Reads from src/content/speakers/*.json
+const speakers = await getCollection('speakers');
 ---
 ```
 
 **When to use:**
 
-- External APIs (Sessionize, GitHub, etc.)
-- Data that changes frequently and shouldn't be committed to repo
-- Large datasets that would bloat the repository
+- External APIs that provide event data (Sessionize, CFP systems)
+- Data that's semi-static (doesn't change during site runtime)
+- When you want schema validation and type safety
 
 #### Example: Speakers
 
-- Fetched from Sessionize API at build time
-- Data cached during prebuild step
-- Images optimized via Astro's remote image handling
+- Fetched from Sessionize API during prebuild step
+- Individual JSON files generated in `src/content/speakers/`
+- Collection provides Zod validation and TypeScript types
+- Images remain as remote URLs (Astro optimizes at build time)
 
 ### Client-side (Preact - Live page only)
 

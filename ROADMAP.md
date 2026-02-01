@@ -121,41 +121,58 @@ This phase is done
 
 ### Speaker Image Optimization
 
-- [ ] **Eliminate speaker image pre-downloading**
-  - Current approach downloads 100+ speaker images during prebuild
-  - Adds complexity: ~70 lines of download logic in `sessionize.ts` and `cache-sessionize.ts`
-  - Build already depends on Sessionize API being available
-  - Astro can optimize remote images directly at build time
+- [x] **Eliminate speaker image pre-downloading**
+  - ✅ Removed image downloading from prebuild process
+  - ✅ Deleted ~70 lines of download logic from `sessionize.ts` and `cache-sessionize.ts`
+  - ✅ Build now relies on Astro's remote image optimization at build time
 
-- [ ] **Configure remote image optimization in astro.config.ts**
-  - Add `image.remotePatterns` configuration:
+- [x] **Configure remote image optimization in astro.config.ts**
+  - ✅ Added `image.remotePatterns` configuration to allow HTTPS images:
+
     ```typescript
     image: {
       remotePatterns: [{ protocol: "https" }];
     }
     ```
-  - Allows Astro to fetch and optimize images from any HTTPS URL at build time
-  - Consider restricting to specific domains for security if needed
 
-- [ ] **Remove image download logic from sessionize utilities**
-  - Delete `getExtensionFromMimeType()` function from `src/lib/sessionize.ts` (lines 66-77)
-  - Delete `downloadAndSaveImage()` function from `src/lib/sessionize.ts` (lines 82-87)
-  - Remove image download loop from `scripts/cache-sessionize.ts` (lines 108-125)
-  - Remove `localProfilePicture` field from `Speaker` interface
-  - Simplify caching script to only cache speaker data JSON
+  - ✅ Astro now fetches and optimizes images from remote URLs at build time
 
-- [ ] **Update speakers page to use Astro Image component**
-  - Replace plain `<img>` tags with Astro's `<Image>` component
-  - Use `speaker.profilePicture` (remote URL) directly
-  - Add `width={180}`, `height={180}`, `format="webp"` props
-  - Benefits:
-    - Automatic WebP/AVIF conversion
+- [x] **Remove image download logic from sessionize utilities**
+  - ✅ Deleted `downloadImage()` function from `src/lib/sessionize.ts`
+  - ✅ Removed `SPEAKERS_IMAGE_DIR` constant
+  - ✅ Removed `localProfilePicture` field from `Speaker` interface
+  - ✅ Simplified `cacheSpeakersData()` to only cache speaker JSON data
+  - ✅ Simplified caching script - no image downloading
+
+- [x] **Update speakers page to use Astro Image component**
+  - ✅ Replaced `<img>` tags with Astro's `<Picture>` component
+  - ✅ Using `speaker.profilePicture` (remote URL) directly
+  - ✅ Added `formats={['avif', 'webp']}` for automatic format conversion
+  - ✅ Benefits achieved:
+    - Automatic WebP/AVIF conversion (251 optimized images generated)
     - Responsive srcset generation
     - Lazy loading optimization
-    - Layout shift prevention
+    - Layout shift prevention with width/height
     - Simpler codebase (~70 lines removed)
     - Consistent with team page approach
     - No manual image download complexity
+
+### Further Simplification: Remove Sessionize Caching
+
+- [x] **Eliminate speaker data caching entirely**
+  - ✅ Removed prebuild script from `package.json`
+  - ✅ Deleted `scripts/cache-sessionize.ts` file
+  - ✅ Deleted `public/cache/` directory
+  - ✅ Simplified `fetchSpeakers()` to fetch directly from API (like sessions)
+  - ✅ Removed `cacheSpeakersData()` function
+  - ✅ Removed all cache-related constants (CACHE_DIR, CACHE_FILE)
+  - ✅ Updated README.md to remove caching documentation
+  - ✅ Benefits:
+    - Simpler build process (no prebuild step)
+    - Consistent approach (speakers and sessions both fetch from API)
+    - Always fresh data on every build
+    - Fewer lines of code to maintain
+    - No cache directory to manage
 
 ## Design Tokens Reference
 
@@ -220,7 +237,7 @@ After full migration, these Gatsby-specific files/folders should be removed:
 
 ## Current State Summary
 
-**Last Updated**: Step 11 completed
+**Last Updated**: Speaker Image Optimization completed
 
 ### What Works ✅
 
@@ -231,9 +248,10 @@ After full migration, these Gatsby-specific files/folders should be removed:
 - Homepage renders with all sections (Hero, Sponsors, Venue, Previous Events)
 - Header with CSS-only mobile menu (details/summary)
 - Footer with navigation and social links
-- Speakers page with CSS-only popover modals
+- Speakers page with remote image optimization and CSS-only popover modals
 - Team page with optimized WebP images and heptagon clip-paths
 - Global styles and design tokens applied
+- Remote image optimization at build time (no pre-downloading needed)
 
 ### What's Next
 
