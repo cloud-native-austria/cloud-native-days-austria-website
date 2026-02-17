@@ -1,82 +1,69 @@
 ---
-import Container from "@components/Container.astro";
 import { Picture } from "astro:assets";
 import venueImage from "@images/home/venue.webp";
 ---
 
 <section>
-	<Container>
-		<h2 id="venue">Venue</h2>
+	<h2 id="venue">Venue</h2>
 
-		<div>
-			<div>
-				<Picture
-					src={venueImage}
-					alt="CDN Austria Venue - Cineplexx Wienerberg"
-					formats={["avif", "webp"]}
-				/>
-				<a
-					href="https://maps.app.goo.gl/Q22METdvy3f1GFfx8"
-					target="_blank"
-					rel="noopener noreferrer"
-				>
-					<strong>Cineplexx Wienerberg</strong>
-					<span>Wienerbergstraße 11, 1100 Wien</span>
-				</a>
-			</div>
+	<div>
+		<Picture
+			src={venueImage}
+			alt="CDN Austria Venue - Cineplexx Wienerberg"
+			formats={["avif", "webp"]}
+		/>
+		<a href="https://maps.app.goo.gl/Q22METdvy3f1GFfx8" target="_blank" rel="noopener noreferrer">
+			<strong>Cineplexx Wienerberg</strong>
+			<span>Wienerbergstraße 11, 1100 Wien</span>
+		</a>
+	</div>
 
-			<div>
-				<p>
-					Cloud Native Days Austria are held at{" "}
-					<a
-						href="https://maps.app.goo.gl/Q22METdvy3f1GFfx8"
-						target="_blank"
-						rel="noopener noreferrer"
-					>
-						Cineplexx Wienerberg
-					</a>
-					. You'll enjoy two cinema-style stages with comfy seats, great sound, and clear visuals.
-				</p>
-				<p>
-					Grab a coffee or a bite to eat throughout the day and check out our sponsors for cool
-					swag. There's plenty of space to meet new people and catch up with friends.
-				</p>
-				<p>Stick around for our evening event – it's right nearby!</p>
-				<p>
-					<strong>We can't wait to see you there!</strong>
-				</p>
-			</div>
-		</div>
-	</Container>
+	<div>
+		<p>
+			Cloud Native Days Austria are held at{" "}
+			<a href="https://maps.app.goo.gl/Q22METdvy3f1GFfx8" target="_blank" rel="noopener noreferrer">
+				Cineplexx Wienerberg
+			</a>
+			. You'll enjoy two cinema-style stages with comfy seats, great sound, and clear visuals.
+		</p>
+		<p>
+			Grab a coffee or a bite to eat throughout the day and check out our sponsors for cool swag.
+			There's plenty of space to meet new people and catch up with friends.
+		</p>
+		<p>Stick around for our evening event – it's right nearby!</p>
+		<p>
+			<strong>We can't wait to see you there!</strong>
+		</p>
+	</div>
 </section>
 
 <style>
 	section {
 		padding: var(--space-12) 0;
+		width: 100%;
+		max-width: var(--container);
+		margin-inline: auto;
+		padding-inline: var(--space-4);
 	}
 
-	section :global(.container) {
-		max-width: var(--container);
+	@media (min-width: 768px) {
+		section {
+			padding-inline: var(--space-8);
+		}
 	}
 
 	h2 {
 		text-align: center;
-		margin-bottom: var(--space-8);
+		width: 100%;
 	}
 
-	section > :global(.container) > div {
+	section {
 		display: flex;
+		flex-wrap: wrap;
 		gap: var(--space-8);
-		align-items: flex-start;
 	}
 
-	@media (max-width: 768px) {
-		section > :global(.container) > div {
-			flex-direction: column;
-		}
-	}
-
-	section > :global(.container) > div > div:first-child {
+	section > div:first-of-type {
 		flex: 1;
 		text-align: center;
 		display: flex;
@@ -85,56 +72,31 @@ import venueImage from "@images/home/venue.webp";
 		gap: var(--space-4);
 	}
 
-	section > :global(.container) > div > div:first-child img {
+	section > div:first-of-type img {
 		max-height: 300px;
 		width: auto;
 		border-radius: var(--radius-md);
 		object-fit: contain;
 	}
 
-	section > :global(.container) > div > div:first-child a {
-		display: block;
-		color: var(--color-text);
-		text-decoration: none;
-		transition: color var(--transition-fast);
-	}
-
-	section > :global(.container) > div > div:first-child a:hover {
-		color: var(--color-pink);
-	}
-
-	section > :global(.container) > div > div:first-child strong {
+	section > div:first-of-type strong {
 		display: block;
 		font-family: var(--font-heading);
 	}
 
-	section > :global(.container) > div > div:first-child span {
+	section > div:first-of-type span {
 		font-size: var(--text-sm);
 	}
 
-	section > :global(.container) > div > div:last-child {
+	section > div:last-of-type {
 		flex: 1;
 	}
 
-	section > :global(.container) > div > div:last-child p {
+	section > div:last-of-type p {
 		margin-bottom: var(--space-4);
 	}
 
-	section > :global(.container) > div > div:last-child p:last-child {
+	section > div:last-of-type p:last-child {
 		margin-bottom: 0;
-	}
-
-	section > :global(.container) > div > div:last-child a {
-		color: var(--color-purple);
-	}
-
-	section > :global(.container) > div > div:last-child a:hover {
-		color: var(--color-pink);
-	}
-
-	@media (max-width: 768px) {
-		section > :global(.container) > div > div:last-child {
-			text-align: left;
-		}
 	}
 </style>

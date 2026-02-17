@@ -62,8 +62,9 @@ typings/
 .cache/
 public
 
-# Astro build output
+# Astro build output and cache
 dist/
+.astro/
 
 # Sessionize cached data (regenerated at build time)
 public/cache/

@@ -1,5 +1,4 @@
 ---
-import Container from "@components/Container.astro";
 import Layout from "@layouts/Layout.astro";
 import Button from "@components/Button.astro";
 import CurrentSessions from "@components/CurrentSessions";
@@ -10,83 +9,76 @@ const description = "Everything you need to know at the event.";
 ---
 
 <Layout title={title} description={description}>
-	<main>
-		<Container>
-			<header>
-				<h1>{title}</h1>
-				<p>{description}</p>
-			</header>
+	<header>
+		<h1>{title}</h1>
+		<p>{description}</p>
+	</header>
 
-			<div>
-				<section>
-					<h2>Current and upcoming sessions</h2>
-					<CurrentSessions client:load />
-					<Button href={scheduleUrl} external variant="primary"> See the full schedule </Button>
-				</section>
+	<div>
+		<section>
+			<h2>Current and upcoming sessions</h2>
+			<CurrentSessions client:load />
+			<Button href={scheduleUrl} external variant="primary"> See the full schedule </Button>
+		</section>
 
-				<section>
-					<h2>Wi-Fi access</h2>
-					<table>
-						<tbody>
-							<tr>
-								<td>SSID</td>
-								<td>CNDA-conference</td>
-							</tr>
-							<tr>
-								<td>Password</td>
-								<td>stay-cloud-native!</td>
-							</tr>
-						</tbody>
-					</table>
-				</section>
+		<section>
+			<h2>Wi-Fi access</h2>
+			<table>
+				<tbody>
+					<tr>
+						<td>SSID</td>
+						<td>CNDA-conference</td>
+					</tr>
+					<tr>
+						<td>Password</td>
+						<td>stay-cloud-native!</td>
+					</tr>
+				</tbody>
+			</table>
+		</section>
 
-				<section>
-					<h2>Emergency numbers</h2>
-					<table>
-						<tbody>
-							<tr>
-								<td>Fire service</td>
-								<td><a href="tel:122">122</a></td>
-							</tr>
-							<tr>
-								<td>Police</td>
-								<td><a href="tel:133">133</a></td>
-							</tr>
-							<tr>
-								<td>Ambulance</td>
-								<td><a href="tel:144">144</a></td>
-							</tr>
-						</tbody>
-					</table>
-				</section>
-			</div>
-		</Container>
-	</main>
+		<section>
+			<h2>Emergency numbers</h2>
+			<table>
+				<tbody>
+					<tr>
+						<td>Fire service</td>
+						<td><a href="tel:122">122</a></td>
+					</tr>
+					<tr>
+						<td>Police</td>
+						<td><a href="tel:133">133</a></td>
+					</tr>
+					<tr>
+						<td>Ambulance</td>
+						<td><a href="tel:144">144</a></td>
+					</tr>
+				</tbody>
+			</table>
+		</section>
+	</div>
 </Layout>
 
 <style>
-	main {
-		padding: var(--space-8) 0;
-	}
-
 	header {
+		padding: var(--space-8) 0;
 		text-align: center;
 		margin-bottom: var(--space-8);
 	}
 
 	header h1 {
 		font-family: var(--font-heading);
-		font-size: 3rem;
+		font-size: var(--text-3xl);
 		color: var(--color-text);
 		margin-bottom: var(--space-4);
 	}
 
 	header p {
-		font-size: 1.25rem;
+		font-size: var(--text-base);
 		color: var(--color-text);
 	}
 
-	main > :global(.container) > div {
+	div {
 		display: grid;
 		grid-template-columns: 1fr 1fr;
 		gap: var(--space-6);
@@ -105,7 +97,7 @@ const description = "Everything you need to know at the event.";
 
 	section h2 {
 		font-family: var(--font-heading);
-		font-size: 1.5rem;
+		font-size: var(--text-lg);
 		margin-bottom: var(--space-4);
 	}
 
@@ -127,7 +119,7 @@ const description = "Everything you need to know at the event.";
 
 	section:first-child :global(.room-sessions h3) {
 		font-family: var(--font-heading);
-		font-size: 1.25rem;
+		font-size: var(--text-base);
 		margin-bottom: var(--space-4);
 	}
 
@@ -194,28 +186,12 @@ const description = "Everything you need to know at the event.";
 	}
 
 	@media (max-width: 768px) {
-		main {
-			padding: var(--space-6) 0;
-		}
-
-		header h1 {
-			font-size: 2rem;
-		}
-
-		header p {
-			font-size: 1rem;
-		}
-
-		main > :global(.container) > div {
+		div {
 			grid-template-columns: 1fr;
 		}
 
 		section:first-child :global(.rooms-grid) {
 			grid-template-columns: 1fr;
-		}
-
-		table {
-			font-size: var(--text-sm);
 		}
 	}
 </style>

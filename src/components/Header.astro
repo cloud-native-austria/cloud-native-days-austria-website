@@ -1,6 +1,4 @@
 ---
-import Container from "@components/Container.astro";
-
 interface Props {
 	homepage?: boolean;
 }
@@ -8,14 +6,14 @@ interface Props {
 const { homepage = false } = Astro.props;
 
 const menuItems = [
-	{ text: "Speakers", to: "/speakers" },
-	{ text: "Venue", to: "/#venue", homeTo: "/" },
-	{ text: "Sponsors", to: "/#sponsors", homeTo: "/" },
+	{ text: "Speakers", to: "/speakers", id: "speakers" },
+	{ text: "Venue", to: "/#venue", homeTo: "/", id: "venue" },
+	{ text: "Sponsors", to: "/#sponsors", homeTo: "/", id: "sponsors" },
 ];
 ---
 
 <header>
-	<Container>
+	<section>
 		<a href="/" aria-label="Go to Homepage">
 			<img src="/images/logo.svg" alt="Cloud Native Days Austria" width="176" height="48" />
 		</a>
@@ -23,52 +21,62 @@ const menuItems = [
 		<nav aria-label="Main navigation">
 			<ul>
 				{
-					menuItems.map(({ text, to, homeTo }) => (
+					menuItems.map(({ text, to, homeTo, id }) => (
 						<li>
-							<a href={homepage && homeTo ? homeTo : to}>{text}</a>
+							<a href={homepage && homeTo ? homeTo : to} data-nav-id={id}>
+								{text}
+							</a>
 						</li>
 					))
 				}
 			</ul>
 		</nav>
 
-		<details>
+		<details id="mobile-menu">
 			<summary aria-label="Toggle menu">
 				<span></span>
 			</summary>
 			<nav aria-label="Mobile navigation">
 				<ul>
 					{
-						menuItems.map(({ text, to, homeTo }) => (
+						menuItems.map(({ text, to, homeTo, id }) => (
 							<li>
-								<a href={homepage && homeTo ? homeTo : to}>{text}</a>
+								<a href={homepage && homeTo ? homeTo : to} data-nav-id={id}>
+									{text}
+								</a>
 							</li>
 						))
 					}
 				</ul>
 			</nav>
 		</details>
-	</Container>
+	</section>
 </header>
 
 <style>
 	header {
-		position: sticky;
-		top: 0;
-		z-index: 50;
-		background: rgba(255, 255, 255, 0.95);
-		backdrop-filter: blur(8px);
+		background: var(--color-white);
 		border-bottom: 1px solid var(--color-gray-10);
 		padding: var(--space-4) 0;
 	}
 
-	header :global(.container) {
+	header section {
+		width: 100%;
+		max-width: var(--container);
+		margin-inline: auto;
+		padding-inline: var(--space-4);
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
 	}
 
-	header > :global(.container) > a {
+	@media (min-width: 768px) {
+		header section {
+			padding-inline: var(--space-8);
+		}
+	}
+
+	header > section > a {
 		z-index: 60;
 	}
 
@@ -92,6 +100,7 @@ const menuItems = [
 		color: var(--color-text);
 		text-decoration: none;
 		transition: color var(--transition-fast);
+		position: relative;
 	}
 
 	nav:first-of-type a:hover {
@@ -104,35 +113,44 @@ const menuItems = [
 		}
 	}
 
-	/* Mobile Menu */
-	details {
+	/* Mobile Menu Button (summary element) */
+	#mobile-menu {
 		display: none;
-		z-index: 60;
 	}
 
 	@media (max-width: 768px) {
-		details {
+		#mobile-menu {
 			display: block;
 		}
 	}
 
-	summary {
-		display: flex;
-		align-items: center;
-		justify-content: center;
+	#mobile-menu > summary {
+		display: none;
+		z-index: 60;
+		background: none;
+		border: none;
+		cursor: pointer;
+		padding: 0;
 		width: 44px;
 		height: 44px;
-		cursor: pointer;
+		align-items: center;
+		justify-content: center;
 		list-style: none;
 	}
 
-	summary::-webkit-details-marker {
+	#mobile-menu > summary::-webkit-details-marker {
 		display: none;
 	}
 
-	summary > span,
-	summary > span::before,
-	summary > span::after {
+	@media (max-width: 768px) {
+		#mobile-menu > summary {
+			display: flex;
+		}
+	}
+
+	#mobile-menu > summary > span,
+	#mobile-menu > summary > span::before,
+	#mobile-menu > summary > span::after {
 		display: block;
 		width: 24px;
 		height: 2px;
@@ -142,62 +160,58 @@ const menuItems = [
 			opacity var(--transition-base);
 	}
 
-	summary > span {
+	#mobile-menu > summary > span {
 		position: relative;
 	}
 
-	summary > span::before,
-	summary > span::after {
+	#mobile-menu > summary > span::before,
+	#mobile-menu > summary > span::after {
 		content: "";
 		position: absolute;
 		left: 0;
 	}
 
-	summary > span::before {
+	#mobile-menu > summary > span::before {
 		top: -8px;
 	}
 
-	summary > span::after {
+	#mobile-menu > summary > span::after {
 		top: 8px;
 	}
 
-	/* Burger animation when open */
-	details[open] summary > span {
+	/* Hamburger animation when details is open */
+	#mobile-menu[open] > summary > span {
 		background-color: transparent;
 	}
 
-	details[open] summary > span::before {
+	#mobile-menu[open] > summary > span::before {
 		transform: translateY(8px) rotate(45deg);
 	}
 
-	details[open] summary > span::after {
+	#mobile-menu[open] > summary > span::after {
 		transform: translateY(-8px) rotate(-45deg);
 	}
 
-	/* Mobile Navigation Panel */
-	details > nav {
-		position: fixed;
-		top: 81px;
-		left: 0;
-		right: 0;
-		bottom: 0;
+	/* Mobile Menu Details Content */
+	#mobile-menu {
+		margin: 0;
+		padding: 0;
+		border: none;
+		background: transparent;
+	}
+
+	#mobile-menu > nav {
 		background: var(--color-white);
 		padding: var(--space-8);
-		animation: slideIn var(--transition-base);
+		border-top: 1px solid var(--color-gray-10);
 	}
 
-	@keyframes slideIn {
-		from {
-			opacity: 0;
-			transform: translateY(-10px);
-		}
-		to {
-			opacity: 1;
-			transform: translateY(0);
-		}
+	#mobile-menu nav {
+		display: flex;
+		flex-direction: column;
 	}
 
-	details > nav ul {
+	#mobile-menu ul {
 		list-style: none;
 		padding: 0;
 		display: flex;
@@ -205,7 +219,7 @@ const menuItems = [
 		gap: var(--space-6);
 	}
 
-	details > nav a {
+	#mobile-menu a {
 		font-family: var(--font-heading);
 		font-size: var(--text-xl);
 		font-weight: 600;
@@ -213,9 +227,16 @@ const menuItems = [
 		text-decoration: none;
 		display: block;
 		padding: var(--space-2) 0;
+		transition: color var(--transition-fast);
 	}
 
-	details > nav a:hover {
+	#mobile-menu a:hover {
 		color: var(--color-pink);
+	}
+
+	@media (min-width: 768px) {
+		#mobile-menu {
+			display: none !important;
+		}
 	}
 </style>

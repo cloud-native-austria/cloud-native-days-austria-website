@@ -1,392 +1,339 @@
 ---
-import Container from "@components/Container.astro";
+import PersonCard from "@components/PersonCard.astro";
 import Layout from "@layouts/Layout.astro";
 import { Picture } from "astro:assets";
-import { fetchSpeakers } from "@lib/sessionize";
+import { getCollection, type CollectionEntry } from "astro:content";
 import { getSpeakerUrl, getSessionUrl } from "../constants/sessionize-app";
+import { Icon } from "astro-icon/components";
+import { getLinkTypeIcon } from "@lib/icon-map";
 
-const speakers = await fetchSpeakers();
+type Speaker = CollectionEntry<"speakers">["data"];
+
+const speakers = (await getCollection("speakers")).map((entry) => entry.data) as Speaker[];
 ---
 
 <Layout
 	title="Speakers 2025 | Cloud Native Days Austria"
 	description="Meet the speakers of Cloud Native Days Austria 2025"
 >
-	<main>
-		<Container>
-			<h1>Speakers of 2025</h1>
-			<div>
-				{
-					speakers.map((speaker) => (
-						<button
-							popovertarget={`speaker-${speaker.id}`}
-							aria-label={`View details for ${speaker.fullName}`}
-						>
-							<Picture
-								src={speaker.profilePicture}
-								alt={speaker.fullName}
-								class="heptagon"
-								formats={["avif", "webp"]}
-								loading="lazy"
-								decoding="async"
-								width={180}
-								height={180}
-							/>
-							<h2>{speaker.fullName}</h2>
-							{speaker.tagLine && <p>{speaker.tagLine}</p>}
-						</button>
-					))
-				}
-			</div>
+	<h1>Speakers of 2025</h1>
+	<section class="speakers-grid">
+		{
+			speakers.map((speaker) => (
+				<button
+					popovertarget={`speaker-${speaker.id}`}
+					aria-label={`View details for ${speaker.fullName}`}
+				>
+					<PersonCard
+						name={speaker.fullName}
+						role={speaker.tagLine}
+						image={speaker.profilePicture}
+					/>
+				</button>
+			))
+		}
+	</section>
 
-			<!-- Speaker modals -->
-			{
-				speakers.map((speaker) => (
-					<div id={`speaker-${speaker.id}`} popover>
-						<header>
-							<div>
-								<Picture
-									src={speaker.profilePicture}
-									alt={speaker.fullName}
-									class="heptagon"
-									formats={["avif", "webp"]}
-									width={80}
-									height={80}
-								/>
-								<div>
-									<h2>
-										<a href={getSpeakerUrl(speaker.id)} target="_blank" rel="noopener noreferrer">
-											{speaker.fullName}
-										</a>
-									</h2>
-									{speaker.tagLine && <p>{speaker.tagLine}</p>}
-								</div>
-							</div>
-							<button
-								popovertarget={`speaker-${speaker.id}`}
-								popovertargetaction="hide"
-								class="close-button"
-								aria-label="Close modal"
-							>
-								✕
-							</button>
-						</header>
+	<!-- Speaker modals -->
+	{
+		speakers.map((speaker) => (
+			<article id={`speaker-${speaker.id}`} popover>
+				<header>
+					<div>
+						<!-- set same width and height as in PersonCard so the same image is used and doesn't need to be reloaded -->
+						<Picture
+							src={speaker.profilePicture}
+							alt={speaker.fullName}
+							class="heptagon"
+							formats={["avif", "webp"]}
+							width={180}
+							height={180}
+						/>
 						<div>
-							{speaker.bio && (
-								<section>
-									<h3>Bio</h3>
-									<p>{speaker.bio}</p>
-								</section>
-							)}
-							{speaker.sessions && speaker.sessions.length > 0 && (
-								<section>
-									<h3>Sessions</h3>
-									<ul>
-										{speaker.sessions.map((session) => (
-											<li>
-												<a
-													href={getSessionUrl(String(session.id))}
-													target="_blank"
-													rel="noopener noreferrer"
-												>
-													{session.name}
-												</a>
-											</li>
-										))}
-									</ul>
-								</section>
-							)}
+							<h2>
+								<a href={getSpeakerUrl(speaker.id)} target="_blank" rel="noopener noreferrer">
+									{speaker.fullName}
+								</a>
+							</h2>
+							{speaker.tagLine && <p>{speaker.tagLine}</p>}
 							<div class="social-links">
-								<h3>Connect</h3>
-								<div class="links-grid">
-									{speaker.links.map((link) => (
-										<a
-											href={link.url}
-											target="_blank"
-											rel="noopener noreferrer"
-											class="social-link"
-											title={link.title}
-										>
-											<span class="link-type">{link.linkType}</span>
-										</a>
-									))}
-								</div>
+								{speaker.links.map((link) => (
+									<a
+										href={link.url}
+										target="_blank"
+										rel="noopener noreferrer"
+										class="social-link"
+										aria-label={link.title}
+									>
+										<Icon name={getLinkTypeIcon(link.linkType)} width={20} height={20} />
+									</a>
+								))}
 							</div>
-							)
 						</div>
 					</div>
-				))
-			}
-		</Container>
-	</main>
-</Layout>
-
-<style>
-	main {
-		padding: var(--space-20) 0;
+					<button
+						popovertarget={`speaker-${speaker.id}`}
+						popovertargetaction="hide"
+						class="close-button"
+						aria-label="Close modal"
+					>
+						✕
+					</button>
+				</header>
+				<div>
+					{speaker.bio && (
+						<section>
+							<h3>Bio</h3>
+							<p>{speaker.bio}</p>
+						</section>
+					)}
+					{speaker.sessions && speaker.sessions.length > 0 && (
+						<section>
+							<h3>Sessions</h3>
+							<ul>
+								{speaker.sessions.map((session) => (
+									<li>
+										<a
+											href={getSessionUrl(String(session.id))}
+											target="_blank"
+											rel="noopener noreferrer"
+										>
+											{session.name}
+										</a>
+									</li>
+								))}
+							</ul>
+						</section>
+					)}
+				</div>
+			</article>
+		))
 	}
 
-	h1 {
-		font-family: var(--font-heading);
-		font-size: var(--text-4xl);
-		text-align: center;
-		margin-bottom: var(--space-12);
-		color: var(--color-text);
-	}
-
-	main > :global(.container) > div {
-		display: grid;
-		grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-		gap: var(--space-8);
-		margin-bottom: var(--space-12);
-	}
-
-	main > :global(.container) > div > button {
-		all: unset;
-		cursor: pointer;
-		display: block;
-		width: 100%;
-		text-align: center;
-		transition: transform 0.2s ease;
-	}
-
-	main > :global(.container) > div > button:hover {
-		transform: scale(1.05);
-	}
-
-	main > :global(.container) > div > button:focus-visible {
-		outline: 2px solid var(--color-purple);
-		outline-offset: 4px;
-		border-radius: var(--radius-md);
-	}
-
-	main > :global(.container) > div > button img {
-		width: 180px;
-		height: 180px;
-		margin-inline: auto;
-		margin-bottom: var(--space-4);
-		filter: drop-shadow(0 8px 16px rgba(38, 47, 89, 0.15));
-		object-fit: cover;
-	}
-
-	main > :global(.container) > div > button h2 {
-		font-size: var(--text-lg);
-		font-weight: 600;
-		margin-bottom: var(--space-2);
-		color: var(--color-text);
-	}
-
-	main > :global(.container) > div > button p {
-		font-size: var(--text-sm);
-		color: var(--color-text-light);
-		line-height: 1.4;
-	}
-
-	/* Modal styles */
-	[popover]:not(:popover-open) {
-		display: none !important;
-	}
-
-	[popover] {
-		margin: auto;
-		padding: 0;
-		border: none;
-		border-radius: var(--radius-lg);
-		max-width: 600px;
-		max-height: 85vh;
-		overflow-y: auto;
-		box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-	}
-
-	[popover]::backdrop {
-		background: rgba(0, 0, 0, 0.6);
-		backdrop-filter: blur(4px);
-	}
-
-	[popover] header {
-		display: flex;
-		justify-content: space-between;
-		align-items: flex-start;
-		gap: var(--space-4);
-		padding: var(--space-6);
-		border-bottom: 1px solid var(--color-gray-10);
-		position: sticky;
-		top: 0;
-		background: var(--color-white);
-	}
-
-	[popover] header > div {
-		display: flex;
-		gap: var(--space-4);
-		align-items: center;
-		flex: 1;
-	}
-
-	[popover] header img {
-		width: 80px;
-		height: 80px;
-		flex-shrink: 0;
-		filter: drop-shadow(0 4px 8px rgba(38, 47, 89, 0.15));
-		object-fit: cover;
-	}
-
-	[popover] header h2 {
-		font-size: var(--text-xl);
-		font-weight: 600;
-		margin-bottom: var(--space-1);
-	}
-
-	[popover] header h2 a {
-		color: var(--color-purple);
-		text-decoration: none;
-	}
-
-	[popover] header h2 a:hover {
-		color: var(--color-pink);
-		text-decoration: underline;
-	}
-
-	[popover] header p {
-		font-size: var(--text-sm);
-		color: var(--color-text-light);
-	}
-
-	.close-button {
-		all: unset;
-		cursor: pointer;
-		font-size: var(--text-2xl);
-		line-height: 1;
-		color: var(--color-text-light);
-		padding: var(--space-2);
-		transition: color 0.2s ease;
-		flex-shrink: 0;
-	}
-
-	.close-button:hover {
-		color: var(--color-text);
-	}
-
-	.close-button:focus-visible {
-		outline: 2px solid var(--color-purple);
-		outline-offset: 2px;
-		border-radius: var(--radius-sm);
-	}
-
-	[popover] > div {
-		padding: var(--space-6);
-	}
-
-	[popover] > div h3 {
-		font-size: var(--text-lg);
-		font-weight: 600;
-		margin-bottom: var(--space-3);
-		color: var(--color-text);
-	}
-
-	[popover] > div > section:first-child {
-		margin-bottom: var(--space-6);
-	}
-
-	[popover] > div > section:first-child p {
-		line-height: 1.6;
-		color: var(--color-text);
-		white-space: pre-wrap;
-	}
-
-	[popover] > div > section:nth-child(2) {
-		margin-bottom: var(--space-6);
-	}
-
-	[popover] > div > section:nth-child(2) ul {
-		list-style: none;
-		padding: 0;
-		margin: 0;
-	}
-
-	[popover] > div > section:nth-child(2) li {
-		margin-bottom: var(--space-2);
-	}
-
-	[popover] > div > section:nth-child(2) a {
-		color: var(--color-purple);
-		text-decoration: none;
-		transition: color 0.2s ease;
-	}
-
-	[popover] > div > section:nth-child(2) a:hover {
-		color: var(--color-pink);
-		text-decoration: underline;
-	}
-
-	[popover] > div > section:nth-child(3) {
-		margin-bottom: var(--space-4);
-	}
-
-	.links-grid {
-		display: flex;
-		flex-wrap: wrap;
-		gap: var(--space-3);
-	}
-
-	.social-link {
-		display: inline-block;
-		padding: var(--space-2) var(--space-4);
-		background: var(--color-bg-light);
-		color: var(--color-purple);
-		text-decoration: none;
-		border-radius: var(--radius-full);
-		font-size: var(--text-sm);
-		font-weight: 500;
-		transition: all 0.2s ease;
-	}
-
-	.social-link:hover {
-		background: var(--color-purple);
-		color: var(--color-white);
-		transform: scale(1.05);
-	}
-
-	.social-link:focus-visible {
-		outline: 2px solid var(--color-purple);
-		outline-offset: 2px;
-	}
-
-	@media (max-width: 768px) {
-		main {
-			padding: var(--space-12) 0;
-		}
-
+	<style>
 		h1 {
-			font-size: var(--text-3xl);
-			margin-bottom: var(--space-8);
+			text-align: center;
 		}
 
-		main > :global(.container) > div {
-			grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-			gap: var(--space-6);
+		.speakers-grid {
+			display: grid;
+			grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+			gap: var(--space-8);
+			align-items: start;
+			margin-block: var(--space-12);
 		}
 
-		main > :global(.container) > div > button img {
-			width: 140px;
-			height: 140px;
+		.speakers-grid > button {
+			all: unset;
+			cursor: pointer;
+			display: block;
+			width: 100%;
+			text-align: center;
+			transition: transform 0.2s ease;
+		}
+
+		.speakers-grid > button:hover {
+			transform: scale(1.05);
+		}
+
+		.speakers-grid > button:focus-visible {
+			outline: 2px solid var(--color-purple);
+			outline-offset: 4px;
+			border-radius: var(--radius-md);
+		}
+
+		/* Modal styles */
+		[popover]:not(:popover-open) {
+			display: none !important;
+		}
+
+		[popover] {
+			margin: auto;
+			padding: 0;
+			border: none;
+			border-radius: var(--radius-lg);
+			max-width: 600px;
+			max-height: 85vh;
+			overflow-y: auto;
+			box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+		}
+
+		[popover]::backdrop {
+			background: rgba(0, 0, 0, 0.6);
+			backdrop-filter: blur(4px);
 		}
 
 		[popover] header {
-			padding: var(--space-4);
+			display: flex;
+			justify-content: space-between;
+			align-items: flex-start;
+			gap: var(--space-4);
+			padding: var(--space-6);
+			border-bottom: 1px solid var(--color-gray-10);
+			position: sticky;
+			top: 0;
+			background: var(--color-white);
 		}
 
 		[popover] header > div {
-			flex-direction: column;
-			align-items: flex-start;
+			display: flex;
+			gap: var(--space-4);
+			align-items: center;
+			flex: 1;
 		}
 
 		[popover] header img {
-			width: 60px;
-			height: 60px;
+			width: 80px;
+			height: 80px;
+			flex-shrink: 0;
+			filter: drop-shadow(0 0 0 rgba(0, 0, 0, 0)) drop-shadow(0 0 0 1px rgba(38, 47, 89, 0.12))
+				drop-shadow(0 4px 8px rgba(38, 47, 89, 0.15));
+			object-fit: cover;
+		}
+
+		[popover] header h2 {
+			font-size: var(--text-xl);
+			font-weight: 600;
+			margin-bottom: var(--space-1);
+		}
+
+		[popover] header h2 a {
+			color: var(--color-purple);
+		}
+
+		[popover] header p {
+			font-size: var(--text-sm);
+			color: var(--color-text-light);
+			margin-bottom: var(--space-2);
+		}
+
+		[popover] header .social-links {
+			display: flex;
+			flex-wrap: wrap;
+			gap: var(--space-2);
+			margin-top: var(--space-2);
+		}
+
+		.close-button {
+			all: unset;
+			cursor: pointer;
+			font-size: var(--text-xl);
+			line-height: 1;
+			color: var(--color-text-light);
+			padding: var(--space-2);
+			transition: color 0.2s ease;
+			flex-shrink: 0;
+		}
+
+		.close-button:hover {
+			color: var(--color-text);
+		}
+
+		.close-button:focus-visible {
+			outline: 2px solid var(--color-purple);
+			outline-offset: 2px;
+			border-radius: var(--radius-sm);
 		}
 
 		[popover] > div {
-			padding: var(--space-4);
+			padding: var(--space-6);
 		}
-	}
-</style>
+
+		[popover] > div h3 {
+			font-size: var(--text-lg);
+			font-weight: 600;
+			margin-bottom: var(--space-3);
+			color: var(--color-text);
+		}
+
+		[popover] > div > section:first-child {
+			margin-bottom: var(--space-6);
+		}
+
+		[popover] > div > section:first-child p {
+			line-height: 1.6;
+			color: var(--color-text);
+			white-space: pre-wrap;
+		}
+
+		[popover] > div > section:nth-child(2) {
+			margin-bottom: var(--space-6);
+		}
+
+		[popover] > div > section:nth-child(2) ul {
+			list-style: none;
+			padding: 0;
+			margin: 0;
+		}
+
+		[popover] > div > section:nth-child(2) li {
+			margin-bottom: var(--space-2);
+		}
+
+		[popover] > div > section:nth-child(2) a {
+			color: var(--color-purple);
+			text-decoration: none;
+			transition: color 0.2s ease;
+		}
+
+		.social-link {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			width: 40px;
+			height: 40px;
+			padding: var(--space-2);
+			background: var(--color-bg-light);
+			color: var(--color-purple);
+			text-decoration: none;
+			border-radius: var(--radius-full);
+			transition: all 0.2s ease;
+		}
+
+		.social-link svg {
+			width: 20px;
+			height: 20px;
+			flex-shrink: 0;
+		}
+
+		.social-link:hover {
+			background: var(--color-purple);
+			color: var(--color-white);
+			transform: scale(1.05);
+		}
+
+		@media (max-width: 768px) {
+			main {
+				padding: var(--space-12) 0;
+			}
+
+			.speakers-grid {
+				grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+				gap: var(--space-6);
+			}
+
+			.speakers-grid > button :global(.person-card) img {
+				width: 140px;
+				height: 140px;
+			}
+
+			[popover] header {
+				padding: var(--space-4);
+			}
+
+			[popover] header > div {
+				flex-direction: column;
+				align-items: flex-start;
+			}
+
+			[popover] header img {
+				width: 60px;
+				height: 60px;
+			}
+
+			[popover] > div {
+				padding: var(--space-4);
+			}
+		}
+	</style>
+</Layout>

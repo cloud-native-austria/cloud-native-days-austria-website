@@ -18,7 +18,7 @@ import Button from "@components/Button.astro";
 <style>
 	h1 {
 		font-family: var(--font-heading);
-		font-size: clamp(6rem, 15vw, 12rem);
+		font-size: 12rem;
 		font-weight: 700;
 		color: var(--color-purple);
 		margin: 0;
@@ -31,29 +31,15 @@ import Button from "@components/Button.astro";
 
 	h2 {
 		font-family: var(--font-heading);
-		font-size: clamp(2rem, 5vw, 3rem);
+		font-size: var(--text-2xl);
 		color: var(--color-text);
 		margin: var(--space-4) 0 var(--space-6);
 	}
 
 	p {
-		font-size: 1.25rem;
+		font-size: var(--text-base);
 		color: var(--color-text);
 		margin-bottom: var(--space-8);
 		line-height: 1.6;
-	}
-
-	@media (max-width: 768px) {
-		h1 {
-			font-size: 6rem;
-		}
-
-		h2 {
-			font-size: 2rem;
-		}
-
-		p {
-			font-size: 1rem;
-		}
 	}
 </style>

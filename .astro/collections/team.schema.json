@@ -2,24 +2,45 @@
   "$ref": "#/definitions/team",
   "definitions": {
     "team": {
-      "type": "array",
-      "items": {
+      "type": "object",
+      "properties": {
+        "$schema": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": {
         "type": "object",
         "properties": {
-          "name": {
+          "id": {
             "type": "string"
           },
-          "role": {
-            "type": "string"
-          },
-          "image": {
-            "type": "string"
+          "members": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "role": {
+                  "type": "string"
+                },
+                "image": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "name",
+                "role",
+                "image"
+              ],
+              "additionalProperties": false
+            }
           }
         },
         "required": [
-          "name",
-          "role",
-          "image"
+          "id",
+          "members"
         ],
         "additionalProperties": false
       }

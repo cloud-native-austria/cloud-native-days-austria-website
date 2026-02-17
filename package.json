@@ -3,8 +3,9 @@
 	"type": "module",
 	"description": "Cloud Native Days Austria Website",
 	"version": "0.1.0",
-	"author": "Katharina Sick, Andreas Taranetz",
+	"author": "Andreas Taranetz",
 	"scripts": {
+		"start": "astro dev",
 		"dev": "astro dev",
 		"build": "astro build",
 		"preview": "astro preview",
@@ -14,7 +15,10 @@
 		"@astrojs/mdx": "^4.3.13",
 		"@astrojs/preact": "^4.0.0",
 		"@astrojs/sitemap": "^3.2.0",
+		"@iconify-json/mdi": "^1.2.3",
+		"@iconify-json/simple-icons": "^1.2.70",
 		"astro": "^5.0.0",
+		"astro-icon": "^1.1.5",
 		"preact": "^10.24.0"
 	},
 	"devDependencies": {

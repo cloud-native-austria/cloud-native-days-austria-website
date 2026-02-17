@@ -1,17 +1,13 @@
 # AI Agent Instructions for Cloud Native Days Austria Website
 
-This document provides guidelines for AI agents contributing to this codebase.
-
 ## Project Overview
 
 This is the website for Cloud Native Days Austria (CNDA formerly Kubernetes Community Days KCD Austria), being migrated from Gatsby to Astro.
 
 - **Framework**: Astro
-- **Language**: TypeScript (strict mode)
-- **Package Manager**: Bun (not npm/yarn)
-- **Styling**: Vanilla CSS only (no Tailwind, no CSS-in-JS)
-- **JavaScript Policy**: No JavaScript except for the live page Preact island
-- **Target Browsers**: Modern browsers only (ES2022+, no IE11)
+- **Language**: TypeScript
+- **Package Manager**: Bun
+- **Styling**: Vanilla CSS only
 
 ## Key Conventions
 
@@ -25,21 +21,6 @@ All code uses TypeScript with strict mode:
 - **Preact components**: Full TypeScript with `.tsx` extension
 - **No `any` types**: Always provide specific types
 
-```typescript
-// src/constants/links.ts
-interface Link {
-  to: string;
-  target?: string;
-}
-
-const LINKS: Record<string, Link> = {
-  home: { to: "/" },
-  speakers: { to: "/speakers" },
-};
-
-export default LINKS;
-```
-
 ### No JavaScript Rule
 
 This project aims for zero JavaScript except where absolutely necessary:
@@ -49,7 +30,6 @@ This project aims for zero JavaScript except where absolutely necessary:
 - Use CSS `@keyframes` for animations (no JS)
 - Use `:target` or `popover` for show/hide (no JS)
 - Do NOT add JavaScript for interactions that CSS can handle
-- Exception: `src/components/CurrentSessions.tsx` uses Preact for live polling
 
 ### CSS Guidelines
 
@@ -61,100 +41,6 @@ This project aims for zero JavaScript except where absolutely necessary:
 6. **Minimal global.css**: Keep `global.css` ONLY for design tokens (colors, fonts, spacing variables), CSS reset, `@font-face` declarations, and legitimate shape utilities (like `.heptagon`). Component-specific styles belong in component `<style>` blocks.
 7. **Single breakpoint**: Use only one media query breakpoint (`768px`) for major layout changes
 8. **Container queries**: Prefer `@container` queries for component-level responsiveness instead of media queries
-9. **Data attributes over BEM classes**: For component variants, use data attributes (`data-variant="primary"`) instead of BEM class patterns (`btn btn-primary`)
-
-#### Good CSS Patterns
-
-```astro
----
-import Container from '@components/Container.astro';
----
-
-<!-- ✅ Use Container component for centering -->
-<Container>
-  <section>
-    <!-- ✅ Target semantic elements directly -->
-    <h1>Page Title</h1>
-    <p>Simple selectors work because Astro scopes styles to this component.</p>
-  </section>
-</Container>
-
-<style>
-  /* ✅ Simple selectors - Astro scoping provides isolation */
-  section {
-    padding: var(--space-8);
-  }
-
-  h1 {
-    font-family: var(--font-heading);
-    color: var(--color-purple);
-  }
-
-  p {
-    color: var(--color-text);
-  }
-</style>
-```
-
-#### Poor CSS Patterns (Avoid)
-
-```astro
----
-// ❌ Don't do this
----
-
-<!-- ❌ Unnecessary wrapper div -->
-<div class="page-wrapper">
-  <!-- ❌ Unnecessary container div -->
-  <div class="container">
-    <section class="section">
-      <!-- ❌ Unnecessary class when semantic element works -->
-      <h1 class="page-title">Title</h1>
-      <p class="page-description">Description</p>
-    </section>
-  </div>
-</div>
-
-<style>
-  /* ❌ Multiple wrappers and over-specific classes */
-  .page-wrapper {
-    width: 100%;
-  }
-
-  .container {
-    max-width: var(--container-lg);
-    margin-inline: auto;
-  }
-
-  .section {
-    padding: var(--space-8);
-  }
-
-  .page-title {
-    font-family: var(--font-heading);
-    color: var(--color-purple);
-  }
-
-  .page-description {
-    color: var(--color-text);
-  }
-</style>
-```
-
-#### Container Component Usage
-
-The `Container.astro` component provides unified centering at `--container-lg` width (1280px):
-
-```astro
----
-import Container from '@components/Container.astro';
----
-
-<Container>
-  <!-- Your content here -->
-  <!-- Automatically centered with max-width and responsive padding -->
-</Container>
-```
 
 ### Component Patterns
 
@@ -239,25 +125,6 @@ import photo from '@images/speaker.jpg';
 <Image src={photo} alt="Speaker name" format="webp" />
 ```
 
-**Why?**
-
-- Automatic WebP conversion and optimization
-- Lazy loading by default
-- Proper `width`/`height` attributes prevent layout shift
-- Responsive `srcset` generation
-
-❌ **Never do this:**
-
-```html
-<img src="/images/logo.png" alt="Logo" />
-```
-
-✅ **Always do this:**
-
-```astro
-<Image src={logo} alt="Logo" />
-```
-
 ### Path Aliases
 
 Configured in `tsconfig.json`:
@@ -270,58 +137,6 @@ Configured in `tsconfig.json`:
 | `@images`     | `src/images`     |
 | `@icons`      | `src/icons`      |
 | `@lib`        | `src/lib`        |
-
-### Modal/Dialog Pattern
-
-Use the `popover` attribute for modals:
-
-```astro
-<!-- Trigger button -->
-<button popovertarget="modal-id">Open Modal</button>
-
-<!-- Modal content -->
-<div id="modal-id" popover>
-  <h2>Modal Title</h2>
-  <p>Content here</p>
-  <button popovertarget="modal-id" popovertargetaction="hide">Close</button>
-</div>
-
-<style>
-  [popover] {
-    /* Centered modal */
-    margin: auto;
-    padding: var(--space-6);
-    border: none;
-    border-radius: var(--radius-lg);
-  }
-
-  [popover]::backdrop {
-    background: rgba(0, 0, 0, 0.5);
-  }
-</style>
-```
-
-### Mobile Menu Pattern
-
-Use `<details>`/`<summary>` for the mobile menu:
-
-```astro
-<details class="mobile-menu">
-  <summary class="burger" aria-label="Menu">
-    <span></span>
-  </summary>
-  <nav>
-    <a href="/">Home</a>
-    <a href="/speakers">Speakers</a>
-  </nav>
-</details>
-
-<style>
-  .mobile-menu[open] .burger span {
-    /* Animate to X */
-  }
-</style>
-```
 
 ## Commands
 
@@ -369,14 +184,6 @@ The real question isn't "Where does the data come from?" but:
 - ✅ **Team members** - Rarely changes, edited in repo → Use collections
 - ❌ **Live sessions** - Real-time, changes every minute during event → Use client-side fetching
 
-**Benefits of using collections for external data:**
-
-1. **Schema validation** - Zod catches API changes at build time
-2. **Image optimization** - Astro's `image()` helper works with remote URLs
-3. **Build fails fast** - Bad data breaks the build, not production
-4. **Type safety** - Full TypeScript types from Zod schemas
-5. **Git versioning** - Changes are tracked and reviewable
-
 ### Collection Types
 
 **Type: `'content'`** - For Markdown/MDX files with rich content:
@@ -406,37 +213,10 @@ const team = defineCollection({
 });
 ```
 
-### Using the `image()` Helper
-
-For collections with images, use Astro's `image()` schema helper:
-
-```typescript
-// src/content/config.ts
-import { defineCollection, z } from "astro:content";
-
-const team = defineCollection({
-  type: "data",
-  schema: ({ image }) =>
-    z.object({
-      name: z.string(),
-      image: image(), // Validates and types image imports
-    }),
-});
-```
-
-```json
-// src/content/team/john-doe.json
-{
-  "name": "John Doe",
-  "image": "../../images/team/john-doe.jpg"
-}
-```
-
 ### File Naming Conventions
 
-- Use kebab-case for filenames: `andreas-grabner.json`, `data-privacy.mdx`
+- Use kebab-case for filenames: `andreas-taranetz.json`, `data-privacy.mdx`
 - Filename becomes the entry ID (slug)
-- For collections with `order` field, filename doesn't determine display order
 
 ### Fetching Collections
 
@@ -457,74 +237,6 @@ const sortedTeam = teamMembers.sort((a, b) => a.data.order - b.data.order);
     <h3>{member.data.name}</h3>
   </div>
 ))}
-```
-
-## Data Fetching
-
-### Prebuild Scripts for External Data → Collections
-
-For **external data that should become collections**, use a prebuild script:
-
-```typescript
-// scripts/fetch-speakers.ts
-import { fetchSpeakersFromSessionize } from "../src/lib/sessionize";
-import fs from "node:fs";
-
-const speakers = await fetchSpeakersFromSessionize();
-
-// Generate individual JSON files for each speaker
-for (const speaker of speakers) {
-  const filePath = `src/content/speakers/${speaker.id}.json`;
-  fs.writeFileSync(filePath, JSON.stringify(speaker, null, 2));
-}
-```
-
-Then in your page:
-
-```astro
----
-import { getCollection } from 'astro:content';
-
-// Reads from src/content/speakers/*.json
-const speakers = await getCollection('speakers');
----
-```
-
-**When to use:**
-
-- External APIs that provide event data (Sessionize, CFP systems)
-- Data that's semi-static (doesn't change during site runtime)
-- When you want schema validation and type safety
-
-#### Example: Speakers
-
-- Fetched from Sessionize API during prebuild step
-- Individual JSON files generated in `src/content/speakers/`
-- Collection provides Zod validation and TypeScript types
-- Images remain as remote URLs (Astro optimizes at build time)
-
-### Client-side (Preact - Live page only)
-
-The live page polls Sessionize every 30 seconds for current sessions:
-
-```tsx
-// src/components/CurrentSessions.tsx
-import { useState, useEffect } from "preact/hooks";
-
-export function CurrentSessions() {
-  const [sessions, setSessions] = useState([]);
-
-  useEffect(() => {
-    const fetchSessions = async () => {
-      /* ... */
-    };
-    fetchSessions();
-    const interval = setInterval(fetchSessions, 30000);
-    return () => clearInterval(interval);
-  }, []);
-
-  return <div>{/* render sessions */}</div>;
-}
 ```
 
 ## Accessibility Requirements
@@ -569,10 +281,6 @@ src/
 ├── images/              # Local images
 └── icons/               # SVG icons
 ```
-
-## Migration Status
-
-See [ROADMAP.md](./ROADMAP.md) for current migration progress.
 
 ## Brand Guidelines
 

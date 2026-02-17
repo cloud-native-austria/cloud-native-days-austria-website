@@ -1,11 +1,9 @@
 ---
-import Container from "@components/Container.astro";
 import Button from "@components/Button.astro";
 ---
 
 <section>
-	<Container>
-		<h2>Previous Events</h2>
+	<h2>Previous Events</h2>
 		<p>Thank you all for making the Cloud Native Days Austria 2025 a fantastic event!</p>
 		<p>In case you want to review previous events, check out the following links:</p>
 
@@ -40,22 +38,27 @@ import Button from "@components/Button.astro";
 					Recordings of 2024
 				</Button>
 			</div>
-		</article>
-	</Container>
+	</article>
 </section>
 
 <style>
 	section {
 		padding: var(--space-12) 0;
-	}
-
-	section :global(.container) {
+		width: 100%;
 		max-width: var(--container);
+		margin-inline: auto;
+		padding-inline: var(--space-4);
 		text-align: center;
 		display: flex;
 		flex-direction: column;
 		align-items: center;
 		gap: var(--space-4);
+	}
+
+	@media (min-width: 768px) {
+		section {
+			padding-inline: var(--space-8);
+		}
 	}
 
 	h2 {

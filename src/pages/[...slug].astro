@@ -4,16 +4,16 @@
  * Renders static pages from content collections
  */
 
-import { getCollection } from 'astro:content';
-import Layout from '@layouts/Layout.astro';
+import { getCollection } from "astro:content";
+import Layout from "@layouts/Layout.astro";
 
 export async function getStaticPaths() {
-  const staticPages = await getCollection('static-pages');
+	const staticPages = await getCollection("static-pages");
 
-  return staticPages.map((page) => ({
-    params: { slug: page.id },
-    props: { page },
-  }));
+	return staticPages.map((page) => ({
+		params: { slug: page.id },
+		props: { page },
+	}));
 }
 
 const { page } = Astro.props;
@@ -22,139 +22,123 @@ const { title } = page.data;
 ---
 
 <Layout title={title} description={title}>
-  <article class="static-page">
-    <header class="page-header">
-      <h1>{title}</h1>
-    </header>
+	<article class="static-page">
+		<header class="page-header">
+			<h1>{title}</h1>
+		</header>
 
-    <div class="content-wrapper">
-      <Content />
-    </div>
-  </article>
+		<div class="content-wrapper">
+			<Content />
+		</div>
+	</article>
 </Layout>
 
 <style>
-  .static-page {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: var(--space-16) var(--space-6);
-  }
+	.static-page {
+		max-width: 1200px;
+		margin: 0 auto;
+		padding: var(--space-16) var(--space-6);
+	}
 
-  .page-header {
-    margin-bottom: var(--space-12);
-    text-align: center;
-  }
+	.page-header {
+		margin-bottom: var(--space-12);
+		text-align: center;
+	}
 
-  .page-header h1 {
-    font-family: var(--font-heading);
-    font-size: clamp(2rem, 5vw, 3rem);
-    color: var(--color-purple);
-    margin: 0;
-  }
+	.page-header h1 {
+		font-family: var(--font-heading);
+		font-size: var(--text-3xl);
+		color: var(--color-purple);
+		margin: 0;
+	}
 
-  .content-wrapper {
-    max-width: 800px;
-    margin: 0 auto;
-    font-size: 1.125rem;
-    line-height: 1.7;
-  }
+	.content-wrapper {
+		max-width: 800px;
+		margin: 0 auto;
+		font-size: var(--text-base);
+		line-height: 1.7;
+	}
 
-  .content-wrapper :global(h2) {
-    font-family: var(--font-heading);
-    font-size: 2rem;
-    color: var(--color-purple);
-    margin-top: var(--space-12);
-    margin-bottom: var(--space-6);
-  }
+	.content-wrapper :global(h2) {
+		font-family: var(--font-heading);
+		font-size: var(--text-xl);
+		color: var(--color-purple);
+		margin-top: var(--space-12);
+		margin-bottom: var(--space-6);
+	}
 
-  .content-wrapper :global(h3) {
-    font-family: var(--font-heading);
-    font-size: 1.5rem;
-    color: var(--color-text);
-    margin-top: var(--space-8);
-    margin-bottom: var(--space-4);
-  }
+	.content-wrapper :global(h3) {
+		font-family: var(--font-heading);
+		font-size: var(--text-lg);
+		color: var(--color-text);
+		margin-top: var(--space-8);
+		margin-bottom: var(--space-4);
+	}
 
-  .content-wrapper :global(h4) {
-    font-family: var(--font-heading);
-    font-size: 1.25rem;
-    color: var(--color-text);
-    margin-top: var(--space-6);
-    margin-bottom: var(--space-3);
-  }
+	.content-wrapper :global(h4) {
+		font-family: var(--font-heading);
+		font-size: var(--text-base);
+		color: var(--color-text);
+		margin-top: var(--space-6);
+		margin-bottom: var(--space-3);
+	}
 
-  .content-wrapper :global(p) {
-    margin-bottom: var(--space-4);
-  }
+	.content-wrapper :global(p) {
+		margin-bottom: var(--space-4);
+	}
 
-  .content-wrapper :global(ul),
-  .content-wrapper :global(ol) {
-    margin-bottom: var(--space-4);
-    padding-left: var(--space-6);
-  }
+	.content-wrapper :global(ul),
+	.content-wrapper :global(ol) {
+		margin-bottom: var(--space-4);
+		padding-left: var(--space-6);
+	}
 
-  .content-wrapper :global(li) {
-    margin-bottom: var(--space-2);
-  }
+	.content-wrapper :global(li) {
+		margin-bottom: var(--space-2);
+	}
 
-  .content-wrapper :global(a) {
-    color: var(--color-purple);
-    text-decoration: underline;
-    transition: color 0.2s ease;
-  }
+	.content-wrapper :global(a) {
+		color: var(--color-purple);
+		text-decoration: underline;
+		transition: color 0.2s ease;
+	}
 
-  .content-wrapper :global(a:hover) {
-    color: var(--color-pink);
-  }
+	.content-wrapper :global(a:hover) {
+		color: var(--color-pink);
+	}
 
-  .content-wrapper :global(table) {
-    width: 100%;
-    margin: var(--space-6) 0;
-    border-collapse: collapse;
-  }
+	.content-wrapper :global(table) {
+		width: 100%;
+		margin: var(--space-6) 0;
+		border-collapse: collapse;
+	}
 
-  .content-wrapper :global(th),
-  .content-wrapper :global(td) {
-    padding: var(--space-3);
-    text-align: left;
-    border-bottom: 1px solid #e5e7eb;
-  }
+	.content-wrapper :global(th),
+	.content-wrapper :global(td) {
+		padding: var(--space-3);
+		text-align: left;
+		border-bottom: 1px solid #e5e7eb;
+	}
 
-  .content-wrapper :global(th) {
-    font-weight: 600;
-    color: var(--color-purple);
-  }
+	.content-wrapper :global(th) {
+		font-weight: 600;
+		color: var(--color-purple);
+	}
 
-  .content-wrapper :global(strong) {
-    font-weight: 600;
-    color: var(--color-text);
-  }
+	.content-wrapper :global(strong) {
+		font-weight: 600;
+		color: var(--color-text);
+	}
 
-  .content-wrapper :global(br) {
-    display: block;
-    margin-bottom: var(--space-2);
-    content: '';
-  }
+	.content-wrapper :global(br) {
+		display: block;
+		margin-bottom: var(--space-2);
+		content: "";
+	}
 
-  @media (max-width: 768px) {
-    .static-page {
-      padding: var(--space-8) var(--space-4);
-    }
-
-    .page-header h1 {
-      font-size: 2rem;
-    }
-
-    .content-wrapper {
-      font-size: 1rem;
-    }
-
-    .content-wrapper :global(h2) {
-      font-size: 1.5rem;
-    }
-
-    .content-wrapper :global(h3) {
-      font-size: 1.25rem;
-    }
-  }
+	@media (max-width: 768px) {
+		.static-page {
+			padding: var(--space-8) var(--space-4);
+		}
+	}
 </style>

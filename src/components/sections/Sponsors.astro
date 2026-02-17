@@ -1,11 +1,9 @@
 ---
-import Container from "@components/Container.astro";
 import Button from "@components/Button.astro";
 ---
 
 <section>
-	<Container>
-		<h2 id="call-for-sponsors">Call for Sponsors</h2>
+	<h2 id="call-for-sponsors">Call for Sponsors</h2>
 
 		<p>
 			Join us in making Cloud Native Days Austria a memorable and impactful event for all attendees.
@@ -24,7 +22,6 @@ import Button from "@components/Button.astro";
 			</Button>
 			<Button href="mailto:organizers@cloudnativedays.at"> Get in touch </Button>
 		</div>
-	</Container>
 </section>
 
 <style>
@@ -32,9 +29,19 @@ import Button from "@components/Button.astro";
 		padding: var(--space-12) 0;
 	}
 
-	section :global(.container) {
+	section {
+		padding: var(--space-12) 0;
+		width: 100%;
 		max-width: var(--container);
+		margin-inline: auto;
+		padding-inline: var(--space-4);
 		text-align: center;
+	}
+
+	@media (min-width: 768px) {
+		section {
+			padding-inline: var(--space-8);
+		}
 	}
 
 	h2 {
@@ -53,7 +60,7 @@ import Button from "@components/Button.astro";
 		color: var(--color-pink);
 	}
 
-	section > :global(.container) > div {
+	section > div {
 		display: flex;
 		flex-wrap: wrap;
 		justify-content: center;
@@ -62,7 +69,7 @@ import Button from "@components/Button.astro";
 	}
 
 	@media (max-width: 768px) {
-		section > :global(.container) > div {
+		section > div {
 			flex-direction: column;
 			align-items: stretch;
 		}

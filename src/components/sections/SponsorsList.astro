@@ -1,5 +1,4 @@
 ---
-import Container from "@components/Container.astro";
 import { Picture } from "astro:assets";
 
 // Sponsor data - logos are served from public/images/sponsors/
@@ -87,44 +86,46 @@ function shuffleArray<T>(array: T[]): T[] {
 ---
 
 <section>
-	<Container>
-		<h2 id="sponsors">Our Sponsors of CNDA 2025</h2>
-		<p>Without them this event wouldn't have been possible</p>
+	<h2 id="sponsors">Our Sponsors of CNDA 2025</h2>
+	<p>Without them this event wouldn't have been possible</p>
 
-		{
-			sponsors.map(({ title, tier, sponsors: tierSponsors }) => (
-				<article data-tier={tier}>
-					<h3>{title}</h3>
-					<div>
-						{shuffleArray(tierSponsors).map(({ name, url, logo }) => (
-							<a href={url} target="_blank" rel="noopener noreferrer" aria-label={name}>
-								<Picture
-									src={logo}
-									alt={name}
-									width={200}
-									height={100}
-									formats={["avif", "webp"]}
-								/>
-							</a>
-						))}
-					</div>
-				</article>
-			))
-		}
-	</Container>
+	{
+		sponsors.map(({ title, tier, sponsors: tierSponsors }) => (
+			<article data-tier={tier}>
+				<h3>{title}</h3>
+				<div>
+					{shuffleArray(tierSponsors).map(({ name, url, logo }) => (
+						<a href={url} target="_blank" rel="noopener noreferrer" aria-label={name}>
+							<Picture src={logo} alt={name} width={200} height={100} formats={["avif", "webp"]} />
+						</a>
+					))}
+				</div>
+			</article>
+		))
+	}
 </section>
 
 <style>
 	section {
 		padding: var(--space-12) 0;
 		text-align: center;
+		width: 100%;
+		max-width: var(--container);
+		margin-inline: auto;
+		padding-inline: var(--space-4);
+	}
+
+	@media (min-width: 768px) {
+		section {
+			padding-inline: var(--space-8);
+		}
 	}
 
 	h2 {
 		margin-bottom: var(--space-2);
 	}
 
-	section > :global(.container) > p {
+	section > p {
 		color: var(--color-text-light);
 		margin-bottom: var(--space-8);
 	}
@@ -177,11 +178,19 @@ function shuffleArray<T>(array: T[]): T[] {
 
 	@media (max-width: 768px) {
 		article a {
-			width: 50%;
+			flex: 0 1 auto;
 		}
 
 		article a img {
-			max-width: 100%;
+			height: 60px;
+		}
+
+		article[data-tier="gold"] a img {
+			height: 70px;
+		}
+
+		article[data-tier="community"] a img {
+			height: 45px;
 		}
 	}
 </style>

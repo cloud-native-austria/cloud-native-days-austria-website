@@ -57,25 +57,29 @@ bun run preview
 ## Project Structure
 
 ```text
-├── public/              # Static assets
-│   ├── fonts/          # Web fonts (Plus Jakarta Sans, Fira Code)
-│   └── images/         # Static images (sponsors, etc.)
+├── public/              # Static assets served at build time
+│   ├── files/          # Download files (sponsorship kits, etc.)
+│   └── fonts/          # Web fonts (Plus Jakarta Sans, Fira Code)
 ├── src/
-│   ├── components/     # Astro components
+│   ├── components/     # Astro components (.astro files)
 │   │   ├── sections/   # Homepage sections
 │   │   ├── Button.astro
+│   │   ├── CurrentSessions.tsx  # Live sessions (Preact component)
 │   │   ├── Footer.astro
 │   │   ├── Header.astro
-│   │   ├── Person.astro
+│   │   ├── PersonCard.astro
 │   │   └── SponsorLogo.astro
 │   ├── constants/      # TypeScript constants
+│   ├── content/        # Content collections (team, static pages)
+│   ├── images/         # Local images referenced in components
+│   ├── icons/          # SVG icons
 │   ├── layouts/        # Page layouts
-│   ├── lib/           # Utilities (Sessionize API)
+│   ├── lib/           # Utilities (Sessionize API, icon mapping)
 │   ├── pages/         # Astro pages (routes)
-│   └── styles/        # Global CSS and design tokens
+│   ├── styles/        # Global CSS with design tokens
+│   └── content.config.ts  # Content collection schema
 ├── astro.config.ts    # Astro configuration
-├── tsconfig.json      # TypeScript configuration
-└── ROADMAP.md         # Migration progress tracking
+└── tsconfig.json      # TypeScript configuration
 ```
 
 ## AI Agent Instructions
