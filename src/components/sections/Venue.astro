@@ -5,7 +5,6 @@ import venueImage from "@images/home/venue.webp";
 
 <section>
 	<h2 id="venue">Venue</h2>
-
 	<div>
 		<Picture
 			src={venueImage}
@@ -38,29 +37,15 @@ import venueImage from "@images/home/venue.webp";
 </section>
 
 <style>
-	section {
-		padding: var(--space-12) 0;
-		width: 100%;
-		max-width: var(--container);
-		margin-inline: auto;
-		padding-inline: var(--space-4);
-	}
-
-	@media (min-width: 768px) {
-		section {
-			padding-inline: var(--space-8);
-		}
-	}
-
 	h2 {
-		text-align: center;
 		width: 100%;
+		text-align: center;
 	}
 
 	section {
 		display: flex;
 		flex-wrap: wrap;
-		gap: var(--space-8);
+		gap: var(--space-4);
 	}
 
 	section > div:first-of-type {
@@ -75,7 +60,7 @@ import venueImage from "@images/home/venue.webp";
 	section > div:first-of-type img {
 		max-height: 300px;
 		width: auto;
-		border-radius: var(--radius-md);
+		border-radius: var(--radius);
 		object-fit: contain;
 	}
 

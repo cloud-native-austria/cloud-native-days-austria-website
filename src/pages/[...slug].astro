@@ -4,7 +4,7 @@
  * Renders static pages from content collections
  */
 
-import { getCollection } from "astro:content";
+import { getCollection, render } from "astro:content";
 import Layout from "@layouts/Layout.astro";
 
 export async function getStaticPaths() {
@@ -17,7 +17,7 @@ export async function getStaticPaths() {
 }
 
 const { page } = Astro.props;
-const { Content, headings } = await page.render();
+const { Content } = await render(page);
 const { title } = page.data;
 ---
 
@@ -37,7 +37,6 @@ const { title } = page.data;
 	.static-page {
 		max-width: 1200px;
 		margin: 0 auto;
-		padding: var(--space-16) var(--space-6);
 	}
 
 	.page-header {
@@ -134,11 +133,5 @@ const { title } = page.data;
 		display: block;
 		margin-bottom: var(--space-2);
 		content: "";
-	}
-
-	@media (max-width: 768px) {
-		.static-page {
-			padding: var(--space-8) var(--space-4);
-		}
 	}
 </style>

@@ -1,131 +1,39 @@
 # AI Agent Instructions for Cloud Native Days Austria Website
 
-## Project Overview
-
 This is the website for Cloud Native Days Austria (CNDA formerly Kubernetes Community Days KCD Austria), being migrated from Gatsby to Astro.
 
-- **Framework**: Astro
-- **Language**: TypeScript
-- **Package Manager**: Bun
-- **Styling**: Vanilla CSS only
+- Framework: Astro
+- Language: Typescript
+- Package Manager: Bun
+- Styling: Vanilla CSS only
 
-## Key Conventions
+Don't start the dev server, assume it is already running on port 4321.
 
-### TypeScript
-
-All code uses TypeScript with strict mode:
-
-- **Config files**: Use `.ts` extension (e.g., `astro.config.ts`)
-- **Constants/utilities**: Write in TypeScript with proper types
-- **Astro components**: Use TypeScript in frontmatter for Props interfaces
-- **Preact components**: Full TypeScript with `.tsx` extension
-- **No `any` types**: Always provide specific types
-
-### No JavaScript Rule
+## No JavaScript Rule
 
 This project aims for zero JavaScript except where absolutely necessary:
 
-- Use `popover` attribute for modals (no JS)
-- Use `<details>`/`<summary>` for accordions/mobile menu (no JS)
-- Use CSS `@keyframes` for animations (no JS)
-- Use `:target` or `popover` for show/hide (no JS)
-- Do NOT add JavaScript for interactions that CSS can handle
+- Use `<details>`/`<summary>` for accordions/mobile menu
+- Use CSS `@keyframes` for animations
+- Use `:target` or `popover` for show/hide
 
-### CSS Guidelines
+## CSS Guidelines
 
 1. **Scoped CSS**: Put styles in `<style>` blocks within Astro components
-2. **Utility components for shared patterns**: Use utility components like `Container.astro` for common layout patterns (centering, max-width). This provides reusability without the downsides of global utility classes.
-3. **Prefer simple semantic selectors**: Leverage Astro's scoped CSS by targeting elements directly (`h1`, `section`, `article`) instead of creating classes. Astro's scoping provides component isolation automatically. Only add classes when targeting multiple elements of the same type with different styles.
-4. **Avoid wrapper divs**: Style semantic HTML elements directly instead of wrapping them in divs with classes. Use the `Container.astro` component when you need centering.
-5. **CSS Custom Properties**: Use variables from `src/styles/global.css`
-6. **Minimal global.css**: Keep `global.css` ONLY for design tokens (colors, fonts, spacing variables), CSS reset, `@font-face` declarations, and legitimate shape utilities (like `.heptagon`). Component-specific styles belong in component `<style>` blocks.
-7. **Single breakpoint**: Use only one media query breakpoint (`768px`) for major layout changes
-8. **Container queries**: Prefer `@container` queries for component-level responsiveness instead of media queries
+2. **Utility components**: Use `Container.astro` for common layout patterns (centering, max-width)
+3. **Semantic selectors**: Target elements directly (`h1`, `section`, `article`) instead of creating classes
+4. **CSS Custom Properties**: Use variables from `src/styles/global.css`
+5. **Minimal global.css**: Only design tokens, CSS reset, `@font-face`, and shape utilities
+6. **Single breakpoint**: Use only `768px` for major layout changes
+7. **Container queries**: Prefer `@container` over media queries for component-level responsiveness
 
-### Component Patterns
-
-#### Astro Components
-
-- Place in `src/components/`
-- Use `.astro` extension
-- **Always** define Props interface in TypeScript frontmatter
-- Use proper TypeScript types for all variables
-
-```astro
----
-interface Props {
-  title: string;
-  variant?: 'primary' | 'secondary';
-}
-
-const { title, variant = 'primary' } = Astro.props;
----
-
-<button data-variant={variant}>
-  {title}
-</button>
-
-<style>
-  button {
-    /* Base button styles */
-    padding: var(--space-3) var(--space-6);
-    border: none;
-    border-radius: var(--radius-md);
-    cursor: pointer;
-  }
-
-  button[data-variant="primary"] {
-    background: var(--gradient-brand);
-    color: var(--color-white);
-  }
-
-  button[data-variant="secondary"] {
-    background: var(--color-white);
-    color: var(--color-purple);
-    border: 2px solid var(--color-purple);
-  }
-</style>
-```
-
-#### Preact Components (Live page only)
-
-- Place in `src/components/`
-- Use `.tsx` extension
-- Only use with `client:load` directive
-- Keep minimal - only for features requiring client-side JS
-
-### Image Handling
+## Image Handling
 
 **ALWAYS** use Astro's `<Image>` or `<Picture>` component for images. Never use raw `<img>` tags.
 
-Use `<Picture>` when you want multiple format fallbacks (recommended for most cases):
+Use `<Picture>` when you want multiple format fallback (avif, webp).
 
-```astro
----
-import { Picture } from 'astro:assets';
-import photo from '@images/speaker.jpg';
----
-
-<!-- For people (speakers, team) - generates WebP and AVIF with fallbacks -->
-<Picture src={photo} alt="Speaker name" formats={['avif', 'webp']} />
-
-<!-- For sponsors -->
-<Picture src={logo} alt="Sponsor name" formats={['avif', 'webp']} />
-```
-
-Use `<Image>` for simpler cases when you only need a single format:
-
-```astro
----
-import { Image } from 'astro:assets';
-import photo from '@images/speaker.jpg';
----
-
-<!-- Single format (WebP) -->
-<Image src={photo} alt="Speaker name" format="webp" />
-```
-
-### Path Aliases
+## Path Aliases
 
 Configured in `tsconfig.json`:
 
@@ -138,113 +46,16 @@ Configured in `tsconfig.json`:
 | `@icons`      | `src/icons`      |
 | `@lib`        | `src/lib`        |
 
-## Commands
-
-```bash
-# Install dependencies
-bun install
-
-# Start dev server
-bun run dev
-
-# Build for production
-bun run build
-
-# Preview production build
-bun run preview
-```
-
 ## Content Collections
 
-### When to Use Collections
-
-Use Astro content collections for **content that is static at build time**, regardless of its source:
-
-✅ **Good candidates for collections:**
-
-- Team members (rarely changes, managed by developers)
-- **Speakers** (semi-static for event, fetched at prebuild from Sessionize API)
-- Blog posts or articles
-- Documentation pages
-- Static pages (privacy policy, code of conduct) - already using collections
-- Sponsors (if updated occasionally and committed to repo)
-
-❌ **NOT for collections:**
-
-- Live session data (real-time, changes during event, requires client-side polling)
-- Any data requiring real-time updates during runtime
-
-### The Key Distinction
-
-The real question isn't "Where does the data come from?" but:
-
-**Is it static at build time, or does it need runtime updates?**
-
-- ✅ **Speakers** - Semi-static for a specific event, fetched once at prebuild → Use collections
-- ✅ **Team members** - Rarely changes, edited in repo → Use collections
-- ❌ **Live sessions** - Real-time, changes every minute during event → Use client-side fetching
-
-### Collection Types
-
-**Type: `'content'`** - For Markdown/MDX files with rich content:
-
-```typescript
-const blog = defineCollection({
-  type: "content",
-  schema: z.object({
-    title: z.string(),
-    publishDate: z.date(),
-  }),
-});
-```
-
-**Type: `'data'`** - For JSON/YAML data files:
-
-```typescript
-const team = defineCollection({
-  type: "data",
-  schema: ({ image }) =>
-    z.object({
-      name: z.string(),
-      role: z.string(),
-      image: image(), // Validates image paths
-      order: z.number(),
-    }),
-});
-```
-
-### File Naming Conventions
-
-- Use kebab-case for filenames: `andreas-taranetz.json`, `data-privacy.mdx`
-- Filename becomes the entry ID (slug)
-
-### Fetching Collections
-
-```astro
----
-import { getCollection } from 'astro:content';
-
-// Get all entries
-const teamMembers = await getCollection('team');
-
-// Sort by custom field
-const sortedTeam = teamMembers.sort((a, b) => a.data.order - b.data.order);
----
-
-{sortedTeam.map(member => (
-  <div>
-    <img src={member.data.image.src} alt={member.data.name} />
-    <h3>{member.data.name}</h3>
-  </div>
-))}
-```
+Use Astro content collections for **content that is static at build time**, regardless of its source
 
 ## Accessibility Requirements
 
 1. **Skip link**: Layout includes skip-to-main-content link
 2. **Focus visible**: All interactive elements have visible focus states
 3. **Alt text**: All images have descriptive alt text
-4. **Semantic HTML**: Use `<header>`, `<main>`, `<footer>`, `<nav>`, `<article>`, `<section>`
+4. **Semantic HTML**: Use semantic html instead of div where possible
 5. **ARIA labels**: Add labels where visual context is missing
 6. **Color contrast**: Minimum 4.5:1 for text
 

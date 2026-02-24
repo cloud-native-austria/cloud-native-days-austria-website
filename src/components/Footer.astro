@@ -8,7 +8,7 @@ const footerLinks = [
 		to: "https://events.linuxfoundation.org/about/code-of-conduct/",
 		external: true,
 	},
-	{ text: "Impressum & Data Privacy", to: "/imprint-and-data-privacy", external: true },
+	{ text: "Impressum & Data Privacy", to: "/data-privacy", external: true },
 ];
 
 const socialLinks = [
@@ -66,7 +66,7 @@ const socialLinks = [
 
 <style>
 	footer {
-		border-top: 1px solid var(--color-gray-10);
+		border-top: 1px solid var(--color-gray);
 		padding: var(--space-4) 0;
 	}
 
@@ -74,7 +74,7 @@ const socialLinks = [
 		width: 100%;
 		max-width: var(--container);
 		margin-inline: auto;
-		padding-inline: var(--space-4);
+		padding-inline: var(--page-inline-padding);
 		display: grid;
 		grid-template-columns: 1fr 1fr;
 		align-items: center;
@@ -84,7 +84,6 @@ const socialLinks = [
 	@media (max-width: 768px) {
 		footer > section {
 			grid-template-columns: 1fr;
-			padding-inline: var(--space-4);
 			text-align: center;
 		}
 
@@ -92,13 +91,24 @@ const socialLinks = [
 		footer > section > div {
 			justify-self: center;
 		}
+
+		nav {
+			flex-direction: column;
+			gap: var(--space-6);
+			align-items: center;
+		}
+
+		footer > section > div {
+			flex-direction: column;
+			gap: var(--space-4);
+		}
+
+		footer > section > div > div {
+			justify-content: center;
+		}
 	}
 
 	@media (min-width: 768px) {
-		footer > section {
-			padding-inline: var(--space-8);
-		}
-
 		footer > section > nav {
 			justify-self: start;
 		}
@@ -111,14 +121,6 @@ const socialLinks = [
 	nav {
 		display: flex;
 		gap: var(--space-6);
-	}
-
-	@media (max-width: 768px) {
-		nav {
-			flex-direction: column;
-			gap: var(--space-6);
-			align-items: center;
-		}
 	}
 
 	nav a {
@@ -141,13 +143,6 @@ const socialLinks = [
 		gap: var(--space-6);
 	}
 
-	@media (max-width: 768px) {
-		footer > section > div {
-			flex-direction: column;
-			gap: var(--space-4);
-		}
-	}
-
 	footer > section > div > a {
 		font-size: var(--text-sm);
 		color: var(--color-text);
@@ -162,12 +157,6 @@ const socialLinks = [
 	footer > section > div > div {
 		display: flex;
 		gap: var(--space-4);
-	}
-
-	@media (max-width: 768px) {
-		footer > section > div > div {
-			justify-content: center;
-		}
 	}
 
 	footer > section > div > div > a {

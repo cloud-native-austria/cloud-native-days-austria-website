@@ -6,7 +6,7 @@ import hands from "@images/home/hands.webp";
 import orgs from "@images/home/orgs.webp";
 ---
 
-<section class="hero">
+<section>
 	<div>
 		<h1>Cloud Native Days Austria</h1>
 		<p>
@@ -29,72 +29,53 @@ import orgs from "@images/home/orgs.webp";
 		class="slideshow"
 		aria-label="View photos from previous events"
 	>
-		<Picture
-			src={adrianajosh}
-			alt="Two speakers giving a talk"
-			formats={["avif", "webp"]}
-			class="slide slide-1"
-		/>
+		<Picture src={adrianajosh} alt="Two speakers giving a talk" formats={["avif", "webp"]} />
 		<Picture
 			src={hands}
 			alt="The audience answering a speaker's question by a show of hands"
 			formats={["avif", "webp"]}
-			class="slide slide-2"
 		/>
-		<Picture
-			src={orgs}
-			alt="The organizers of the event"
-			formats={["avif", "webp"]}
-			class="slide slide-3"
-		/>
+		<Picture src={orgs} alt="The organizers of the event" formats={["avif", "webp"]} />
 		<Picture
 			src={crowd}
 			alt="Attendees networking and talking to each other"
 			formats={["avif", "webp"]}
-			class="slide slide-4"
 		/>
 	</a>
 </section>
 
 <style>
-	.hero {
-		padding: var(--space-12) 0;
+	section {
 		container-type: inline-size;
 		container-name: hero;
 		width: 100%;
 		max-width: var(--container);
 		margin-inline: auto;
-		padding-inline: var(--space-4);
+		padding-inline: var(--page-inline-padding);
 		display: flex;
 		gap: var(--space-8);
 		justify-content: space-between;
 		align-items: center;
 	}
 
-	@media (min-width: 768px) {
-		.hero {
-			padding-inline: var(--space-8);
-		}
-	}
-
 	@media (max-width: 768px) {
-		.hero {
+		section {
 			flex-direction: column;
 		}
 
-		.hero > div:first-child {
+		section > div:first-child {
 			max-width: 100%;
 		}
 	}
 
-	.hero > div:first-child {
+	section > div:first-child {
 		max-width: 580px;
 		display: flex;
 		flex-direction: column;
 		gap: var(--space-4);
 	}
 
-	.hero > div:first-child h1 {
+	section > div:first-child h1 {
 		text-align: start;
 		margin-bottom: 0;
 	}
@@ -114,35 +95,35 @@ import orgs from "@images/home/orgs.webp";
 		max-width: 500px;
 		aspect-ratio: 10 / 9;
 		overflow: hidden;
-		border-radius: var(--radius-md);
+		border-radius: var(--radius);
 	}
 
-	.slide {
+	picture {
 		position: absolute;
 		inset: 0;
 		width: 100%;
 		height: 100%;
 	}
 
-	.slide img {
+	picture img {
 		width: 100%;
 		height: 100%;
 		object-fit: cover;
 	}
 
-	.slide-1 {
+	.slideshow > picture:nth-of-type(1) {
 		animation: slide1 10s ease-in-out infinite;
 	}
 
-	.slide-2 {
+	.slideshow > picture:nth-of-type(2) {
 		animation: slide2 10s ease-in-out infinite;
 	}
 
-	.slide-3 {
+	.slideshow > picture:nth-of-type(3) {
 		animation: slide3 10s ease-in-out infinite;
 	}
 
-	.slide-4 {
+	.slideshow > picture:nth-of-type(4) {
 		animation: slide4 10s ease-in-out infinite;
 	}
 
