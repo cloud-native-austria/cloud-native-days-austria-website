@@ -1,0 +1,114 @@
+---
+import Button from "@components/Button.astro";
+---
+
+<section aria-labelledby="call-for-papers">
+	<h2 id="call-for-papers">Our CFP Is Open</h2>
+	<p>Now is your chance to become a speaker at the Cloud Native Days Austria.</p>
+	<p>
+		Send us your presentations until the <strong>30th of April!</strong>
+	</p>
+
+	<article>
+		<h3>Talks will be selected in batches</h3>
+		<p>
+			In addition to your free speaker ticket, you'll receive a bonus depending on
+			<em> when </em> your talk gets selected.
+		</p>
+
+		<ul>
+			<li>
+				<strong>At the end of February (~5 talks)</strong>
+				<span>We will reimburse travel costs of up to 400€.</span>
+			</li>
+			<li>
+				<strong>At the end of March (~10 talks)</strong>
+				<span>You'll receive a complimentary attendee ticket.</span>
+			</li>
+			<li>
+				<strong>At the end of April (~15 talks)</strong>
+				<span>You'll get a 50% discount for a single attendee ticket.</span>
+			</li>
+		</ul>
+	</article>
+
+	<p>
+		<Button href="https://sessionize.com/cloud-native-days-austria-2026" external>
+			Submit a session
+		</Button>
+	</p>
+</section>
+
+<style>
+	section {
+		width: 100%;
+		max-width: var(--container);
+		margin-inline: auto;
+		padding-inline: var(--page-inline-padding);
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: var(--space-4);
+		text-align: center;
+	}
+
+	h2 {
+		font-size: var(--text-3xl);
+	}
+
+	section > p {
+		max-width: 46ch;
+	}
+
+	section > p strong {
+		color: var(--color-pink);
+	}
+
+	article {
+		width: 100%;
+		background: var(--color-gray);
+		border-radius: var(--radius);
+		padding: var(--space-6);
+		display: flex;
+		flex-direction: column;
+		gap: var(--space-3);
+		text-align: left;
+	}
+
+	article h3 {
+		font-size: var(--text-3xl);
+		text-align: center;
+	}
+
+	article > p {
+		max-width: 68ch;
+	}
+
+	ul {
+		list-style: none;
+		padding: 0;
+		display: grid;
+		gap: var(--space-3);
+	}
+
+	li {
+		display: flex;
+		flex-direction: column;
+		gap: var(--space-1);
+	}
+
+	li strong {
+		font-family: var(--font-body);
+	}
+
+	@media (max-width: 768px) {
+		h2,
+		article h3 {
+			font-size: var(--text-xl);
+		}
+
+		article {
+			padding: var(--space-4);
+		}
+	}
+</style>

@@ -5,6 +5,7 @@ formerly known as KCD (Kubernetes Community Days) Austria
 Website for the Cloud Native Days Austria available at [cloudnativedays.at](https://cloudnativedays.at).
 
 > Forked from [KCDMunich/website](https://github.com/KCDMunich/website) -> Thank you! :)
+> Then rewritten from Gatsby to Astro
 
 ## Table of Contents
 
@@ -14,7 +15,6 @@ Website for the Cloud Native Days Austria available at [cloudnativedays.at](http
   - [Build the website](#build-the-website)
   - [Preview the built website](#preview-the-built-website)
 - [Project Structure](#project-structure)
-- [AI Agent Instructions](#ai-agent-instructions)
 
 ## Getting Started
 
@@ -53,40 +53,3 @@ This will build the Astro site to the `dist/` directory.
 ```bash
 bun run preview
 ```
-
-## Project Structure
-
-```text
-├── public/              # Static assets served at build time
-│   ├── files/          # Download files (sponsorship kits, etc.)
-│   └── fonts/          # Web fonts (Plus Jakarta Sans, Fira Code)
-├── src/
-│   ├── components/     # Astro components (.astro files)
-│   │   ├── sections/   # Homepage sections
-│   │   ├── Button.astro
-│   │   ├── CurrentSessions.tsx  # Live sessions (Preact component)
-│   │   ├── Footer.astro
-│   │   ├── Header.astro
-│   │   ├── PersonCard.astro
-│   │   └── SponsorLogo.astro
-│   ├── constants/      # TypeScript constants
-│   ├── content/        # Content collections (team, static pages)
-│   ├── images/         # Local images referenced in components
-│   ├── icons/          # SVG icons
-│   ├── layouts/        # Page layouts
-│   ├── lib/           # Utilities (Sessionize API, icon mapping)
-│   ├── pages/         # Astro pages (routes)
-│   ├── styles/        # Global CSS with design tokens
-│   └── content.config.ts  # Content collection schema
-├── astro.config.ts    # Astro configuration
-└── tsconfig.json      # TypeScript configuration
-```
-
-## AI Agent Instructions
-
-For AI agents contributing to this project, see [AGENTS.md](./AGENTS.md) for detailed guidelines on:
-
-- Project conventions (TypeScript, CSS, no JavaScript policy)
-- Component patterns
-- Code style requirements
-- Migration goals

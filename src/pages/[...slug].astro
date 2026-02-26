@@ -8,9 +8,9 @@ import { getCollection, render } from "astro:content";
 import Layout from "@layouts/Layout.astro";
 
 export async function getStaticPaths() {
-	const staticPages = await getCollection("static-pages");
+	const markdownPages = await getCollection("markdown-pages");
 
-	return staticPages.map((page) => ({
+	return markdownPages.map((page) => ({
 		params: { slug: page.id },
 		props: { page },
 	}));
@@ -18,118 +18,84 @@ export async function getStaticPaths() {
 
 const { page } = Astro.props;
 const { Content } = await render(page);
-const { title } = page.data;
+const { title, lang } = page.data;
 ---
 
 <Layout title={title} description={title}>
-	<article class="static-page">
-		<header class="page-header">
-			<h1>{title}</h1>
-		</header>
+	<article lang={lang}>
+		<h1>{title}</h1>
 
-		<div class="content-wrapper">
-			<Content />
-		</div>
+		<Content />
 	</article>
 </Layout>
 
 <style>
-	.static-page {
+	article {
 		max-width: var(--container);
 		margin: 0 auto;
-	}
-
-	.page-header {
-		margin-bottom: var(--space-12);
-		text-align: center;
-	}
-
-	.page-header h1 {
-		font-family: var(--font-heading);
-		font-size: var(--text-3xl);
-		color: var(--color-purple);
-		margin: 0;
-	}
-
-	.content-wrapper {
-		max-width: var(--container);
-		margin: 0 auto;
-		font-size: var(--text-base);
 		line-height: 1.7;
 	}
 
-	.content-wrapper :global(h2) {
-		font-family: var(--font-heading);
+	article :global(h2) {
 		font-size: var(--text-xl);
 		color: var(--color-purple);
 		margin-top: var(--space-12);
 		margin-bottom: var(--space-6);
 	}
 
-	.content-wrapper :global(h3) {
-		font-family: var(--font-heading);
+	article :global(h3) {
 		font-size: var(--text-lg);
-		color: var(--color-text);
 		margin-top: var(--space-8);
 		margin-bottom: var(--space-4);
 	}
 
-	.content-wrapper :global(h4) {
-		font-family: var(--font-heading);
+	article :global(h4) {
 		font-size: var(--text-base);
-		color: var(--color-text);
 		margin-top: var(--space-6);
 		margin-bottom: var(--space-3);
 	}
 
-	.content-wrapper :global(p) {
+	article :global(p) {
 		margin-bottom: var(--space-4);
 	}
 
-	.content-wrapper :global(ul),
-	.content-wrapper :global(ol) {
+	article :global(ul),
+	article :global(ol) {
 		margin-bottom: var(--space-4);
 		padding-left: var(--space-6);
 	}
 
-	.content-wrapper :global(li) {
+	article :global(li) {
 		margin-bottom: var(--space-2);
 	}
 
-	.content-wrapper :global(a) {
-		color: var(--color-purple);
+	article :global(a) {
 		text-decoration: underline;
-		transition: color 0.2s ease;
 	}
 
-	.content-wrapper :global(a:hover) {
-		color: var(--color-pink);
-	}
-
-	.content-wrapper :global(table) {
+	article :global(table) {
 		width: 100%;
 		margin: var(--space-6) 0;
 		border-collapse: collapse;
 	}
 
-	.content-wrapper :global(th),
-	.content-wrapper :global(td) {
+	article :global(th),
+	article :global(td) {
 		padding: var(--space-3);
 		text-align: left;
 		border-bottom: 1px solid #e5e7eb;
 	}
 
-	.content-wrapper :global(th) {
+	article :global(th) {
 		font-weight: 600;
 		color: var(--color-purple);
 	}
 
-	.content-wrapper :global(strong) {
+	article :global(strong) {
 		font-weight: 600;
-		color: var(--color-text);
 	}
 
-	.content-wrapper :global(br) {
+	article :global(br) {
 		display: block;
 		margin-bottom: var(--space-2);
 		content: "";

@@ -33,19 +33,6 @@ This project aims for zero JavaScript except where absolutely necessary:
 
 Use `<Picture>` when you want multiple format fallback (avif, webp).
 
-## Path Aliases
-
-Configured in `tsconfig.json`:
-
-| Alias         | Path             |
-| ------------- | ---------------- |
-| `@components` | `src/components` |
-| `@layouts`    | `src/layouts`    |
-| `@styles`     | `src/styles`     |
-| `@images`     | `src/images`     |
-| `@icons`      | `src/icons`      |
-| `@lib`        | `src/lib`        |
-
 ## Content Collections
 
 Use Astro content collections for **content that is static at build time**, regardless of its source
@@ -58,40 +45,6 @@ Use Astro content collections for **content that is static at build time**, rega
 4. **Semantic HTML**: Use semantic html instead of div where possible
 5. **ARIA labels**: Add labels where visual context is missing
 6. **Color contrast**: Minimum 4.5:1 for text
-
-## File Structure
-
-```text
-src/
-├── components/          # Astro components (and one Preact)
-│   ├── Header.astro
-│   ├── Footer.astro
-│   ├── Button.astro
-│   ├── Person.astro
-│   ├── SponsorLogo.astro
-│   ├── CurrentSessions.tsx  # Only Preact component
-│   └── sections/        # Homepage sections
-│       ├── Hero.astro
-│       ├── Sponsors.astro
-│       └── ...
-├── content/
-│   └── static-pages/    # MDX content
-├── layouts/
-│   └── Layout.astro     # Main layout
-├── lib/
-│   └── sessionize.ts    # Data fetching utilities
-├── pages/
-│   ├── index.astro
-│   ├── speakers.astro
-│   ├── team.astro
-│   ├── live.astro
-│   ├── 404.astro
-│   └── [...slug].astro  # Dynamic MDX pages
-├── styles/
-│   └── global.css       # CSS custom properties
-├── images/              # Local images
-└── icons/               # SVG icons
-```
 
 ## Brand Guidelines
 

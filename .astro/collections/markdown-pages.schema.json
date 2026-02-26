@@ -1,7 +1,7 @@
 {
-  "$ref": "#/definitions/static-pages",
+  "$ref": "#/definitions/markdown-pages",
   "definitions": {
-    "static-pages": {
+    "markdown-pages": {
       "type": "object",
       "properties": {
         "title": {

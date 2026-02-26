@@ -1,18 +1,17 @@
 ---
 interface Props {
 	href?: string;
-	variant?: "primary" | "link";
-	size?: "sm" | "md" | "lg";
+	variant?: "primary" | "outline";
 	external?: boolean;
 }
 
-const { href, variant = "primary", size = "md", external = false } = Astro.props;
+const { href, variant = "primary", external = false } = Astro.props;
 
 const Tag = href ? "a" : "button";
 const externalAttrs = external ? { target: "_blank", rel: "noopener noreferrer" } : {};
 ---
 
-<Tag href={href} data-variant={variant} data-size={size} {...externalAttrs}>
+<Tag href={href} data-variant={variant} {...externalAttrs}>
 	<slot />
 </Tag>
 
@@ -23,16 +22,14 @@ const externalAttrs = external ? { target: "_blank", rel: "noopener noreferrer" 
 		justify-content: center;
 		font-family: var(--font-heading);
 		font-weight: 600;
+		font-size: var(--text-base);
+		padding: var(--space-3) var(--space-6);
 		text-decoration: none;
 		border: none;
 		cursor: pointer;
 		transition:
 			transform var(--transition-fast),
 			opacity var(--transition-fast);
-	}
-
-	:where(a, button):hover {
-		transform: scale(1.05);
 	}
 
 	:where(a, button):active {
@@ -54,37 +51,30 @@ const externalAttrs = external ? { target: "_blank", rel: "noopener noreferrer" 
 		background-position: 100% 0;
 	}
 
-	/* Link variant - text only */
-	:where(a, button)[data-variant="link"] {
-		background: none;
+	/* Outline variant - gradient border only */
+	:where(a, button)[data-variant="outline"] {
+		background:
+			linear-gradient(var(--color-white), var(--color-white)) padding-box,
+			var(--gradient-brand) border-box;
+		background-size:
+			100% 100%,
+			200% 100%;
+		background-position:
+			0 0,
+			0 0;
 		color: var(--color-text);
-		padding: 0;
+		border: 2px solid transparent;
+		border-radius: var(--radius-full);
+		transition:
+			background-position var(--transition-base),
+			transform var(--transition-fast),
+			color var(--transition-fast);
 	}
 
-	:where(a, button)[data-variant="link"]:hover {
+	:where(a, button)[data-variant="outline"]:hover {
+		background-position:
+			0 0,
+			100% 0;
 		color: var(--color-pink);
-	}
-
-	/* Sizes */
-	:where(a, button)[data-size="sm"] {
-		font-size: var(--text-sm);
-		padding: var(--space-2) var(--space-4);
-	}
-
-	:where(a, button)[data-size="md"] {
-		font-size: var(--text-base);
-		padding: var(--space-3) var(--space-6);
-	}
-
-	:where(a, button)[data-size="lg"] {
-		font-size: var(--text-lg);
-		padding: var(--space-4) var(--space-8);
-	}
-
-	/* Link variant ignores padding */
-	:where(a, button)[data-variant="link"][data-size="sm"],
-	:where(a, button)[data-variant="link"][data-size="md"],
-	:where(a, button)[data-variant="link"][data-size="lg"] {
-		padding: var(--space-1) var(--space-2);
 	}
 </style>

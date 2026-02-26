@@ -1,26 +1,5 @@
 ---
-import Layout from "@layouts/Layout.astro";
-import Hero from "@components/sections/Hero.astro";
-import PreviousEvents from "@components/sections/PreviousEvents.astro";
-import Sponsors from "@components/sections/Sponsors.astro";
-import SponsorsList from "@components/sections/SponsorsList.astro";
-import Venue from "@components/sections/Venue.astro";
+import HomePage from "./home-page/HomePage.astro";
 ---
 
-<Layout title="Cloud Native Days Austria">
-	<section>
-		<Hero />
-		<PreviousEvents />
-		<Venue />
-		<Sponsors />
-		<SponsorsList />
-	</section>
-</Layout>
-
-<style>
-	section {
-		display: flex;
-		flex-direction: column;
-		gap: var(--space-16);
-	}
-</style>
+<HomePage />
