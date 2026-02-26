@@ -1,10 +1,31 @@
 ---
 import { Picture } from "astro:assets";
 import venueImage from "./images/venue.webp";
+
+const venueDescription = `apiVersion: event.cloudnativedays.at/v1
+kind: Venue
+metadata:
+  name: cineplexx-wienerberg
+  namespace: vienna
+spec:
+  location:
+    address: <a href="https://maps.app.goo.gl/Q22METdvy3f1GFfx8" target="_blank" rel="noopener noreferrer">Wienerbergstraße 11, 1100 Wien</a>
+    lat: 48.1680217
+    long: 16.3449543
+  stages:
+    - cinema-hall-4
+    - cinema-hall-6
+  networking:
+    evening-event: nearby
+status:
+  readiness: "We can't wait to see you there!"`;
 ---
 
 <section>
 	<h2 id="venue">Venue</h2>
+	<div>
+		<pre aria-label="Venue description"><code set:html={venueDescription} /></pre>
+	</div>
 	<div>
 		<Picture
 			src={venueImage}
@@ -13,26 +34,9 @@ import venueImage from "./images/venue.webp";
 		/>
 		<a href="https://maps.app.goo.gl/Q22METdvy3f1GFfx8" target="_blank" rel="noopener noreferrer">
 			<strong>Cineplexx Wienerberg</strong>
-			<span>Wienerbergstraße 11, 1100 Wien</span>
-		</a>
-	</div>
 
-	<div>
-		<p>
-			Cloud Native Days Austria are held at{" "}
-			<a href="https://maps.app.goo.gl/Q22METdvy3f1GFfx8" target="_blank" rel="noopener noreferrer">
-				Cineplexx Wienerberg
-			</a>
-			. You'll enjoy two cinema-style stages with comfy seats, great sound, and clear visuals.
-		</p>
-		<p>
-			Grab a coffee or a bite to eat throughout the day and check out our sponsors for cool swag.
-			There's plenty of space to meet new people and catch up with friends.
-		</p>
-		<p>Stick around for our evening event – it's right nearby!</p>
-		<p>
-			<strong>We can't wait to see you there!</strong>
-		</p>
+			Wienerbergstraße 11, 1100 Wien</a
+		>
 	</div>
 </section>
 
@@ -45,43 +49,42 @@ import venueImage from "./images/venue.webp";
 	section {
 		display: flex;
 		flex-wrap: wrap;
+		justify-content: center;
 		gap: var(--space-4);
 	}
 
-	section > div:first-of-type {
-		flex: 1;
+	section > div:last-of-type {
 		text-align: center;
 		display: flex;
 		flex-direction: column;
-		align-items: center;
 		gap: var(--space-4);
 	}
 
-	section > div:first-of-type img {
+	img {
 		max-height: 300px;
 		width: auto;
 		border-radius: var(--radius);
 		object-fit: contain;
 	}
 
-	section > div:first-of-type strong {
+	strong {
 		display: block;
 		font-family: var(--font-heading);
 	}
 
-	section > div:first-of-type span {
+	pre {
+		margin: 0;
+		padding: var(--space-4);
+		border-radius: var(--radius);
+		overflow-x: auto;
+		font-family: var(--font-heading);
 		font-size: var(--text-sm);
+		line-height: 1.5;
+		background: var(--color-bg-light);
+		border: 1px solid var(--color-gray);
 	}
 
-	section > div:last-of-type {
-		flex: 1;
-	}
-
-	section > div:last-of-type p {
-		margin-bottom: var(--space-4);
-	}
-
-	section > div:last-of-type p:last-child {
-		margin-bottom: 0;
+	code {
+		white-space: pre;
 	}
 </style>
