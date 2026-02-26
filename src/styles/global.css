@@ -129,6 +129,10 @@
 	--radius: 0.5rem;
 	--radius-full: 9999px;
 
+	/* Shadows */
+	--shadow-elevated: 0 12px 24px
+		color-mix(in srgb, var(--color-text) 16%, transparent);
+
 	/* Transitions */
 	--transition-fast: 150ms ease;
 	--transition-base: 200ms ease;
