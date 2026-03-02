@@ -1,0 +1,42 @@
+[
+	{
+		"name": "Andreas Grabner",
+		"role": "CNCF Ambassador, CNCF Keptn & Dynatrace DevRel",
+		"image": "./images/AndreasGrabner.jpeg"
+	},
+	{
+		"name": "Andreas Taranetz",
+		"role": "Senior Software Engineer, Dynatrace",
+		"image": "./images/AndreasTaranetz.jpg"
+	},
+	{
+		"name": "Daniel Drack",
+		"role": "I host the community chapter in Graz, Austria",
+		"image": "./images/DanielDrack.jpeg"
+	},
+	{
+		"name": "Erik Auer",
+		"role": "CEO, WhizUs",
+		"image": "./images/ErikAuer.jpg"
+	},
+	{
+		"name": "Johannes Grumböck",
+		"role": "Cloud Architect, Red Bull Media House",
+		"image": "./images/JohannesGrumboeck.jpeg"
+	},
+	{
+		"name": "Octavian Helm",
+		"role": "Senior Platform Engineer, BearingPoint",
+		"image": "./images/OctavianHelm.jpg"
+	},
+	{
+		"name": "Philipp Maier",
+		"role": "Senior Cloud Engineer, Dynatrace",
+		"image": "./images/PhilippMaier.jpg"
+	},
+	{
+		"name": "Sandra Schadenbauer",
+		"role": "Lecturer, FH JOANNEUM",
+		"image": "./images/SandraSchadenbauer.jpeg"
+	}
+]

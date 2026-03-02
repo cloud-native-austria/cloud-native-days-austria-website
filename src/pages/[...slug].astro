@@ -1,0 +1,103 @@
+---
+/**
+ * Dynamic MDX route
+ * Renders static pages from content collections
+ */
+
+import { getCollection, render } from "astro:content";
+import Layout from "@layouts/Layout.astro";
+
+export async function getStaticPaths() {
+	const markdownPages = await getCollection("markdown-pages");
+
+	return markdownPages.map((page) => ({
+		params: { slug: page.id },
+		props: { page },
+	}));
+}
+
+const { page } = Astro.props;
+const { Content } = await render(page);
+const { title, lang } = page.data;
+---
+
+<Layout title={title} description={title}>
+	<article lang={lang}>
+		<h1>{title}</h1>
+
+		<Content />
+	</article>
+</Layout>
+
+<style>
+	article {
+		max-width: var(--container);
+		margin: 0 auto;
+		line-height: 1.7;
+	}
+
+	article :global(h2) {
+		font-size: var(--text-xl);
+		color: var(--color-purple);
+		margin-top: var(--space-12);
+		margin-bottom: var(--space-6);
+	}
+
+	article :global(h3) {
+		font-size: var(--text-lg);
+		margin-top: var(--space-8);
+		margin-bottom: var(--space-4);
+	}
+
+	article :global(h4) {
+		font-size: var(--text-base);
+		margin-top: var(--space-6);
+		margin-bottom: var(--space-3);
+	}
+
+	article :global(p) {
+		margin-bottom: var(--space-4);
+	}
+
+	article :global(ul),
+	article :global(ol) {
+		margin-bottom: var(--space-4);
+		padding-left: var(--space-6);
+	}
+
+	article :global(li) {
+		margin-bottom: var(--space-2);
+	}
+
+	article :global(a) {
+		text-decoration: underline;
+	}
+
+	article :global(table) {
+		width: 100%;
+		margin: var(--space-6) 0;
+		border-collapse: collapse;
+	}
+
+	article :global(th),
+	article :global(td) {
+		padding: var(--space-3);
+		text-align: left;
+		border-bottom: 1px solid #e5e7eb;
+	}
+
+	article :global(th) {
+		font-weight: 600;
+		color: var(--color-purple);
+	}
+
+	article :global(strong) {
+		font-weight: 600;
+	}
+
+	article :global(br) {
+		display: block;
+		margin-bottom: var(--space-2);
+		content: "";
+	}
+</style>

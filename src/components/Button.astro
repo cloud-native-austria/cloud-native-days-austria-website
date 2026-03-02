@@ -1,0 +1,80 @@
+---
+interface Props {
+	href?: string;
+	variant?: "primary" | "outline";
+	external?: boolean;
+}
+
+const { href, variant = "primary", external = false } = Astro.props;
+
+const Tag = href ? "a" : "button";
+const externalAttrs = external ? { target: "_blank", rel: "noopener noreferrer" } : {};
+---
+
+<Tag href={href} data-variant={variant} {...externalAttrs}>
+	<slot />
+</Tag>
+
+<style>
+	:where(a, button) {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		font-family: var(--font-heading);
+		font-weight: 600;
+		font-size: var(--text-base);
+		padding: var(--space-3) var(--space-6);
+		text-decoration: none;
+		border: none;
+		cursor: pointer;
+		transition:
+			transform var(--transition-fast),
+			opacity var(--transition-fast);
+	}
+
+	:where(a, button):active {
+		transform: scale(0.98);
+	}
+
+	/* Primary variant - gradient background */
+	:where(a, button)[data-variant="primary"] {
+		background: var(--gradient-brand);
+		background-size: 200% 100%;
+		color: var(--color-white);
+		border-radius: var(--radius-full);
+		transition:
+			background-position var(--transition-base),
+			transform var(--transition-fast);
+	}
+
+	:where(a, button)[data-variant="primary"]:hover {
+		background-position: 100% 0;
+	}
+
+	/* Outline variant - gradient border only */
+	:where(a, button)[data-variant="outline"] {
+		background:
+			linear-gradient(var(--color-white), var(--color-white)) padding-box,
+			var(--gradient-brand) border-box;
+		background-size:
+			100% 100%,
+			200% 100%;
+		background-position:
+			0 0,
+			0 0;
+		color: var(--color-text);
+		border: 2px solid transparent;
+		border-radius: var(--radius-full);
+		transition:
+			background-position var(--transition-base),
+			transform var(--transition-fast),
+			color var(--transition-fast);
+	}
+
+	:where(a, button)[data-variant="outline"]:hover {
+		background-position:
+			0 0,
+			100% 0;
+		color: var(--color-pink);
+	}
+</style>

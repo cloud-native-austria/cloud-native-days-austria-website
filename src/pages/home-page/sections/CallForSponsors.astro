@@ -1,0 +1,58 @@
+---
+import Button from "@components/Button.astro";
+---
+
+<section>
+	<h2 id="call-for-sponsors">Call for Sponsors</h2>
+
+	<div>
+		<p>
+			Join us in making Cloud Native Days Austria a memorable and impactful event for all attendees.
+			To explore sponsorship opportunities, please don't hesitate to get in touch with us today.
+			Your support will help us create an unforgettable experience for the community while enhancing
+			your brand's visibility and recognition.
+		</p>
+		<p>
+			Contact us at
+			<a href="mailto:organizers@cloudnativedays.at"> organizers@cloudnativedays.at </a>
+		</p>
+	</div>
+
+	<div>
+		<Button href="/files/CND-Austria-2026-sponsor-prospectus.pdf" external>
+			Information Slides
+		</Button>
+		<Button href="/files/CND-Austria-2026-sponsor-agreement-form.pdf" external variant="outline">
+			Agreement Form
+		</Button>
+		<Button href="mailto:organizers@cloudnativedays.at" variant="outline"> Get in touch </Button>
+	</div>
+
+	<style>
+		section {
+			display: flex;
+			flex-wrap: wrap;
+			justify-content: center;
+			gap: var(--space-4);
+		}
+
+		h2 {
+			width: 100%;
+			text-align: center;
+		}
+
+		div:first-of-type {
+			flex: 1 1;
+			text-align: start;
+		}
+
+		div:last-of-type {
+			display: flex;
+			width: 300px;
+			flex-direction: column;
+			align-items: stretch;
+			justify-content: center;
+			gap: var(--space-3);
+		}
+	</style>
+</section>

@@ -1,0 +1,92 @@
+---
+import Button from "@components/Button.astro";
+import { Image } from "astro:assets";
+import speaker from "./speaker.svg";
+---
+
+<section aria-labelledby="call-for-papers">
+	<h2 id="call-for-papers">Our CFP Is Open</h2>
+	<div>
+		<p>Now is your chance to become a speaker at the Cloud Native Days Austria.</p>
+		<p>
+			Send us your presentations until the <strong>30th of April!</strong>
+		</p>
+		<Image height={150} src={speaker} alt="Conference Speaker" />
+		<Button href="https://sessionize.com/cloud-native-days-austria-2026" external>
+			Submit a session
+		</Button>
+	</div>
+
+	<section>
+		<h3>Talks will be selected in batches</h3>
+		<p>
+			In addition to your free speaker ticket, you'll receive a bonus depending on
+			<em> when </em> your talk gets selected.
+		</p>
+
+		<ul>
+			<li>
+				<strong>At the end of February (~5 talks)</strong>
+				<span>We will reimburse travel costs of up to 400€.</span>
+			</li>
+			<li>
+				<strong>At the end of March (~10 talks)</strong>
+				<span>You'll receive a complimentary attendee ticket.</span>
+			</li>
+			<li>
+				<strong>At the end of April (~15 talks)</strong>
+				<span>You'll get a 50% discount for a single attendee ticket.</span>
+			</li>
+		</ul>
+	</section>
+</section>
+
+<style>
+	section {
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: center;
+		gap: var(--space-4);
+	}
+
+	h2 {
+		width: 100%;
+		text-align: center;
+	}
+
+	section > div {
+		flex-grow: 1;
+		flex-basis: 300px;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: var(--space-4);
+	}
+
+	section > div strong {
+		color: var(--color-pink);
+	}
+
+	section > section {
+		flex-grow: 1;
+		flex-basis: 300px;
+		background: var(--color-gray);
+		border-radius: var(--radius);
+		padding: var(--space-6);
+		display: flex;
+		flex-direction: column;
+		gap: var(--space-3);
+		text-align: left;
+	}
+
+	ul {
+		list-style: none;
+		padding: 0;
+		gap: var(--space-2);
+	}
+
+	li > strong {
+		display: block;
+		color: var(--color-purple);
+	}
+</style>

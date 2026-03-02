@@ -1,0 +1,77 @@
+---
+import { Image, Picture } from "astro:assets";
+import type { ImageMetadata } from "astro";
+
+interface Props {
+	name: string;
+	role?: string | null;
+	image: ImageMetadata | string;
+}
+
+const { name, role, image } = Astro.props;
+const isRemoteImage = typeof image === "string";
+---
+
+<div class="person-card">
+	{
+		isRemoteImage ? (
+			<Picture
+				src={image}
+				alt={name}
+				class="heptagon"
+				formats={["avif", "webp"]}
+				loading="lazy"
+				decoding="async"
+				width={180}
+				height={180}
+			/>
+		) : (
+			<Image
+				src={image}
+				alt={name}
+				class="heptagon"
+				format="webp"
+				loading="lazy"
+				decoding="async"
+				width={180}
+				height={180}
+			/>
+		)
+	}
+	<h3>{name}</h3>
+	{role && <p>{role}</p>}
+</div>
+
+<style>
+	.person-card {
+		text-align: center;
+	}
+
+	.person-card img {
+		width: 180px;
+		height: 180px;
+		margin-inline: auto;
+		margin-bottom: var(--space-4);
+		object-fit: cover;
+	}
+
+	.person-card h3 {
+		font-family: var(--font-heading);
+		font-size: var(--text-lg);
+		margin-bottom: var(--space-2);
+		color: var(--color-text);
+	}
+
+	.person-card p {
+		font-size: var(--text-sm);
+		color: var(--color-text-light);
+		line-height: 1.5;
+	}
+
+	@media (max-width: 768px) {
+		.person-card img {
+			width: 150px;
+			height: 150px;
+		}
+	}
+</style>

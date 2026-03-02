@@ -9,7 +9,7 @@
     "csstools.postcss",
     "SimonSiefke.svg-preview",
     "mikestead.dotenv",
-    "esbenp.prettier-vscode",
+    "EditorConfig.EditorConfig",
     "wayou.vscode-todo-highlight",
     "formulahendry.auto-rename-tag",
     "formulahendry.auto-close-tag"

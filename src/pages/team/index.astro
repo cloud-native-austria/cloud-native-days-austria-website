@@ -1,0 +1,65 @@
+---
+import { getEntry, type CollectionEntry } from "astro:content";
+import PersonCard from "@components/PersonCard.astro";
+import Layout from "@layouts/Layout.astro";
+
+type TeamMember = CollectionEntry<"team">["data"]["members"][number];
+
+// Fetch team members from content collection
+const teamMembersEntry = await getEntry("team", "members");
+if (!teamMembersEntry) {
+	throw new Error("Team members data not found in content collection");
+}
+const teamMembers = teamMembersEntry.data.members as TeamMember[];
+---
+
+<Layout
+	title="Team | Cloud Native Days Austria"
+	description="Meet the team behind Cloud Native Days Austria. Our organizers are passionate about building the cloud native community in Austria."
+>
+	<h1>Team</h1>
+	<ul>
+		{
+			teamMembers.map(({ name, role, image }) => (
+				<li>
+					<PersonCard name={name} role={role} image={image} />
+				</li>
+			))
+		}
+	</ul>
+
+	<style>
+		h1 {
+			font-family: var(--font-heading);
+			font-size: var(--text-3xl);
+			text-align: center;
+			margin-bottom: var(--space-12);
+			color: var(--color-text);
+		}
+
+		ul {
+			display: grid;
+			grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+			gap: var(--space-10);
+			justify-items: center;
+			list-style: none;
+			padding: 0;
+			margin: 0;
+		}
+
+		li {
+			max-width: 300px;
+			width: 100%;
+		}
+		@media (max-width: 768px) {
+			h1 {
+				margin-bottom: var(--space-8);
+			}
+
+			ul {
+				grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+				gap: var(--space-8);
+			}
+		}
+	</style>
+</Layout>

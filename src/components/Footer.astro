@@ -1,0 +1,176 @@
+---
+import { Icon } from "astro-icon/components";
+
+const footerLinks = [
+	{ text: "Team", to: "/team" },
+	{
+		text: "Code of Conduct",
+		to: "https://events.linuxfoundation.org/about/code-of-conduct/",
+		external: true,
+	},
+	{ text: "Impressum & Data Privacy", to: "/data-privacy" },
+];
+
+const socialLinks = [
+	{
+		label: "LinkedIn",
+		url: "https://www.linkedin.com/company/cndaustria/",
+		icon: "linkedin",
+	},
+	{
+		label: "Google Maps",
+		url: "https://maps.app.goo.gl/ow5DQBEXz6MJCyB97",
+		icon: "maps",
+	},
+	{
+		label: "YouTube",
+		url: "https://www.youtube.com/channel/UCs8vJuX9OkkXObKb5VCkYfA",
+		icon: "youtube",
+	},
+];
+---
+
+<footer>
+	<section>
+		<nav aria-label="Footer navigation">
+			{
+				footerLinks.map(({ text, to, external }) => (
+					<a
+						href={to}
+						target={external ? "_blank" : undefined}
+						rel={external ? "noopener noreferrer" : undefined}
+					>
+						{text}
+					</a>
+				))
+			}
+		</nav>
+
+		<div>
+			<a href="mailto:organizers@cloudnativedays.at"> organizers@cloudnativedays.at </a>
+
+			<div>
+				{
+					socialLinks.map(({ label, url, icon }) => (
+						<a href={url} target="_blank" rel="noopener noreferrer" aria-label={label}>
+							{icon === "linkedin" && <Icon name="simple-icons:linkedin" width={16} height={16} />}
+							{icon === "maps" && <Icon name="simple-icons:googlemaps" width={16} height={16} />}
+							{icon === "youtube" && <Icon name="simple-icons:youtube" width={16} height={16} />}
+						</a>
+					))
+				}
+			</div>
+		</div>
+	</section>
+</footer>
+
+<style>
+	footer {
+		border-top: 1px solid var(--color-gray);
+		padding: var(--space-4) 0;
+	}
+
+	footer > section {
+		width: 100%;
+		max-width: var(--container);
+		margin-inline: auto;
+		padding-inline: var(--page-inline-padding);
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		align-items: center;
+		gap: var(--space-6);
+	}
+
+	@media (max-width: 768px) {
+		footer > section {
+			grid-template-columns: 1fr;
+			text-align: center;
+		}
+
+		footer > section > nav,
+		footer > section > div {
+			justify-self: center;
+		}
+
+		nav {
+			flex-direction: column;
+			gap: var(--space-6);
+			align-items: center;
+		}
+
+		footer > section > div {
+			flex-direction: column;
+			gap: var(--space-4);
+		}
+
+		footer > section > div > div {
+			justify-content: center;
+		}
+	}
+
+	@media (min-width: 768px) {
+		footer > section > nav {
+			justify-self: start;
+		}
+
+		footer > section > div {
+			justify-self: end;
+		}
+	}
+
+	nav {
+		display: flex;
+		gap: var(--space-6);
+	}
+
+	nav a {
+		font-size: var(--text-sm);
+		font-family: var(--font-heading);
+		font-weight: 600;
+		color: var(--color-text);
+		text-decoration: none;
+		transition: color var(--transition-fast);
+	}
+
+	nav a:hover {
+		color: var(--color-pink);
+	}
+
+	footer > section > div {
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		gap: var(--space-6);
+	}
+
+	footer > section > div > a {
+		font-size: var(--text-sm);
+		color: var(--color-text);
+		text-decoration: none;
+		transition: color var(--transition-fast);
+	}
+
+	footer > section > div > a:hover {
+		color: var(--color-pink);
+	}
+
+	footer > section > div > div {
+		display: flex;
+		gap: var(--space-4);
+	}
+
+	footer > section > div > div > a {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		color: var(--color-text);
+		transition:
+			color var(--transition-fast),
+			transform var(--transition-fast);
+	}
+
+	footer > section > div > div > a:hover {
+		color: var(--color-pink);
+		transform: scale(1.1);
+	}
+</style>

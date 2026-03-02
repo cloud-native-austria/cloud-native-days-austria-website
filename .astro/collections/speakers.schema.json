@@ -1,0 +1,114 @@
+{
+  "$ref": "#/definitions/speakers",
+  "definitions": {
+    "speakers": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "firstName": {
+          "type": "string"
+        },
+        "lastName": {
+          "type": "string"
+        },
+        "fullName": {
+          "type": "string"
+        },
+        "bio": {
+          "type": "string"
+        },
+        "tagLine": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "profilePicture": {
+          "type": "string",
+          "format": "uri"
+        },
+        "sessions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "number"
+              },
+              "name": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id",
+              "name"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "isTopSpeaker": {
+          "type": "boolean"
+        },
+        "links": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "title": {
+                "type": "string"
+              },
+              "url": {
+                "type": "string",
+                "format": "uri"
+              },
+              "linkType": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "title",
+              "url",
+              "linkType"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "categories": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "number"
+              },
+              "name": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id",
+              "name"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "$schema": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "firstName",
+        "lastName",
+        "fullName",
+        "profilePicture",
+        "sessions",
+        "links"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "$schema": "http://json-schema.org/draft-07/schema#"
+}
