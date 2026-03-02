@@ -14,7 +14,6 @@ Website for the Cloud Native Days Austria available at [cloudnativedays.at](http
   - [Run the website](#run-the-website)
   - [Build the website](#build-the-website)
   - [Preview the built website](#preview-the-built-website)
-- [Project Structure](#project-structure)
 
 ## Getting Started
 
@@ -24,10 +23,10 @@ Website for the Cloud Native Days Austria available at [cloudnativedays.at](http
 git clone git@github.com:cloud-native-austria/kcd-austria-website.git
 ```
 
-2. Install dependencies (using Bun)
+1. Install dependencies (using npm)
 
 ```bash
-bun install
+npm install
 ```
 
 ## Usage
@@ -35,7 +34,7 @@ bun install
 ### Run the website
 
 ```bash
-bun run dev
+npm run dev
 ```
 
 The site will be available at `http://localhost:4321/`
@@ -43,7 +42,7 @@ The site will be available at `http://localhost:4321/`
 ### Build the website
 
 ```bash
-bun run build
+npm run build
 ```
 
 This will build the Astro site to the `dist/` directory.
@@ -51,5 +50,5 @@ This will build the Astro site to the `dist/` directory.
 ### Preview the built website
 
 ```bash
-bun run preview
+npm run preview
 ```

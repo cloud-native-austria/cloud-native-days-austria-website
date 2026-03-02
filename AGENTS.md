@@ -4,7 +4,7 @@ This is the website for Cloud Native Days Austria (CNDA formerly Kubernetes Comm
 
 - Framework: Astro
 - Language: Typescript
-- Package Manager: Bun
+- Package Manager: npm
 - Styling: Vanilla CSS only
 
 Don't start the dev server, assume it is already running on port 4321.
