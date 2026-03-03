@@ -1,0 +1,340 @@
+---
+import PersonCard from "./PersonCard.astro";
+import { Icon } from "astro-icon/components";
+import { getLinkTypeIcon } from "../lib/icon-map";
+import { getSessionUrl } from "../lib/sessionize-app";
+import type { CollectionEntry } from "astro:content";
+
+type Speaker = CollectionEntry<"speakers">["data"];
+
+interface Props {
+	speakers: Speaker[];
+	showSessions?: boolean;
+}
+
+const { speakers, showSessions = true } = Astro.props;
+---
+
+{
+	speakers.map((speaker) => (
+		<dialog
+			id={`speaker-${speaker.id}`}
+			closedby="any"
+			aria-labelledby={`speaker-${speaker.id}-name`}
+		>
+			<header>
+				<form method="dialog">
+					<button type="submit" class="close-button" aria-label="Close modal">
+						✕
+					</button>
+				</form>
+				<div>
+					<PersonCard
+						name={speaker.fullName}
+						image={speaker.profilePicture}
+						showMeta={false}
+						sizes="120px"
+					/>
+					<div>
+						<h2 id={`speaker-${speaker.id}-name`}>{speaker.fullName}</h2>
+						{speaker.tagLine && <p>{speaker.tagLine}</p>}
+						<div class="social-links">
+							{speaker.links.map((link) => (
+								<a
+									href={link.url}
+									target="_blank"
+									rel="noopener noreferrer"
+									class="social-link"
+									aria-label={link.title}
+								>
+									<Icon name={getLinkTypeIcon(link.linkType)} width={20} height={20} />
+								</a>
+							))}
+						</div>
+					</div>
+				</div>
+			</header>
+			<div>
+				{speaker.bio && (
+					<section>
+						<h3>Bio</h3>
+						<p>{speaker.bio}</p>
+					</section>
+				)}
+				{showSessions && speaker.sessions && speaker.sessions.length > 0 && (
+					<section>
+						<h3>Sessions</h3>
+						<ul>
+							{speaker.sessions.map((session) => (
+								<li>
+									<a href={getSessionUrl(String(session.id))}>{session.name}</a>
+								</li>
+							))}
+						</ul>
+					</section>
+				)}
+			</div>
+		</dialog>
+	))
+}
+
+<style>
+	dialog {
+		margin: auto;
+		padding: 0;
+		border: none;
+		border-radius: var(--radius);
+		max-width: 600px;
+		max-height: 85vh;
+		overflow-y: auto;
+		box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+	}
+
+	dialog[open] {
+		animation: dialog-enter 220ms ease;
+	}
+
+	dialog::backdrop {
+		background: rgba(0, 0, 0, 0.6);
+		backdrop-filter: blur(4px);
+	}
+
+	@keyframes dialog-enter {
+		from {
+			opacity: 0;
+			transform: translateY(1rem) scale(0.98);
+		}
+		to {
+			opacity: 1;
+			transform: translateY(0) scale(1);
+		}
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		dialog[open] {
+			animation: none;
+		}
+	}
+
+	dialog header {
+		display: flex;
+		justify-content: space-between;
+		align-items: flex-start;
+		gap: var(--space-4);
+		padding: var(--space-6);
+		border-bottom: 1px solid var(--color-gray);
+		position: sticky;
+		top: 0;
+		background-color: var(--color-white);
+	}
+
+	dialog header > div {
+		display: flex;
+		flex-direction: column;
+		gap: var(--space-4);
+		align-items: center;
+		text-align: center;
+		width: 100%;
+	}
+
+	dialog header > div > :first-child {
+		max-width: 120px;
+	}
+
+	dialog header > div > :nth-child(2) {
+		align-self: center;
+	}
+
+	dialog header h2 {
+		font-size: var(--text-xl);
+		font-weight: 600;
+		margin-bottom: var(--space-1);
+	}
+
+	dialog header p {
+		font-size: var(--text-base);
+		color: var(--color-text-light);
+		margin-bottom: var(--space-2);
+	}
+
+	dialog header .social-links {
+		display: flex;
+		flex-wrap: wrap;
+		gap: var(--space-2);
+		margin-top: var(--space-2);
+		justify-content: center;
+	}
+
+	.close-button {
+		all: unset;
+		cursor: pointer;
+		font-size: var(--text-xl);
+		line-height: 1;
+		color: var(--color-text-light);
+		transition: color 0.2s ease;
+		flex-shrink: 0;
+		align-self: flex-start;
+		position: absolute;
+		top: var(--space-6);
+		right: var(--space-6);
+	}
+
+	.close-button:hover {
+		color: var(--color-text);
+	}
+
+	.close-button:focus-visible {
+		outline: 2px solid var(--color-purple);
+		outline-offset: 2px;
+		border-radius: var(--radius);
+	}
+
+	dialog > div {
+		padding: var(--space-6);
+	}
+
+	dialog > div h3 {
+		font-size: var(--text-lg);
+		font-weight: 600;
+		margin-bottom: var(--space-3);
+		color: var(--color-text);
+	}
+
+	dialog > div > section:first-child {
+		margin-bottom: var(--space-6);
+	}
+
+	dialog > div > section:first-child p {
+		line-height: 1.6;
+		color: var(--color-text);
+		white-space: pre-wrap;
+	}
+
+	dialog > div > section:nth-child(2) {
+		margin-bottom: var(--space-6);
+	}
+
+	dialog > div > section:nth-child(2) ul {
+		list-style: none;
+		padding: 0;
+		margin: 0;
+	}
+
+	dialog > div > section:nth-child(2) li {
+		margin-bottom: var(--space-2);
+	}
+
+	dialog > div > section:nth-child(2) a {
+		color: var(--color-purple);
+		text-decoration: none;
+		transition: color 0.2s ease;
+	}
+
+	dialog > div > section:nth-child(2) a:hover,
+	dialog > div > section:nth-child(2) a:focus-visible {
+		color: var(--color-pink);
+	}
+
+	.social-link {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 40px;
+		height: 40px;
+		padding: var(--space-2);
+		background: var(--color-bg-light);
+		color: var(--color-purple);
+		text-decoration: none;
+		border-radius: var(--radius-full);
+		transition: all 0.2s ease;
+	}
+
+	.social-link svg {
+		width: 20px;
+		height: 20px;
+		flex-shrink: 0;
+	}
+
+	.social-link:hover {
+		background: var(--color-purple);
+		color: var(--color-white);
+		transform: scale(1.05);
+	}
+
+	@media (max-width: 768px) {
+		dialog header {
+			padding: var(--space-4);
+		}
+
+		.close-button {
+			top: var(--space-4);
+			right: var(--space-4);
+		}
+
+		dialog > div {
+			padding: var(--space-4);
+		}
+	}
+</style>
+
+<script>
+	const speakerDialogs = Array.from(document.querySelectorAll("dialog[id^='speaker-']")).filter(
+		(dialog): dialog is HTMLDialogElement => dialog instanceof HTMLDialogElement,
+	);
+
+	const openSpeakerFromHash = () => {
+		const openDialog = speakerDialogs.find((dialog) => dialog.open);
+
+		if (!window.location.hash) {
+			if (openDialog) {
+				openDialog.close();
+			}
+			return;
+		}
+
+		const targetId = decodeURIComponent(window.location.hash.slice(1));
+		const target = document.getElementById(targetId);
+
+		if (!(target instanceof HTMLDialogElement)) {
+			if (openDialog) {
+				openDialog.close();
+			}
+			return;
+		}
+
+		if (openDialog && openDialog !== target) {
+			openDialog.close();
+		}
+
+		if (!target.open) {
+			target.showModal();
+		}
+	};
+
+	openSpeakerFromHash();
+	window.addEventListener("hashchange", openSpeakerFromHash);
+
+	speakerDialogs.forEach((dialog) => {
+		dialog.addEventListener("close", () => {
+			if (window.location.hash !== `#${dialog.id}`) {
+				return;
+			}
+
+			history.replaceState(null, "", `${window.location.pathname}${window.location.search}`);
+		});
+	});
+
+	document.querySelectorAll("[data-speaker-target]").forEach((trigger) => {
+		trigger.addEventListener("click", () => {
+			const targetId = trigger.getAttribute("data-speaker-target");
+			if (!targetId) return;
+
+			if (window.location.hash === `#${targetId}`) {
+				openSpeakerFromHash();
+				return;
+			}
+
+			window.location.hash = targetId;
+		});
+	});
+</script>

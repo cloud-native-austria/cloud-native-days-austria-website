@@ -5,6 +5,7 @@
 
 import { defineCollection, z } from "astro:content";
 import { file, glob } from "astro/loaders";
+import { BASE_URL } from "@lib/sessionize";
 
 const markdownPages = defineCollection({
 	loader: glob({ base: "./src/markdown-pages", pattern: "**/*.mdx" }),
@@ -57,7 +58,7 @@ const sponsors = defineCollection({
 
 const speakers = defineCollection({
 	loader: async () => {
-		const response = await fetch("https://sessionize.com/api/v2/fetamiym/view/Speakers");
+		const response = await fetch(`${BASE_URL}/Speakers`);
 		if (!response.ok) {
 			throw new Error(`Failed to load speakers: ${response.status}`);
 		}
@@ -102,9 +103,58 @@ const speakers = defineCollection({
 	}),
 });
 
+const sessions = defineCollection({
+	loader: async () => {
+		const response = await fetch(`${BASE_URL}/Sessions`);
+		if (!response.ok) {
+			throw new Error(`Failed to load sessions: ${response.status}`);
+		}
+
+		const data = (await response.json()) as Array<Record<string, unknown>>;
+
+		return data.flatMap((group) => {
+			const groupedSessions = Array.isArray(group.sessions) ? group.sessions : [];
+
+			return groupedSessions.map((session) => {
+				const sessionData = session as Record<string, unknown>;
+
+				return {
+					id: String(sessionData.id ?? ""),
+					title: String(sessionData.title ?? ""),
+					description: typeof sessionData.description === "string" ? sessionData.description : "",
+					startsAt: typeof sessionData.startsAt === "string" ? sessionData.startsAt : null,
+					endsAt: typeof sessionData.endsAt === "string" ? sessionData.endsAt : null,
+					room: typeof sessionData.room === "string" ? sessionData.room : null,
+					speakers: Array.isArray(sessionData.speakers)
+						? (sessionData.speakers as Array<Record<string, unknown>>).map((speaker) => ({
+								id: String(speaker.id ?? ""),
+								name: String(speaker.name ?? ""),
+							}))
+						: [],
+				};
+			});
+		});
+	},
+	schema: z.object({
+		id: z.string(),
+		title: z.string(),
+		description: z.string(),
+		startsAt: z.string().nullable(),
+		endsAt: z.string().nullable(),
+		room: z.string().nullable(),
+		speakers: z.array(
+			z.object({
+				id: z.string(),
+				name: z.string(),
+			}),
+		),
+	}),
+});
+
 export const collections = {
 	"markdown-pages": markdownPages,
 	team,
 	sponsors,
 	speakers,
+	sessions,
 };

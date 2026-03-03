@@ -1,20 +1,21 @@
 ---
-import { Image, Picture } from "astro:assets";
+import { Picture } from "astro:assets";
 import type { ImageMetadata } from "astro";
 
 interface Props {
 	name: string;
 	role?: string | null;
 	image: ImageMetadata | string;
+	showMeta?: boolean;
+	sizes?: string;
 }
 
-const { name, role, image } = Astro.props;
-const isRemoteImage = typeof image === "string";
+const { name, role, image, showMeta = true, sizes = "200px" } = Astro.props;
 ---
 
-<div class="person-card">
+<div>
 	{
-		isRemoteImage ? (
+		typeof image === "string" ? (
 			<Picture
 				src={image}
 				alt={name}
@@ -22,56 +23,59 @@ const isRemoteImage = typeof image === "string";
 				formats={["avif", "webp"]}
 				loading="lazy"
 				decoding="async"
-				width={180}
-				height={180}
+				sizes={sizes}
+				height={200}
+				width={200}
 			/>
 		) : (
-			<Image
+			<Picture
 				src={image}
 				alt={name}
 				class="heptagon"
-				format="webp"
+				formats={["avif", "webp"]}
 				loading="lazy"
 				decoding="async"
-				width={180}
-				height={180}
+				sizes={sizes}
+				height={200}
+				width={200}
 			/>
 		)
 	}
-	<h3>{name}</h3>
-	{role && <p>{role}</p>}
+	{showMeta && <h3>{name}</h3>}
+	{showMeta && role && <p>{role}</p>}
 </div>
 
 <style>
-	.person-card {
+	div {
 		text-align: center;
 	}
 
-	.person-card img {
-		width: 180px;
-		height: 180px;
-		margin-inline: auto;
-		margin-bottom: var(--space-4);
+	picture,
+	img {
+		margin: 0 auto;
+		width: 100%;
+		height: 100%;
+		aspect-ratio: 1/1;
 		object-fit: cover;
+		filter: drop-shadow(0 6px 6px rgb(0 0 0 / 0.24));
 	}
 
-	.person-card h3 {
+	h3 {
 		font-family: var(--font-heading);
 		font-size: var(--text-lg);
-		margin-bottom: var(--space-2);
+		margin-block: var(--space-2);
 		color: var(--color-text);
+		transition: color 0.2s ease;
 	}
 
-	.person-card p {
-		font-size: var(--text-sm);
+	:global(a:hover) h3,
+	:global(a:focus-visible) h3 {
+		color: var(--color-pink);
+	}
+
+	p {
+		font-size: var(--text-base);
 		color: var(--color-text-light);
 		line-height: 1.5;
-	}
-
-	@media (max-width: 768px) {
-		.person-card img {
-			width: 150px;
-			height: 150px;
-		}
 	}
 </style>

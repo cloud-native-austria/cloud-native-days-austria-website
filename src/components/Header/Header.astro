@@ -9,7 +9,9 @@ interface Props {
 const { homepage = false } = Astro.props;
 
 const menuItems = [
-	{ text: "Speakers", to: "/speakers", id: "speakers" },
+	// { text: "Speakers", to: "/speakers", id: "speakers" },
+	{ text: "Sessions", to: "/sessions", id: "sessions" },
+	{ text: "Tickets", to: "/#tickets", homeTo: "/", id: "tickets" },
 	{ text: "Venue", to: "/#venue", homeTo: "/", id: "venue" },
 	{ text: "Sponsors", to: "/#sponsors", homeTo: "/", id: "sponsors" },
 ];
@@ -18,7 +20,7 @@ const menuItems = [
 <header>
 	<section>
 		<a href="/" aria-label="Go to Homepage">
-			<Image src={logo} alt="Cloud Native Days Austria" width="176" height="48" />
+			<Image src={logo} alt="Cloud Native Days Austria" width="176" height="48" loading="eager" />
 		</a>
 
 		<nav aria-label="Main navigation">
@@ -100,7 +102,7 @@ const menuItems = [
 	}
 
 	nav:first-of-type a {
-		font-size: var(--text-sm);
+		font-size: var(--text-base);
 	}
 
 	nav:first-of-type a:hover,

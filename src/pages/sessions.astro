@@ -1,0 +1,355 @@
+---
+import PersonCard from "@components/PersonCard.astro";
+import SpeakersDetailDialog from "@components/SpeakersDetailDialog.astro";
+import Layout from "@layouts/Layout.astro";
+import { getCollection } from "astro:content";
+
+const speakers = await getCollection("speakers");
+const speakersById = new Map(speakers.map((entry) => [entry.data.id, entry.data]));
+
+const sessions = (await getCollection("sessions")).map((entry) => {
+	return {
+		...entry.data,
+		speakers: entry.data.speakers.map((speaker) => ({
+			...speaker,
+			profilePicture: speakersById.get(speaker.id)?.profilePicture,
+		})),
+		anchorId: `session-${entry.data.id}`,
+	};
+});
+
+const sessionSpeakerIds = new Set(
+	sessions.flatMap((session) => session.speakers.map((speaker) => speaker.id)),
+);
+const sessionSpeakers = speakers
+	.map((entry) => entry.data)
+	.filter((speaker) => sessionSpeakerIds.has(speaker.id));
+---
+
+<Layout title="Sessions | Cloud Native Days Austria" description="Browse all conference sessions">
+	<h1>Sessions of 2026</h1>
+
+	{
+		sessions.length > 0 ? (
+			<section class="timeline" aria-label="Conference sessions">
+				{sessions.map((session) => (
+					<article class="timeline-item">
+						<div class="timeline-marker">
+							{session.speakers.some((speaker) => speaker.profilePicture) ? (
+								<div class="speaker-cards">
+									{session.speakers.map(
+										(speaker) =>
+											speaker.profilePicture && (
+												<button
+													type="button"
+													commandfor={`speaker-${speaker.id}`}
+													command="show-modal"
+													data-speaker-target={`speaker-${speaker.id}`}
+													class="speaker-card-link"
+													aria-label={`View speaker profile for ${speaker.name}`}
+												>
+													<PersonCard
+														name={speaker.name}
+														image={speaker.profilePicture}
+														showMeta={false}
+														sizes="48px"
+													/>
+												</button>
+											),
+									)}
+								</div>
+							) : (
+								<span class="fallback-marker" aria-hidden="true" />
+							)}
+						</div>
+						<details id={session.anchorId}>
+							<summary data-session-target={session.anchorId}>
+								<div class="summary-content">
+									<div>
+										<h2>{session.title}</h2>
+										{session.speakers.length > 0 && (
+											<p>
+												{session.speakers.map((speaker, index) => (
+													<>
+														{index > 0 && ", "}
+														<span class="speaker-name">{speaker.name}</span>
+													</>
+												))}
+											</p>
+										)}
+									</div>
+								</div>
+							</summary>
+							<div>
+								{session.description ? (
+									<p>{session.description}</p>
+								) : (
+									<p>Session details will be available soon.</p>
+								)}
+							</div>
+						</details>
+					</article>
+				))}
+			</section>
+		) : (
+			<p>No sessions are available at the moment.</p>
+		)
+	}
+
+	<SpeakersDetailDialog speakers={sessionSpeakers} showSessions={false} />
+
+	<style>
+		h1 {
+			text-align: center;
+			margin-bottom: var(--space-8);
+		}
+
+		.timeline {
+			--timeline-marker-column: 72px;
+			--timeline-avatar-size: 48px;
+			--timeline-marker-center-y: calc(var(--space-4) + 0.7rem);
+			--timeline-pointer-size: 8px;
+			--timeline-line-x: calc(var(--timeline-marker-column) / 2);
+			display: grid;
+			gap: var(--space-4);
+			position: relative;
+			padding-block: var(--space-2);
+		}
+
+		.timeline::before {
+			content: "";
+			position: absolute;
+			top: calc(var(--space-12) * -1);
+			bottom: calc(var(--space-10) * -1);
+			left: calc(var(--timeline-line-x) - 1px);
+			width: 2px;
+			background: linear-gradient(
+				to bottom,
+				transparent 0%,
+				var(--color-gray) 12%,
+				var(--color-gray) 88%,
+				transparent 100%
+			);
+		}
+
+		.timeline-item {
+			display: grid;
+			grid-template-columns: var(--timeline-marker-column) 1fr;
+			gap: var(--space-3);
+			align-items: start;
+			position: relative;
+		}
+
+		.timeline-marker {
+			position: relative;
+			z-index: 1;
+			display: flex;
+			justify-content: center;
+			padding-top: calc(var(--timeline-marker-center-y) - (var(--timeline-avatar-size) / 2));
+		}
+
+		.fallback-marker {
+			display: block;
+			width: 24px;
+			height: 24px;
+			margin: 0;
+			border-radius: var(--radius-full);
+			background: var(--color-purple);
+		}
+
+		details {
+			border: 1px solid var(--color-gray);
+			border-radius: var(--radius);
+			background: var(--color-white);
+			overflow: visible;
+			interpolate-size: allow-keywords;
+			position: relative;
+		}
+
+		details::before {
+			content: "";
+			position: absolute;
+			left: -10px;
+			top: calc(var(--timeline-marker-center-y) - var(--timeline-pointer-size));
+			border-top: var(--timeline-pointer-size) solid transparent;
+			border-bottom: var(--timeline-pointer-size) solid transparent;
+			border-right: 10px solid var(--color-gray);
+		}
+
+		details::after {
+			content: "";
+			position: absolute;
+			left: -8px;
+			top: calc(var(--timeline-marker-center-y) - 7px);
+			border-top: 7px solid transparent;
+			border-bottom: 7px solid transparent;
+			border-right: 9px solid var(--color-white);
+		}
+
+		details:target {
+			scroll-margin-top: var(--space-8);
+			border-color: var(--color-purple);
+		}
+
+		summary {
+			list-style: none;
+			padding: var(--space-4);
+			cursor: pointer;
+		}
+
+		.summary-content {
+			display: block;
+		}
+
+		.speaker-cards {
+			display: flex;
+			flex-wrap: wrap;
+			gap: var(--space-1);
+			max-width: var(--timeline-avatar-size);
+			justify-content: center;
+			margin-inline: auto;
+		}
+
+		.speaker-card-link {
+			display: block;
+			width: var(--timeline-avatar-size);
+			height: var(--timeline-avatar-size);
+			padding: 0;
+			border-radius: var(--radius-full);
+			overflow: clip;
+			background: var(--color-white);
+			border: 1px solid var(--color-gray);
+			appearance: none;
+			line-height: 0;
+		}
+
+		.speaker-card-link:focus-visible {
+			outline: 2px solid var(--color-purple);
+			outline-offset: 2px;
+		}
+
+		.speaker-card-link :global(div) {
+			text-align: left;
+		}
+
+		.speaker-card-link :global(picture),
+		.speaker-card-link :global(img) {
+			display: block;
+			width: var(--timeline-avatar-size);
+			height: var(--timeline-avatar-size);
+			margin: 0;
+			filter: none;
+		}
+
+		.speaker-card-link :global(.heptagon) {
+			clip-path: none;
+			border-radius: var(--radius-full);
+		}
+
+		summary::-webkit-details-marker {
+			display: none;
+		}
+
+		details[open] summary {
+			border-bottom: 1px solid var(--color-gray);
+		}
+
+		h2 {
+			font-size: var(--text-base);
+			font-family: var(--font-body);
+			font-weight: 600;
+			color: var(--color-purple);
+			margin: 0;
+		}
+
+		summary p {
+			margin-top: var(--space-1);
+			color: var(--color-text-light);
+			font-size: 0.95rem;
+		}
+
+		summary p .speaker-name {
+			color: inherit;
+			font-weight: 700;
+		}
+
+		@media (max-width: 768px) {
+			.timeline {
+				--timeline-marker-column: 52px;
+				--timeline-avatar-size: 34px;
+			}
+
+			.timeline-item {
+				gap: var(--space-2);
+			}
+
+			.fallback-marker {
+				width: 18px;
+				height: 18px;
+			}
+		}
+
+		@supports selector(details::details-content) {
+			details::details-content {
+				display: block;
+				block-size: 0;
+				overflow: hidden;
+				opacity: 0;
+				transition:
+					block-size 250ms ease,
+					opacity 250ms ease,
+					content-visibility 250ms ease allow-discrete;
+			}
+
+			details[open]::details-content {
+				block-size: auto;
+				opacity: 1;
+			}
+		}
+
+		details > div {
+			padding: var(--space-4);
+		}
+
+		details > div p {
+			white-space: pre-wrap;
+		}
+
+		ul {
+			margin: var(--space-3) 0 0;
+			padding-left: var(--space-6);
+		}
+	</style>
+
+	<script>
+		const openSessionFromHash = () => {
+			if (!window.location.hash) return;
+
+			const targetId = decodeURIComponent(window.location.hash.slice(1));
+			const target = document.getElementById(targetId);
+
+			if (target instanceof HTMLDetailsElement) {
+				target.open = true;
+			}
+		};
+
+		const syncHashFromSummary = (event: Event) => {
+			const summary = event.currentTarget;
+
+			if (!(summary instanceof HTMLElement)) return;
+
+			const targetId = summary.dataset.sessionTarget;
+
+			if (!targetId) return;
+
+			window.location.hash = targetId;
+		};
+
+		document
+			.querySelectorAll("summary[data-session-target]")
+			.forEach((summary) => summary.addEventListener("click", syncHashFromSummary));
+
+		openSessionFromHash();
+		window.addEventListener("hashchange", openSessionFromHash);
+	</script>
+</Layout>
