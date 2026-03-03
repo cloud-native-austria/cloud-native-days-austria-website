@@ -1,0 +1,29 @@
+---
+import Button from "@components/Button.astro";
+import PersonCard from "@components/PersonCard.astro";
+import { getCollection } from "astro:content";
+
+const speakers = (await getCollection("speakers")).map((entry) => entry.data);
+
+const displayedSpeakers = speakers.slice(0, 10);
+---
+
+<section>
+	<h2 id="tickets">Tickets</h2>
+	<p>
+		The conference pass gives you access to all talks on both days and the evening event.
+		<br />Get your tickets now and join us for Cloud Native Days Austria 2026!
+	</p>
+
+	<Button href="https://tickets.cloudnativedays.at" external> Get your conference pass </Button>
+</section>
+
+<style>
+	section {
+		text-align: center;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: var(--space-2);
+	}
+</style>

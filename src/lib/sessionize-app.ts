@@ -1,4 +1,4 @@
-const appBaseUrl = "https://cloud-native-days-austria.sessionize.com";
+const appBaseUrl = "https://cloud-native-days-austria-2026.sessionize.com";
 
 export const getSpeakerUrl = (speakerId: string): string => `${appBaseUrl}/speaker/${speakerId}`;
 
