@@ -1,29 +1,177 @@
 ---
 import Button from "@components/Button.astro";
 import PersonCard from "@components/PersonCard.astro";
+import SpeakersPopover from "@components/SpeakersPopover.astro";
 import { getCollection } from "astro:content";
 
 const speakers = (await getCollection("speakers")).map((entry) => entry.data);
 
-const displayedSpeakers = speakers.slice(0, 10);
+const displayedSpeakers = speakers.slice(0, 5);
 ---
 
-<section>
+<section aria-labelledby="tickets">
 	<h2 id="tickets">Tickets</h2>
-	<p>
-		The conference pass gives you access to all talks on both days and the evening event.
-		<br />Get your tickets now and join us for Cloud Native Days Austria 2026!
-	</p>
+	<div>
+		<div>
+			{
+				displayedSpeakers.map((speaker) => (
+					<a
+						href={`#speaker-${speaker.id}`}
+						data-speaker-target={`speaker-${speaker.id}`}
+						aria-label={`View details for ${speaker.fullName}`}
+					>
+						<PersonCard name={speaker.fullName} image={speaker.profilePicture} showMeta={false} />
+					</a>
+				))
+			}
+		</div>
 
-	<Button href="https://tickets.cloudnativedays.at" external> Get your conference pass </Button>
+		<div>
+			<p>
+				We are currently finalizing our lineup, but you can already secure your spot.
+				<br />
+				The conference pass gives you access to all <a href="/sessions">sessions</a> on both days and
+				the
+				<strong>evening event</strong>.
+				<br />Get your ticket now <span>save 20%</span> until the end of March!
+			</p>
+
+			<Button href="https://tickets.cloudnativedays.at" external> Get your conference pass </Button>
+		</div>
+	</div>
 </section>
+
+<SpeakersPopover speakers={displayedSpeakers} />
 
 <style>
 	section {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: var(--space-4);
+	}
+
+	h2 {
+		text-align: center;
+	}
+
+	section > div {
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		justify-content: center;
+		flex-wrap: wrap;
+		gap: var(--space-6);
+		width: 100%;
+		max-width: var(--container);
+		margin-inline: auto;
+	}
+
+	section > div > div:first-child {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		max-width: 700px;
+	}
+
+	section > div > div:first-child > a {
+		display: block;
+		width: 80px;
+		flex-shrink: 0;
+		transform-origin: center bottom;
+		transform: translateY(calc(var(--base-y, 0px) + var(--lift, 0px))) rotate(var(--tilt, 0deg));
+		transition: transform 0.2s ease;
+	}
+
+	section > div > div:first-child > a:hover,
+	section > div > div:first-child > a:focus-visible {
+		--lift: -10px;
+		z-index: 6;
+	}
+
+	section > div > div:first-child > a + a {
+		margin-left: -24px;
+	}
+
+	@media (min-width: 768px) {
+		section > div > div:first-child > a {
+			width: 120px;
+		}
+
+		section > div > div:first-child > a + a {
+			margin-left: -36px;
+		}
+	}
+
+	section > div > div:first-child > a:nth-child(1) {
+		--base-y: 8px;
+		--tilt: -8deg;
+		z-index: 1;
+	}
+
+	section > div > div:first-child > a:nth-child(2) {
+		--base-y: 3px;
+		--tilt: -4deg;
+		z-index: 2;
+	}
+
+	section > div > div:first-child > a:nth-child(3) {
+		--base-y: 0px;
+		--tilt: 0deg;
+		z-index: 3;
+	}
+
+	section > div > div:first-child > a:nth-child(4) {
+		--base-y: 3px;
+		--tilt: 4deg;
+		z-index: 4;
+	}
+
+	section > div > div:first-child > a:nth-child(5) {
+		--base-y: 8px;
+		--tilt: 8deg;
+		z-index: 5;
+	}
+
+	section > div > div:nth-child(2) {
 		text-align: center;
 		display: flex;
 		flex-direction: column;
 		align-items: center;
 		gap: var(--space-2);
+		min-width: 300px;
+	}
+
+	p {
+		max-width: 34ch;
+	}
+
+	p > a {
+		color: var(--color-purple);
+	}
+
+	p > a:hover,
+	p > a:focus-visible {
+		color: var(--color-pink);
+	}
+
+	a {
+		font-weight: 600;
+	}
+
+	span {
+		color: var(--color-pink);
+		font-weight: 600;
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		section > div > div:first-child > a {
+			transition: none;
+		}
+
+		section > div > div:first-child > a:hover,
+		section > div > div:first-child > a:focus-visible {
+			--lift: 0;
+		}
 	}
 </style>

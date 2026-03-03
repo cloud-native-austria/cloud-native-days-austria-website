@@ -5,6 +5,7 @@
 
 const SESSIONIZE_API_ID = "7o54a33i";
 export const BASE_URL = `https://sessionize.com/api/v2/${SESSIONIZE_API_ID}/view`;
+export { sessionizeAppBaseUrl } from "./sessionize-app";
 
 export interface Speaker {
 	id: string;
@@ -98,14 +99,3 @@ export async function fetchAllSessions(): Promise<Session[]> {
 	const groups = await fetchSessions();
 	return groups.flatMap((group) => group.sessions);
 }
-
-/**
- * Sessionize URL helpers
- */
-export const sessionizeUrls = {
-	speaker: (speakerId: string) =>
-		`https://cloud-native-days-austria.sessionize.com/speaker/${speakerId}`,
-	session: (sessionId: string) =>
-		`https://cloud-native-days-austria.sessionize.com/session/${sessionId}`,
-	schedule: "https://cloud-native-days-austria.sessionize.com/schedule",
-};
