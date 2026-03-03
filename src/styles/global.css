@@ -102,13 +102,11 @@
 	--font-heading: "Fira Code", ui-monospace, monospace;
 
 	/* Font Sizes - Simplified T-shirt scale */
-	--text-sm: 1rem; /* 16px */
-	--text-base: 1.25rem; /* 20px */
+	--text-base: 1rem; /* 16px (browser default) */
 	--text-lg: 1.5rem; /* 24px */
 	--text-xl: 2rem; /* 32px */
 	--text-2xl: 2.5rem; /* 40px */
-	--text-3xl: 3rem; /* 48px */
-	--text-4xl: 4rem; /* 64px */
+	--text-3xl: 3.5rem; /* 56px */
 
 	/* Spacing */
 	--space-1: 0.25rem; /* 4px */
@@ -217,19 +215,19 @@ h6 {
 }
 
 h1 {
-	font-size: var(--text-4xl);
-}
-
-h2 {
 	font-size: var(--text-2xl);
 }
 
-h3 {
+h2 {
 	font-size: var(--text-xl);
 }
 
-h4 {
+h3 {
 	font-size: var(--text-lg);
+}
+
+h4 {
+	font-size: var(--text-md);
 }
 
 h5,

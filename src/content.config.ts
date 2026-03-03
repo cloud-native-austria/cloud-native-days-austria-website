@@ -5,6 +5,7 @@
 
 import { defineCollection, z } from "astro:content";
 import { file, glob } from "astro/loaders";
+import { BASE_URL } from "@lib/sessionize";
 
 const markdownPages = defineCollection({
 	loader: glob({ base: "./src/markdown-pages", pattern: "**/*.mdx" }),
@@ -57,7 +58,7 @@ const sponsors = defineCollection({
 
 const speakers = defineCollection({
 	loader: async () => {
-		const response = await fetch("https://sessionize.com/api/v2/fetamiym/view/Speakers");
+		const response = await fetch(`${BASE_URL}/Speakers`);
 		if (!response.ok) {
 			throw new Error(`Failed to load speakers: ${response.status}`);
 		}

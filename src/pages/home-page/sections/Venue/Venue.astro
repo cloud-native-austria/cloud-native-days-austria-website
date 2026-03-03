@@ -50,14 +50,22 @@ status:
 		display: flex;
 		flex-wrap: wrap;
 		justify-content: center;
-		gap: var(--space-4);
+		gap: var(--space-2);
+	}
+
+	section > div {
+		min-width: 0;
 	}
 
 	section > div:last-of-type {
-		text-align: center;
+		font-size: var(--text-base);
 		display: flex;
 		flex-direction: column;
-		gap: var(--space-4);
+		gap: var(--space-2);
+
+		a {
+			text-align: center;
+		}
 	}
 
 	img {
@@ -74,11 +82,12 @@ status:
 
 	pre {
 		margin: 0;
-		padding: var(--space-4);
+		padding: var(--space-2);
+		max-width: 100%;
 		border-radius: var(--radius);
 		overflow-x: auto;
 		font-family: var(--font-heading);
-		font-size: var(--text-sm);
+		font-size: var(--text-base);
 		line-height: 1.5;
 		background: var(--color-bg-light);
 		border: 1px solid var(--color-gray);
@@ -86,5 +95,11 @@ status:
 
 	code {
 		white-space: pre;
+	}
+
+	@media (max-width: 768px) {
+		pre {
+			font-size: calc(var(--text-base) * 0.9);
+		}
 	}
 </style>

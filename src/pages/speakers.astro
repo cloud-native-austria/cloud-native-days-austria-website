@@ -16,7 +16,7 @@ const speakers = (await getCollection("speakers")).map((entry) => entry.data) as
 	title="Speakers 2025 | Cloud Native Days Austria"
 	description="Meet the speakers of Cloud Native Days Austria 2025"
 >
-	<h1>Speakers of 2025</h1>
+	<h1>Speakers of 2026</h1>
 	<section class="speakers-grid">
 		{
 			speakers.map((speaker) => (
@@ -202,7 +202,7 @@ const speakers = (await getCollection("speakers")).map((entry) => entry.data) as
 		}
 
 		[popover] header p {
-			font-size: var(--text-sm);
+			font-size: var(--text-base);
 			color: var(--color-text-light);
 			margin-bottom: var(--space-2);
 		}

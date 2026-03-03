@@ -3,8 +3,8 @@
  * API documentation: https://sessionize.com/api-documentation
  */
 
-const SESSIONIZE_API_ID = "fetamiym";
-const BASE_URL = `https://sessionize.com/api/v2/${SESSIONIZE_API_ID}/view`;
+const SESSIONIZE_API_ID = "7o54a33i";
+export const BASE_URL = `https://sessionize.com/api/v2/${SESSIONIZE_API_ID}/view`;
 
 export interface Speaker {
 	id: string;
