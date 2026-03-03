@@ -1,7 +1,7 @@
 ---
 import Button from "@components/Button.astro";
 import PersonCard from "@components/PersonCard.astro";
-import SpeakersPopover from "@components/SpeakersPopover.astro";
+import SpeakersDetailDialog from "@components/SpeakersDetailDialog.astro";
 import { getCollection } from "astro:content";
 
 const speakers = (await getCollection("speakers")).map((entry) => entry.data);
@@ -15,13 +15,20 @@ const displayedSpeakers = speakers.slice(0, 5);
 		<div>
 			{
 				displayedSpeakers.map((speaker) => (
-					<a
-						href={`#speaker-${speaker.id}`}
+					<button
+						type="button"
+						commandfor={`speaker-${speaker.id}`}
+						command="show-modal"
 						data-speaker-target={`speaker-${speaker.id}`}
 						aria-label={`View details for ${speaker.fullName}`}
 					>
-						<PersonCard name={speaker.fullName} image={speaker.profilePicture} showMeta={false} />
-					</a>
+						<PersonCard
+							name={speaker.fullName}
+							image={speaker.profilePicture}
+							showMeta={false}
+							sizes="(max-width: 768px) 80px, 120px"
+						/>
+					</button>
 				))
 			}
 		</div>
@@ -41,7 +48,7 @@ const displayedSpeakers = speakers.slice(0, 5);
 	</div>
 </section>
 
-<SpeakersPopover speakers={displayedSpeakers} />
+<SpeakersDetailDialog speakers={displayedSpeakers} />
 
 <style>
 	section {
@@ -74,8 +81,11 @@ const displayedSpeakers = speakers.slice(0, 5);
 		max-width: 700px;
 	}
 
-	section > div > div:first-child > a {
+	section > div > div:first-child > button {
 		display: block;
+		all: unset;
+		cursor: pointer;
+		position: relative;
 		width: 80px;
 		flex-shrink: 0;
 		transform-origin: center bottom;
@@ -83,51 +93,58 @@ const displayedSpeakers = speakers.slice(0, 5);
 		transition: transform 0.2s ease;
 	}
 
-	section > div > div:first-child > a:hover,
-	section > div > div:first-child > a:focus-visible {
+	section > div > div:first-child > button:hover {
 		--lift: -10px;
 		z-index: 6;
 	}
 
-	section > div > div:first-child > a + a {
+	section > div > div:first-child > button:focus-visible {
+		--lift: -10px;
+		z-index: 6;
+		outline: 2px solid var(--color-purple);
+		outline-offset: 4px;
+		border-radius: var(--radius);
+	}
+
+	section > div > div:first-child > button + button {
 		margin-left: -24px;
 	}
 
 	@media (min-width: 768px) {
-		section > div > div:first-child > a {
+		section > div > div:first-child > button {
 			width: 120px;
 		}
 
-		section > div > div:first-child > a + a {
+		section > div > div:first-child > button + button {
 			margin-left: -36px;
 		}
 	}
 
-	section > div > div:first-child > a:nth-child(1) {
+	section > div > div:first-child > button:nth-child(1) {
 		--base-y: 8px;
 		--tilt: -8deg;
 		z-index: 1;
 	}
 
-	section > div > div:first-child > a:nth-child(2) {
+	section > div > div:first-child > button:nth-child(2) {
 		--base-y: 3px;
 		--tilt: -4deg;
 		z-index: 2;
 	}
 
-	section > div > div:first-child > a:nth-child(3) {
+	section > div > div:first-child > button:nth-child(3) {
 		--base-y: 0px;
 		--tilt: 0deg;
 		z-index: 3;
 	}
 
-	section > div > div:first-child > a:nth-child(4) {
+	section > div > div:first-child > button:nth-child(4) {
 		--base-y: 3px;
 		--tilt: 4deg;
 		z-index: 4;
 	}
 
-	section > div > div:first-child > a:nth-child(5) {
+	section > div > div:first-child > button:nth-child(5) {
 		--base-y: 8px;
 		--tilt: 8deg;
 		z-index: 5;
@@ -165,12 +182,12 @@ const displayedSpeakers = speakers.slice(0, 5);
 	}
 
 	@media (prefers-reduced-motion: reduce) {
-		section > div > div:first-child > a {
+		section > div > div:first-child > button {
 			transition: none;
 		}
 
-		section > div > div:first-child > a:hover,
-		section > div > div:first-child > a:focus-visible {
+		section > div > div:first-child > button:hover,
+		section > div > div:first-child > button:focus-visible {
 			--lift: 0;
 		}
 	}

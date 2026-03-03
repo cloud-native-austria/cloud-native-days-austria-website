@@ -1,6 +1,6 @@
 ---
 import PersonCard from "@components/PersonCard.astro";
-import SpeakersPopover from "@components/SpeakersPopover.astro";
+import SpeakersDetailDialog from "@components/SpeakersDetailDialog.astro";
 import Layout from "@layouts/Layout.astro";
 import { getCollection, type CollectionEntry } from "astro:content";
 
@@ -17,8 +17,10 @@ const speakers = (await getCollection("speakers")).map((entry) => entry.data) as
 	<section class="speakers-grid">
 		{
 			speakers.map((speaker) => (
-				<a
-					href={`#speaker-${speaker.id}`}
+				<button
+					type="button"
+					commandfor={`speaker-${speaker.id}`}
+					command="show-modal"
 					data-speaker-target={`speaker-${speaker.id}`}
 					aria-label={`View details for ${speaker.fullName}`}
 				>
@@ -26,13 +28,14 @@ const speakers = (await getCollection("speakers")).map((entry) => entry.data) as
 						name={speaker.fullName}
 						role={speaker.tagLine}
 						image={speaker.profilePicture}
+						sizes="(max-width: 768px) 150px, 200px"
 					/>
-				</a>
+				</button>
 			))
 		}
 	</section>
 
-	<SpeakersPopover speakers={speakers} />
+	<SpeakersDetailDialog speakers={speakers} />
 
 	<style>
 		h1 {
@@ -47,7 +50,7 @@ const speakers = (await getCollection("speakers")).map((entry) => entry.data) as
 			margin-top: var(--space-12);
 		}
 
-		.speakers-grid > a {
+		.speakers-grid > button {
 			all: unset;
 			cursor: pointer;
 			display: block;
@@ -55,7 +58,7 @@ const speakers = (await getCollection("speakers")).map((entry) => entry.data) as
 			text-align: center;
 		}
 
-		.speakers-grid > a:focus-visible {
+		.speakers-grid > button:focus-visible {
 			outline: 2px solid var(--color-purple);
 			outline-offset: 4px;
 			border-radius: var(--radius);

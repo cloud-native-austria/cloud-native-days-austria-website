@@ -29,17 +29,29 @@ import orgs from "./images/orgs.webp";
 		class="slideshow"
 		aria-label="View photos from previous events"
 	>
-		<Picture src={adrianajosh} alt="Two speakers giving a talk" formats={["avif", "webp"]} />
+		<Picture
+			src={adrianajosh}
+			alt="Two speakers giving a talk"
+			formats={["avif", "webp"]}
+			loading="eager"
+		/>
 		<Picture
 			src={hands}
 			alt="The audience answering a speaker's question by a show of hands"
 			formats={["avif", "webp"]}
+			loading="eager"
 		/>
-		<Picture src={orgs} alt="The organizers of the event" formats={["avif", "webp"]} />
+		<Picture
+			src={orgs}
+			alt="The organizers of the event"
+			formats={["avif", "webp"]}
+			loading="eager"
+		/>
 		<Picture
 			src={crowd}
 			alt="Attendees networking and talking to each other"
 			formats={["avif", "webp"]}
+			loading="eager"
 		/>
 	</a>
 </section>

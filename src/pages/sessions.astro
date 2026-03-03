@@ -1,6 +1,6 @@
 ---
 import PersonCard from "@components/PersonCard.astro";
-import SpeakersPopover from "@components/SpeakersPopover.astro";
+import SpeakersDetailDialog from "@components/SpeakersDetailDialog.astro";
 import Layout from "@layouts/Layout.astro";
 import { getCollection } from "astro:content";
 
@@ -40,8 +40,10 @@ const sessionSpeakers = speakers
 									{session.speakers.map(
 										(speaker) =>
 											speaker.profilePicture && (
-												<a
-													href={`#speaker-${speaker.id}`}
+												<button
+													type="button"
+													commandfor={`speaker-${speaker.id}`}
+													command="show-modal"
 													data-speaker-target={`speaker-${speaker.id}`}
 													class="speaker-card-link"
 													aria-label={`View speaker profile for ${speaker.name}`}
@@ -50,8 +52,9 @@ const sessionSpeakers = speakers
 														name={speaker.name}
 														image={speaker.profilePicture}
 														showMeta={false}
+														sizes="48px"
 													/>
-												</a>
+												</button>
 											),
 									)}
 								</div>
@@ -60,12 +63,10 @@ const sessionSpeakers = speakers
 							)}
 						</div>
 						<details id={session.anchorId}>
-							<summary>
+							<summary data-session-target={session.anchorId}>
 								<div class="summary-content">
 									<div>
-										<h2>
-											<a href={`#${session.anchorId}`}>{session.title}</a>
-										</h2>
+										<h2>{session.title}</h2>
 										{session.speakers.length > 0 && (
 											<p>
 												{session.speakers.map((speaker, index) => (
@@ -95,7 +96,7 @@ const sessionSpeakers = speakers
 		)
 	}
 
-	<SpeakersPopover speakers={sessionSpeakers} />
+	<SpeakersDetailDialog speakers={sessionSpeakers} showSessions={false} />
 
 	<style>
 		h1 {
@@ -213,10 +214,13 @@ const sessionSpeakers = speakers
 			display: block;
 			width: var(--timeline-avatar-size);
 			height: var(--timeline-avatar-size);
+			padding: 0;
 			border-radius: var(--radius-full);
 			overflow: clip;
 			background: var(--color-white);
 			border: 1px solid var(--color-gray);
+			appearance: none;
+			line-height: 0;
 		}
 
 		.speaker-card-link:focus-visible {
@@ -230,6 +234,7 @@ const sessionSpeakers = speakers
 
 		.speaker-card-link :global(picture),
 		.speaker-card-link :global(img) {
+			display: block;
 			width: var(--timeline-avatar-size);
 			height: var(--timeline-avatar-size);
 			margin: 0;
@@ -327,6 +332,22 @@ const sessionSpeakers = speakers
 				target.open = true;
 			}
 		};
+
+		const syncHashFromSummary = (event: Event) => {
+			const summary = event.currentTarget;
+
+			if (!(summary instanceof HTMLElement)) return;
+
+			const targetId = summary.dataset.sessionTarget;
+
+			if (!targetId) return;
+
+			window.location.hash = targetId;
+		};
+
+		document
+			.querySelectorAll("summary[data-session-target]")
+			.forEach((summary) => summary.addEventListener("click", syncHashFromSummary));
 
 		openSessionFromHash();
 		window.addEventListener("hashchange", openSessionFromHash);

@@ -22,7 +22,7 @@ const teamMembers = teamMembersEntry.data.members as TeamMember[];
 		{
 			teamMembers.map(({ name, role, image }) => (
 				<li>
-					<PersonCard name={name} role={role} image={image} />
+					<PersonCard name={name} role={role} image={image} sizes="200px" />
 				</li>
 			))
 		}

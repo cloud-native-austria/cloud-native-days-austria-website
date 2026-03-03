@@ -88,11 +88,22 @@ function shuffleArray<T>(array: T[]): T[] {
 	}
 
 	a {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		padding: var(--space-2);
+		border-radius: var(--radius);
 		transition: transform var(--transition-fast);
 	}
 
 	a:hover {
 		transform: scale(1.05);
+	}
+
+	a:focus-visible {
+		outline: 2px solid var(--color-purple);
+		outline-offset: 4px;
+		box-shadow: 0 0 0 4px color-mix(in srgb, var(--color-white) 85%, transparent);
 	}
 
 	a img {

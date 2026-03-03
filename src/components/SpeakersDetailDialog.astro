@@ -9,19 +9,34 @@ type Speaker = CollectionEntry<"speakers">["data"];
 
 interface Props {
 	speakers: Speaker[];
+	showSessions?: boolean;
 }
 
-const { speakers } = Astro.props;
+const { speakers, showSessions = true } = Astro.props;
 ---
 
 {
 	speakers.map((speaker) => (
-		<article id={`speaker-${speaker.id}`} popover>
+		<dialog
+			id={`speaker-${speaker.id}`}
+			closedby="any"
+			aria-labelledby={`speaker-${speaker.id}-name`}
+		>
 			<header>
+				<form method="dialog">
+					<button type="submit" class="close-button" aria-label="Close modal">
+						✕
+					</button>
+				</form>
 				<div>
-					<PersonCard name={speaker.fullName} image={speaker.profilePicture} showMeta={false} />
+					<PersonCard
+						name={speaker.fullName}
+						image={speaker.profilePicture}
+						showMeta={false}
+						sizes="120px"
+					/>
 					<div>
-						<h2>{speaker.fullName}</h2>
+						<h2 id={`speaker-${speaker.id}-name`}>{speaker.fullName}</h2>
 						{speaker.tagLine && <p>{speaker.tagLine}</p>}
 						<div class="social-links">
 							{speaker.links.map((link) => (
@@ -38,14 +53,6 @@ const { speakers } = Astro.props;
 						</div>
 					</div>
 				</div>
-				<button
-					popovertarget={`speaker-${speaker.id}`}
-					popovertargetaction="hide"
-					class="close-button"
-					aria-label="Close modal"
-				>
-					✕
-				</button>
 			</header>
 			<div>
 				{speaker.bio && (
@@ -54,7 +61,7 @@ const { speakers } = Astro.props;
 						<p>{speaker.bio}</p>
 					</section>
 				)}
-				{speaker.sessions && speaker.sessions.length > 0 && (
+				{showSessions && speaker.sessions && speaker.sessions.length > 0 && (
 					<section>
 						<h3>Sessions</h3>
 						<ul>
@@ -67,16 +74,12 @@ const { speakers } = Astro.props;
 					</section>
 				)}
 			</div>
-		</article>
+		</dialog>
 	))
 }
 
 <style>
-	[popover]:not(:popover-open) {
-		display: none !important;
-	}
-
-	[popover] {
+	dialog {
 		margin: auto;
 		padding: 0;
 		border: none;
@@ -85,49 +88,35 @@ const { speakers } = Astro.props;
 		max-height: 85vh;
 		overflow-y: auto;
 		box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-		opacity: 0;
-		transform: translateY(1rem) scale(0.98);
-		transition:
-			opacity 220ms ease,
-			transform 220ms ease,
-			overlay 220ms ease allow-discrete,
-			display 220ms ease allow-discrete;
 	}
 
-	[popover]:popover-open {
-		opacity: 1;
-		transform: translateY(0) scale(1);
+	dialog[open] {
+		animation: dialog-enter 220ms ease;
 	}
 
-	[popover]::backdrop {
+	dialog::backdrop {
 		background: rgba(0, 0, 0, 0.6);
 		backdrop-filter: blur(4px);
-		transition: background 220ms ease;
 	}
 
-	@starting-style {
-		[popover]:popover-open {
+	@keyframes dialog-enter {
+		from {
 			opacity: 0;
 			transform: translateY(1rem) scale(0.98);
 		}
-
-		[popover]:popover-open::backdrop {
-			background: rgba(0, 0, 0, 0);
+		to {
+			opacity: 1;
+			transform: translateY(0) scale(1);
 		}
 	}
 
 	@media (prefers-reduced-motion: reduce) {
-		[popover],
-		[popover]::backdrop {
-			transition: none;
-		}
-
-		[popover] {
-			transform: none;
+		dialog[open] {
+			animation: none;
 		}
 	}
 
-	[popover] header {
+	dialog header {
 		display: flex;
 		justify-content: space-between;
 		align-items: flex-start;
@@ -139,33 +128,41 @@ const { speakers } = Astro.props;
 		background-color: var(--color-white);
 	}
 
-	[popover] header > div {
+	dialog header > div {
 		display: flex;
+		flex-direction: column;
 		gap: var(--space-4);
-		align-items: flex-start;
+		align-items: center;
+		text-align: center;
+		width: 100%;
 	}
 
-	[popover] header > div > :nth-child(2) {
-		align-self: flex-start;
+	dialog header > div > :first-child {
+		max-width: 120px;
 	}
 
-	[popover] header h2 {
+	dialog header > div > :nth-child(2) {
+		align-self: center;
+	}
+
+	dialog header h2 {
 		font-size: var(--text-xl);
 		font-weight: 600;
 		margin-bottom: var(--space-1);
 	}
 
-	[popover] header p {
+	dialog header p {
 		font-size: var(--text-base);
 		color: var(--color-text-light);
 		margin-bottom: var(--space-2);
 	}
 
-	[popover] header .social-links {
+	dialog header .social-links {
 		display: flex;
 		flex-wrap: wrap;
 		gap: var(--space-2);
 		margin-top: var(--space-2);
+		justify-content: center;
 	}
 
 	.close-button {
@@ -177,6 +174,9 @@ const { speakers } = Astro.props;
 		transition: color 0.2s ease;
 		flex-shrink: 0;
 		align-self: flex-start;
+		position: absolute;
+		top: var(--space-6);
+		right: var(--space-6);
 	}
 
 	.close-button:hover {
@@ -189,49 +189,49 @@ const { speakers } = Astro.props;
 		border-radius: var(--radius);
 	}
 
-	[popover] > div {
+	dialog > div {
 		padding: var(--space-6);
 	}
 
-	[popover] > div h3 {
+	dialog > div h3 {
 		font-size: var(--text-lg);
 		font-weight: 600;
 		margin-bottom: var(--space-3);
 		color: var(--color-text);
 	}
 
-	[popover] > div > section:first-child {
+	dialog > div > section:first-child {
 		margin-bottom: var(--space-6);
 	}
 
-	[popover] > div > section:first-child p {
+	dialog > div > section:first-child p {
 		line-height: 1.6;
 		color: var(--color-text);
 		white-space: pre-wrap;
 	}
 
-	[popover] > div > section:nth-child(2) {
+	dialog > div > section:nth-child(2) {
 		margin-bottom: var(--space-6);
 	}
 
-	[popover] > div > section:nth-child(2) ul {
+	dialog > div > section:nth-child(2) ul {
 		list-style: none;
 		padding: 0;
 		margin: 0;
 	}
 
-	[popover] > div > section:nth-child(2) li {
+	dialog > div > section:nth-child(2) li {
 		margin-bottom: var(--space-2);
 	}
 
-	[popover] > div > section:nth-child(2) a {
+	dialog > div > section:nth-child(2) a {
 		color: var(--color-purple);
 		text-decoration: none;
 		transition: color 0.2s ease;
 	}
 
-	[popover] > div > section:nth-child(2) a:hover,
-	[popover] > div > section:nth-child(2) a:focus-visible {
+	dialog > div > section:nth-child(2) a:hover,
+	dialog > div > section:nth-child(2) a:focus-visible {
 		color: var(--color-pink);
 	}
 
@@ -262,56 +262,79 @@ const { speakers } = Astro.props;
 	}
 
 	@media (max-width: 768px) {
-		[popover] header {
+		dialog header {
 			padding: var(--space-4);
 		}
 
-		[popover] > div {
+		.close-button {
+			top: var(--space-4);
+			right: var(--space-4);
+		}
+
+		dialog > div {
 			padding: var(--space-4);
 		}
 	}
 </style>
 
 <script>
+	const speakerDialogs = Array.from(document.querySelectorAll("dialog[id^='speaker-']")).filter(
+		(dialog): dialog is HTMLDialogElement => dialog instanceof HTMLDialogElement,
+	);
+
 	const openSpeakerFromHash = () => {
-		if (!window.location.hash) return;
+		const openDialog = speakerDialogs.find((dialog) => dialog.open);
+
+		if (!window.location.hash) {
+			if (openDialog) {
+				openDialog.close();
+			}
+			return;
+		}
 
 		const targetId = decodeURIComponent(window.location.hash.slice(1));
 		const target = document.getElementById(targetId);
 
-		if (!target?.matches("[popover]")) return;
-
-		const openPopover = document.querySelector("[popover]:popover-open");
-		if (openPopover && openPopover !== target) {
-			(openPopover as HTMLElement).hidePopover();
+		if (!(target instanceof HTMLDialogElement)) {
+			if (openDialog) {
+				openDialog.close();
+			}
+			return;
 		}
 
-		if (!target.matches(":popover-open")) {
-			(target as HTMLElement).showPopover();
+		if (openDialog && openDialog !== target) {
+			openDialog.close();
+		}
+
+		if (!target.open) {
+			target.showModal();
 		}
 	};
 
 	openSpeakerFromHash();
 	window.addEventListener("hashchange", openSpeakerFromHash);
 
-	document.querySelectorAll("[popover]").forEach((popover) => {
-		popover.addEventListener("beforetoggle", (event) => {
-			if (!(event instanceof ToggleEvent)) return;
-			if (event.newState !== "closed") return;
-			if (window.location.hash !== `#${popover.id}`) return;
+	speakerDialogs.forEach((dialog) => {
+		dialog.addEventListener("close", () => {
+			if (window.location.hash !== `#${dialog.id}`) {
+				return;
+			}
 
 			history.replaceState(null, "", `${window.location.pathname}${window.location.search}`);
 		});
 	});
 
-	document.querySelectorAll("a[data-speaker-target]").forEach((link) => {
-		link.addEventListener("click", () => {
-			const targetId = link.getAttribute("data-speaker-target");
+	document.querySelectorAll("[data-speaker-target]").forEach((trigger) => {
+		trigger.addEventListener("click", () => {
+			const targetId = trigger.getAttribute("data-speaker-target");
 			if (!targetId) return;
 
 			if (window.location.hash === `#${targetId}`) {
 				openSpeakerFromHash();
+				return;
 			}
+
+			window.location.hash = targetId;
 		});
 	});
 </script>

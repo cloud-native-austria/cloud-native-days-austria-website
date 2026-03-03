@@ -7,9 +7,10 @@ interface Props {
 	role?: string | null;
 	image: ImageMetadata | string;
 	showMeta?: boolean;
+	sizes?: string;
 }
 
-const { name, role, image, showMeta = true } = Astro.props;
+const { name, role, image, showMeta = true, sizes = "200px" } = Astro.props;
 ---
 
 <div>
@@ -22,8 +23,9 @@ const { name, role, image, showMeta = true } = Astro.props;
 				formats={["avif", "webp"]}
 				loading="lazy"
 				decoding="async"
-				width={200}
+				sizes={sizes}
 				height={200}
+				width={200}
 			/>
 		) : (
 			<Picture
@@ -33,6 +35,9 @@ const { name, role, image, showMeta = true } = Astro.props;
 				formats={["avif", "webp"]}
 				loading="lazy"
 				decoding="async"
+				sizes={sizes}
+				height={200}
+				width={200}
 			/>
 		)
 	}

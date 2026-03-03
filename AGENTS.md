@@ -39,12 +39,11 @@ Use Astro content collections for **content that is static at build time**, rega
 
 ## Accessibility Requirements
 
-1. **Skip link**: Layout includes skip-to-main-content link
-2. **Focus visible**: All interactive elements have visible focus states
-3. **Alt text**: All images have descriptive alt text
-4. **Semantic HTML**: Use semantic html instead of div where possible
-5. **ARIA labels**: Add labels where visual context is missing
-6. **Color contrast**: Minimum 4.5:1 for text
+1. **Focus visible**: All interactive elements have visible focus states
+2. **Alt text**: All images have descriptive alt text
+3. **Semantic HTML**: Use semantic html instead of div where possible
+4. **ARIA labels**: Add labels where visual context is missing
+5. **Color contrast**: Minimum 4.5:1 for text
 
 ## Brand Guidelines
 
