@@ -1,8 +1,9 @@
 ---
 import PersonCard from "@components/PersonCard.astro";
-import SpeakersDetailDialog from "@components/SpeakersDetailDialog.astro";
+import SpeakerDetailModal from "@components/SpeakerDetailModal.astro";
 import Layout from "@layouts/Layout.astro";
 import { getCollection } from "astro:content";
+import Speakers from "./speakers.astro";
 
 const speakers = await getCollection("speakers");
 const speakersById = new Map(speakers.map((entry) => [entry.data.id, entry.data]));
@@ -40,6 +41,7 @@ const sessionSpeakers = speakers
 									{session.speakers.map(
 										(speaker) =>
 											speaker.profilePicture && (
+												<SpeakerDetailModal speaker={sessionSpeakers.find((s) => s.id === speaker.id)!} showSessions={false} />
 												<button
 													type="button"
 													commandfor={`speaker-${speaker.id}`}
@@ -95,8 +97,6 @@ const sessionSpeakers = speakers
 			<p>No sessions are available at the moment.</p>
 		)
 	}
-
-	<SpeakersDetailDialog speakers={sessionSpeakers} showSessions={false} />
 
 	<style>
 		h1 {

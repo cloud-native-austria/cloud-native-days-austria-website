@@ -1,6 +1,6 @@
 ---
 import PersonCard from "@components/PersonCard.astro";
-import SpeakersDetailDialog from "@components/SpeakersDetailDialog.astro";
+import SpeakerDetailModal from "@components/SpeakerDetailModal.astro";
 import Layout from "@layouts/Layout.astro";
 import { getCollection, type CollectionEntry } from "astro:content";
 
@@ -17,6 +17,7 @@ const speakers = (await getCollection("speakers")).map((entry) => entry.data) as
 	<section class="speakers-grid">
 		{
 			speakers.map((speaker) => (
+				<SpeakerDetailModal speaker={speaker} />
 				<button
 					type="button"
 					commandfor={`speaker-${speaker.id}`}
@@ -34,8 +35,6 @@ const speakers = (await getCollection("speakers")).map((entry) => entry.data) as
 			))
 		}
 	</section>
-
-	<SpeakersDetailDialog speakers={speakers} />
 
 	<style>
 		h1 {

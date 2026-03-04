@@ -1,7 +1,7 @@
 ---
 import Button from "@components/Button.astro";
 import PersonCard from "@components/PersonCard.astro";
-import SpeakersDetailDialog from "@components/SpeakersDetailDialog.astro";
+import SpeakerDetailModal from "@components/SpeakerDetailModal.astro";
 import { getCollection } from "astro:content";
 
 const speakers = (await getCollection("speakers")).map((entry) => entry.data);
@@ -12,26 +12,29 @@ const displayedSpeakers = speakers.slice(0, 5);
 <section aria-labelledby="tickets">
 	<h2 id="tickets">Tickets</h2>
 	<div>
-		<div>
+		<ul>
 			{
 				displayedSpeakers.map((speaker) => (
-					<button
-						type="button"
-						commandfor={`speaker-${speaker.id}`}
-						command="show-modal"
-						data-speaker-target={`speaker-${speaker.id}`}
-						aria-label={`View details for ${speaker.fullName}`}
-					>
-						<PersonCard
-							name={speaker.fullName}
-							image={speaker.profilePicture}
-							showMeta={false}
-							sizes="(max-width: 768px) 80px, 120px"
-						/>
-					</button>
+					<li>
+						<SpeakerDetailModal speaker={speaker} />
+						<button
+							type="button"
+							commandfor={`speaker-${speaker.id}`}
+							command="show-modal"
+							data-speaker-target={`speaker-${speaker.id}`}
+							aria-label={`View details for ${speaker.fullName}`}
+						>
+							<PersonCard
+								name={speaker.fullName}
+								image={speaker.profilePicture}
+								showMeta={false}
+								sizes="(max-width: 768px) 80px, 120px"
+							/>
+						</button>
+					</li>
 				))
 			}
-		</div>
+		</ul>
 
 		<div>
 			<p>
@@ -47,8 +50,6 @@ const displayedSpeakers = speakers.slice(0, 5);
 		</div>
 	</div>
 </section>
-
-<SpeakersDetailDialog speakers={displayedSpeakers} />
 
 <style>
 	section {
@@ -74,14 +75,24 @@ const displayedSpeakers = speakers.slice(0, 5);
 		margin-inline: auto;
 	}
 
-	section > div > div:first-child {
+	section > div > ul {
 		display: flex;
 		justify-content: center;
 		align-items: center;
 		max-width: 700px;
+		padding: 0;
+		margin: 0;
 	}
 
-	section > div > div:first-child > button {
+	ul > li {
+		list-style: none;
+	}
+
+	ul > li:not(:first-child) {
+		margin-left: -24px;
+	}
+
+	ul > li > button {
 		display: block;
 		all: unset;
 		cursor: pointer;
@@ -93,12 +104,12 @@ const displayedSpeakers = speakers.slice(0, 5);
 		transition: transform 0.2s ease;
 	}
 
-	section > div > div:first-child > button:hover {
+	ul > li > button:hover {
 		--lift: -10px;
 		z-index: 6;
 	}
 
-	section > div > div:first-child > button:focus-visible {
+	ul > li > button:focus-visible {
 		--lift: -10px;
 		z-index: 6;
 		outline: 2px solid var(--color-purple);
@@ -106,51 +117,47 @@ const displayedSpeakers = speakers.slice(0, 5);
 		border-radius: var(--radius);
 	}
 
-	section > div > div:first-child > button + button {
-		margin-left: -24px;
-	}
-
 	@media (min-width: 768px) {
-		section > div > div:first-child > button {
+		ul > li > button {
 			width: 120px;
 		}
 
-		section > div > div:first-child > button + button {
+		ul > li:not(:first-child) {
 			margin-left: -36px;
 		}
 	}
 
-	section > div > div:first-child > button:nth-child(1) {
+	ul > li:nth-child(1) {
 		--base-y: 8px;
 		--tilt: -8deg;
 		z-index: 1;
 	}
 
-	section > div > div:first-child > button:nth-child(2) {
+	ul > li:nth-child(2) {
 		--base-y: 3px;
 		--tilt: -4deg;
 		z-index: 2;
 	}
 
-	section > div > div:first-child > button:nth-child(3) {
+	section > div > ul > li:nth-child(3) {
 		--base-y: 0px;
 		--tilt: 0deg;
 		z-index: 3;
 	}
 
-	section > div > div:first-child > button:nth-child(4) {
+	section > div > ul > li:nth-child(4) {
 		--base-y: 3px;
 		--tilt: 4deg;
 		z-index: 4;
 	}
 
-	section > div > div:first-child > button:nth-child(5) {
+	section > div > ul > li:nth-child(5) {
 		--base-y: 8px;
 		--tilt: 8deg;
 		z-index: 5;
 	}
 
-	section > div > div:nth-child(2) {
+	section > div > div:last-child {
 		text-align: center;
 		display: flex;
 		flex-direction: column;
@@ -182,12 +189,12 @@ const displayedSpeakers = speakers.slice(0, 5);
 	}
 
 	@media (prefers-reduced-motion: reduce) {
-		section > div > div:first-child > button {
+		section > div > ul > li > button {
 			transition: none;
 		}
 
-		section > div > div:first-child > button:hover,
-		section > div > div:first-child > button:focus-visible {
+		section > div > ul > li > button:hover,
+		section > div > ul > li > button:focus-visible {
 			--lift: 0;
 		}
 	}
