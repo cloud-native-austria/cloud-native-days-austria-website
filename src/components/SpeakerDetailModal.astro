@@ -8,26 +8,29 @@ import type { CollectionEntry } from "astro:content";
 type Speaker = CollectionEntry<"speakers">["data"];
 
 interface Props {
-	speakers: Speaker[];
+	speaker: Speaker;
 	showSessions?: boolean;
 }
 
-const { speakers, showSessions = true } = Astro.props;
+const { speaker, showSessions = true } = Astro.props;
 ---
 
 {
-	speakers.map((speaker) => (
+	(
 		<dialog
 			id={`speaker-${speaker.id}`}
 			closedby="any"
 			aria-labelledby={`speaker-${speaker.id}-name`}
 		>
 			<header>
-				<form method="dialog">
-					<button type="submit" class="close-button" aria-label="Close modal">
-						✕
-					</button>
-				</form>
+				<button
+					autofocus
+					commandfor={`speaker-${speaker.id}`}
+					command="close"
+					aria-label="Close speaker details"
+				>
+					✕
+				</button>
 				<div>
 					<PersonCard
 						name={speaker.fullName}
@@ -75,7 +78,7 @@ const { speakers, showSessions = true } = Astro.props;
 				)}
 			</div>
 		</dialog>
-	))
+	)
 }
 
 <style>
@@ -165,25 +168,22 @@ const { speakers, showSessions = true } = Astro.props;
 		justify-content: center;
 	}
 
-	.close-button {
+	button {
 		all: unset;
-		cursor: pointer;
 		font-size: var(--text-xl);
-		line-height: 1;
+		padding-inline: 0.5rem;
 		color: var(--color-text-light);
 		transition: color 0.2s ease;
-		flex-shrink: 0;
-		align-self: flex-start;
 		position: absolute;
 		top: var(--space-6);
 		right: var(--space-6);
 	}
 
-	.close-button:hover {
+	button:hover {
 		color: var(--color-text);
 	}
 
-	.close-button:focus-visible {
+	button:focus-visible {
 		outline: 2px solid var(--color-purple);
 		outline-offset: 2px;
 		border-radius: var(--radius);
@@ -266,7 +266,7 @@ const { speakers, showSessions = true } = Astro.props;
 			padding: var(--space-4);
 		}
 
-		.close-button {
+		button {
 			top: var(--space-4);
 			right: var(--space-4);
 		}
