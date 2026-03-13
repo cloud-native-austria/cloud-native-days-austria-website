@@ -3,80 +3,6 @@
    ========================================================================== */
 
 /* --------------------------------------------------------------------------
-   Font Faces
-   -------------------------------------------------------------------------- */
-
-/* Plus Jakarta Sans - Body text */
-@font-face {
-	font-family: "Plus Jakarta Sans";
-	font-style: normal;
-	font-weight: 400;
-	font-display: swap;
-	src: url("/fonts/plus-jakarta-sans/plus-jakarta-sans-400.woff2")
-		format("woff2");
-}
-
-@font-face {
-	font-family: "Plus Jakarta Sans";
-	font-style: normal;
-	font-weight: 500;
-	font-display: swap;
-	src: url("/fonts/plus-jakarta-sans/plus-jakarta-sans-500.woff2")
-		format("woff2");
-}
-
-@font-face {
-	font-family: "Plus Jakarta Sans";
-	font-style: normal;
-	font-weight: 600;
-	font-display: swap;
-	src: url("/fonts/plus-jakarta-sans/plus-jakarta-sans-600.woff2")
-		format("woff2");
-}
-
-@font-face {
-	font-family: "Plus Jakarta Sans";
-	font-style: normal;
-	font-weight: 700;
-	font-display: swap;
-	src: url("/fonts/plus-jakarta-sans/plus-jakarta-sans-700.woff2")
-		format("woff2");
-}
-
-/* Fira Code - Headings */
-@font-face {
-	font-family: "Fira Code";
-	font-style: normal;
-	font-weight: 400;
-	font-display: swap;
-	src: url("/fonts/fira-code/FiraCode-Regular.woff2") format("woff2");
-}
-
-@font-face {
-	font-family: "Fira Code";
-	font-style: normal;
-	font-weight: 500;
-	font-display: swap;
-	src: url("/fonts/fira-code/FiraCode-Medium.woff2") format("woff2");
-}
-
-@font-face {
-	font-family: "Fira Code";
-	font-style: normal;
-	font-weight: 600;
-	font-display: swap;
-	src: url("/fonts/fira-code/FiraCode-SemiBold.woff2") format("woff2");
-}
-
-@font-face {
-	font-family: "Fira Code";
-	font-style: normal;
-	font-weight: 700;
-	font-display: swap;
-	src: url("/fonts/fira-code/FiraCode-Bold.woff2") format("woff2");
-}
-
-/* --------------------------------------------------------------------------
    CSS Custom Properties (Design Tokens)
    -------------------------------------------------------------------------- */
 
@@ -98,8 +24,8 @@
 	--color-gray: #e6e6e6;
 
 	/* Typography */
-	--font-body: "Plus Jakarta Sans", system-ui, sans-serif;
-	--font-heading: "Fira Code", ui-monospace, monospace;
+	--font-body: var(--font-plus-jakarta-sans);
+	--font-heading: var(--font-fira-code);
 
 	/* Font Sizes - Simplified T-shirt scale */
 	--text-base: 1rem; /* 16px (browser default) */
