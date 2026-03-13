@@ -11,6 +11,16 @@ if (!sponsorsEntry) {
 
 const sponsors = sponsorsEntry.data.tiers as SponsorTier[];
 
+const tierImageBounds: Record<string, { width: number; height: number }> = {
+	gold: { width: 220, height: 110 },
+	silver: { width: 200, height: 100 },
+	community: { width: 160, height: 80 },
+};
+
+function getTierImageBounds(tier: string) {
+	return tierImageBounds[tier] ?? tierImageBounds.silver;
+}
+
 // Shuffle sponsors at build time for each tier
 function shuffleArray<T>(array: T[]): T[] {
 	const shuffled = [...array];
@@ -31,19 +41,24 @@ function shuffleArray<T>(array: T[]): T[] {
 				<li data-tier={tier}>
 					<h3>{title}</h3>
 					<ul>
-						{shuffleArray(tierSponsors).map(({ name, url, logo }) => (
-							<li>
-								<a href={url} target="_blank" rel="noopener noreferrer" aria-label={name}>
-									<Picture
-										src={logo}
-										alt={name}
-										width={200}
-										height={100}
-										formats={["avif", "webp"]}
-									/>
-								</a>
-							</li>
-						))}
+						{shuffleArray(tierSponsors).map(({ name, url, logo }) => {
+							const imageBounds = getTierImageBounds(tier);
+
+							return (
+								<li>
+									<a href={url} target="_blank" rel="noopener noreferrer" aria-label={name}>
+										<Picture
+											src={logo}
+											alt={name}
+											width={imageBounds.width}
+											height={imageBounds.height}
+											fit="inside"
+											formats={["avif", "webp"]}
+										/>
+									</a>
+								</li>
+							);
+						})}
 					</ul>
 				</li>
 			))
@@ -107,35 +122,8 @@ function shuffleArray<T>(array: T[]): T[] {
 	}
 
 	a img {
-		height: 70px;
+		height: auto;
 		width: auto;
-		max-width: 180px;
 		object-fit: contain;
-	}
-
-	/* Gold tier - larger logos */
-	ol > li[data-tier="gold"] a img {
-		height: 80px;
-		max-width: 200px;
-	}
-
-	/* Community tier - smaller logos */
-	ol > li[data-tier="community"] a img {
-		height: 50px;
-		max-width: 140px;
-	}
-
-	@media (max-width: 768px) {
-		a img {
-			height: 60px;
-		}
-
-		ol > li[data-tier="gold"] a img {
-			height: 70px;
-		}
-
-		ol > li[data-tier="community"] a img {
-			height: 45px;
-		}
 	}
 </style>

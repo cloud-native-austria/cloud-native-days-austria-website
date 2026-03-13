@@ -21,6 +21,9 @@ export default defineConfig({
 		}),
 	],
 	image: {
-		remotePatterns: [{ protocol: "https" }],
+		remotePatterns: [
+			{ protocol: "https", hostname: "sessionize.com" },
+			{ protocol: "https", hostname: "cache.sessionize.com" },
+		],
 	},
 });
