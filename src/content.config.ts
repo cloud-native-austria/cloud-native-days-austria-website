@@ -7,6 +7,26 @@ import { defineCollection, z } from "astro:content";
 import { file, glob } from "astro/loaders";
 import { BASE_URL } from "@lib/sessionize";
 
+const SESSIONIZE_IMAGE_HOST = "cache.sessionize.com";
+
+function normalizeSessionizeImageUrl(value: unknown): unknown {
+	if (typeof value !== "string") {
+		return value;
+	}
+
+	try {
+		const url = new URL(value);
+		if (url.hostname === "sessionize.com" && url.pathname.startsWith("/image/")) {
+			url.hostname = SESSIONIZE_IMAGE_HOST;
+			return url.toString();
+		}
+	} catch {
+		return value;
+	}
+
+	return value;
+}
+
 const markdownPages = defineCollection({
 	loader: glob({ base: "./src/markdown-pages", pattern: "**/*.mdx" }),
 	schema: z.object({
@@ -66,6 +86,7 @@ const speakers = defineCollection({
 		return data.map((speaker) => ({
 			id: String(speaker.id ?? ""),
 			...speaker,
+			profilePicture: normalizeSessionizeImageUrl(speaker.profilePicture),
 			links: Array.isArray(speaker.links) ? speaker.links : [],
 			sessions: Array.isArray(speaker.sessions) ? speaker.sessions : [],
 		}));
