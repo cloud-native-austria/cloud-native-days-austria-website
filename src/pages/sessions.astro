@@ -203,10 +203,10 @@ const sessionSpeakers = speakers
 
 		.speaker-cards {
 			display: flex;
-			flex-wrap: wrap;
-			gap: var(--space-1);
+			flex-direction: column;
 			max-width: var(--timeline-avatar-size);
-			justify-content: center;
+			justify-content: flex-start;
+			align-items: center;
 			margin-inline: auto;
 		}
 
@@ -221,6 +221,11 @@ const sessionSpeakers = speakers
 			border: 1px solid var(--color-gray);
 			appearance: none;
 			line-height: 0;
+			position: relative;
+		}
+
+		.speaker-card-link ~ .speaker-card-link {
+			margin-top: calc(var(--timeline-avatar-size) * -0.3);
 		}
 
 		.speaker-card-link:focus-visible {
