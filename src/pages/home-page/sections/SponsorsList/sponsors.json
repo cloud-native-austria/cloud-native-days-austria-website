@@ -4,24 +4,24 @@
 		"tier": "gold",
 		"sponsors": [
 			{
-				"name": "Whizus",
+				"name": "WhizUs",
 				"url": "https://www.whizus.com",
-				"logo": "./images/Whizus.png"
+				"logo": "./images/whizus.png"
 			},
 			{
-				"name": "Exoscale",
-				"url": "https://www.exoscale.com/",
-				"logo": "./images/Exoscale.png"
+				"name": "FullStacks",
+				"url": "https://fullstacks.io/",
+				"logo": "./images/fullstacks.png"
 			},
 			{
 				"name": "Dynatrace",
-				"url": "https://www.dynatrace.com/",
-				"logo": "./images/Dynatrace.png"
+				"url": "https://www.dynatrace.com",
+				"logo": "./images/dynatrace.png"
 			},
 			{
-				"name": "Splunk",
-				"url": "https://www.splunk.com/",
-				"logo": "./images/splunk.jpg"
+				"name": "Exoscale",
+				"url": "https://www.exoscale.com",
+				"logo": "./images/exoscale.png"
 			}
 		]
 	},
@@ -30,39 +30,19 @@
 		"tier": "silver",
 		"sponsors": [
 			{
-				"name": "Raiffeisen Bank International",
-				"url": "https://rbinternational.com",
-				"logo": "./images/RaiffeisenBankInternational.png"
+				"name": "iits",
+				"url": "https://iits-consulting.de",
+				"logo": "./images/iits.png"
 			},
 			{
-				"name": "FullStacks",
-				"url": "https://www.fullstacks.eu",
-				"logo": "./images/FullStacks.png"
-			},
-			{
-				"name": "CloudWerkstatt",
-				"url": "https://www.cloudwerkstatt.com",
-				"logo": "./images/CloudWerkstatt.png"
-			},
-			{
-				"name": "NextLayer",
+				"name": "next layer",
 				"url": "https://www.nextlayer.at",
-				"logo": "./images/NextLayer.webp"
+				"logo": "./images/next-layer.png"
 			},
 			{
-				"name": "Veeam",
-				"url": "https://www.veeam.com",
-				"logo": "./images/Veeam.png"
-			},
-			{
-				"name": "Post",
-				"url": "https://www.post.at/",
-				"logo": "./images/Post.png"
-			},
-			{
-				"name": "squer",
-				"url": "https://www.squer.io/",
-				"logo": "./images/squer.png"
+				"name": "cloudWerkstatt",
+				"url": "https://www.cloudwerkstatt.com",
+				"logo": "./images/cloudwerkstatt.png"
 			}
 		]
 	},
@@ -71,40 +51,14 @@
 		"tier": "community",
 		"sponsors": [
 			{
-				"name": "AWS",
-				"url": "https://aws.amazon.com/",
-				"logo": "./images/aws.png"
+				"name": "TSC Labs",
+				"url": "https://tsc-labs.eu",
+				"logo": "./images/tsc-labs.svg"
 			},
 			{
-				"name": "CNCF",
-				"url": "https://www.cncf.io",
-				"logo": "./images/cncf.png"
-			},
-			{
-				"name": "Posedio",
-				"url": "https://www.posedio.com",
-				"logo": "./images/Posedio.svg"
-			},
-			{
-				"name": "Frequentis",
-				"url": "https://www.frequentis.com",
-				"logo": "./images/Frequentis.png"
-			}
-		]
-	},
-	{
-		"title": "Media Partners",
-		"tier": "community",
-		"sponsors": [
-			{
-				"name": "KubeCareers",
-				"url": "https://kube.careers",
-				"logo": "./images/KubeCareers.svg"
-			},
-			{
-				"name": "KubeEvents",
-				"url": "https://kube.events",
-				"logo": "./images/KubeEvents.svg"
+				"name": "willhaben",
+				"url": "https://www.willhaben.at",
+				"logo": "./images/willhaben.png"
 			}
 		]
 	}
