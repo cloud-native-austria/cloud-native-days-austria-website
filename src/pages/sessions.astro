@@ -65,23 +65,33 @@ const sessionSpeakers = speakers
 							)}
 						</div>
 						<details id={session.anchorId}>
-							<summary data-session-target={session.anchorId}>
-								<div class="summary-content">
-									<div>
-										<h2>{session.title}</h2>
-										{session.speakers.length > 0 && (
-											<p>
-												{session.speakers.map((speaker, index) => (
-													<>
-														{index > 0 && ", "}
-														<span class="speaker-name">{speaker.name}</span>
-													</>
-												))}
-											</p>
-										)}
-									</div>
+						<summary data-session-target={session.anchorId}>
+							<div class="summary-content">
+								<div>
+									<h2>{session.title}</h2>
+									{session.speakers.length > 0 && (
+										<p>
+											{session.speakers.map((speaker, index) => (
+												<>
+													{index > 0 && ", "}
+													<span class="speaker-name">{speaker.name}</span>
+												</>
+											))}
+										</p>
+									)}
+									{(session.topics.length > 0 || session.sessionFormat) && (
+										<ul class="session-meta" aria-label="Session details">
+											{session.sessionFormat && (
+												<li>{session.sessionFormat}</li>
+											)}
+											{session.topics.map((topic) => (
+												<li>{topic}</li>
+											))}
+										</ul>
+									)}
 								</div>
-							</summary>
+							</div>
+						</summary>
 							<div>
 								{session.description ? (
 									<p>{session.description}</p>
@@ -109,7 +119,6 @@ const sessionSpeakers = speakers
 			--timeline-avatar-size: 48px;
 			--timeline-marker-center-y: calc(var(--space-4) + 0.7rem);
 			--timeline-pointer-size: 8px;
-			--timeline-line-x: calc(var(--timeline-marker-column) / 2);
 			display: grid;
 			gap: var(--space-4);
 			position: relative;
@@ -121,7 +130,7 @@ const sessionSpeakers = speakers
 			position: absolute;
 			top: calc(var(--space-12) * -1);
 			bottom: calc(var(--space-10) * -1);
-			left: calc(var(--timeline-line-x) - 1px);
+			left: calc(var(--timeline-marker-column) / 2 - 1px);
 			width: 2px;
 			background: linear-gradient(
 				to bottom,
@@ -276,6 +285,24 @@ const sessionSpeakers = speakers
 		summary p .speaker-name {
 			color: inherit;
 			font-weight: 700;
+		}
+
+		.session-meta {
+			display: flex;
+			flex-wrap: wrap;
+			gap: var(--space-1);
+			list-style: none;
+			margin: var(--space-2) 0 0;
+			padding: 0;
+		}
+
+		.session-meta li {
+			font-size: var(--text-sm);
+			color: var(--color-text-light);
+			background: var(--color-bg-light);
+			border: 1px solid var(--color-gray);
+			border-radius: var(--radius);
+			padding: 2px var(--space-2);
 		}
 
 		@media (max-width: 768px) {
