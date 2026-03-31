@@ -124,6 +124,17 @@ const speakers = defineCollection({
 	}),
 });
 
+function getCategoryItemNames(
+	categories: Array<Record<string, unknown>>,
+	categoryName: string,
+): string[] {
+	const category = categories.find((c) => c.name === categoryName);
+	if (!category || !Array.isArray(category.categoryItems)) return [];
+	return (category.categoryItems as Array<Record<string, unknown>>).map((item) =>
+		String(item.name ?? ""),
+	);
+}
+
 const sessions = defineCollection({
 	loader: async () => {
 		const response = await fetch(`${BASE_URL}/Sessions`);
@@ -138,6 +149,9 @@ const sessions = defineCollection({
 
 			return groupedSessions.map((session) => {
 				const sessionData = session as Record<string, unknown>;
+				const categories = Array.isArray(sessionData.categories)
+					? (sessionData.categories as Array<Record<string, unknown>>)
+					: [];
 
 				return {
 					id: String(sessionData.id ?? ""),
@@ -152,6 +166,8 @@ const sessions = defineCollection({
 								name: String(speaker.name ?? ""),
 							}))
 						: [],
+					topics: getCategoryItemNames(categories, "Topic(s)"),
+					sessionFormat: getCategoryItemNames(categories, "Session format").at(0) ?? null,
 				};
 			});
 		});
@@ -169,6 +185,8 @@ const sessions = defineCollection({
 				name: z.string(),
 			}),
 		),
+		topics: z.array(z.string()),
+		sessionFormat: z.string().nullable(),
 	}),
 });
 
