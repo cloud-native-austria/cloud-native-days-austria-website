@@ -10,12 +10,17 @@
   "automergeType": "branch",
   "packageRules": [
     {
-      "updateTypes": ["minor", "patch"],
+      "matchUpdateTypes": [
+        "minor",
+        "patch"
+      ],
       "groupName": "all minor and patch updates",
       "automerge": false
     },
     {
-      "updateTypes": ["major"],
+      "matchUpdateTypes": [
+        "major"
+      ],
       "groupName": "major updates",
       "automerge": false
     }
