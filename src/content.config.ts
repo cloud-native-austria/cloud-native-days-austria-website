@@ -54,7 +54,7 @@ const team = defineCollection({
 });
 
 const sponsors = defineCollection({
-	loader: file("src/pages/home-page/sections/SponsorsList/sponsors.json", {
+	loader: file("src/components/home/SponsorsList/sponsors.json", {
 		parser: (text) => [{ id: "list", tiers: JSON.parse(text) }],
 	}),
 	schema: ({ image }) =>

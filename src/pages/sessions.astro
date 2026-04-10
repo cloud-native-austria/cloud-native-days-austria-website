@@ -3,7 +3,6 @@ import PersonCard from "@components/PersonCard.astro";
 import SpeakerDetailModal from "@components/SpeakerDetailModal.astro";
 import Layout from "@layouts/Layout.astro";
 import { getCollection } from "astro:content";
-import Speakers from "./speakers.astro";
 
 const speakers = await getCollection("speakers");
 const speakersById = new Map(speakers.map((entry) => [entry.data.id, entry.data]));
