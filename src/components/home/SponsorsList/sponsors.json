@@ -51,6 +51,11 @@
 		"tier": "community",
 		"sponsors": [
 			{
+				"name": "Frequentis",
+				"url": "https://www.frequentis.com",
+				"logo": "./images/frequentis.png"
+			},
+			{
 				"name": "TSC Labs",
 				"url": "https://tsc-labs.eu",
 				"logo": "./images/tsc-labs.svg"
