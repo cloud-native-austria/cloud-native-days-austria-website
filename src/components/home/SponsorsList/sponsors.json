@@ -48,6 +48,11 @@
 				"name": "Bearingpoint",
 				"url": "https://www.bearingpoint.com",
 				"logo": "./images/BearingPoint.png"
+			},
+			{
+				"name": "Österreichische Post",
+				"url": "https://www.post.at/",
+				"logo": "./images/Post.png"
 			}
 		]
 	},
