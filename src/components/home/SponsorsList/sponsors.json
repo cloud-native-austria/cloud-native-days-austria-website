@@ -43,6 +43,11 @@
 				"name": "cloudWerkstatt",
 				"url": "https://www.cloudwerkstatt.com",
 				"logo": "./images/cloudwerkstatt.png"
+			},
+			{
+				"name": "Bearingpoint",
+				"url": "https://www.bearingpoint.com",
+				"logo": "./images/BearingPoint.png"
 			}
 		]
 	},
