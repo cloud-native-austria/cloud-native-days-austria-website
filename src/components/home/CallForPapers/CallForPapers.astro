@@ -1,7 +1,6 @@
 ---
 import Button from "@components/Button.astro";
-import { Image } from "astro:assets";
-import speaker from "./speaker.svg";
+import Speaker from "./speaker.svg";
 ---
 
 <section aria-labelledby="call-for-papers">
@@ -11,7 +10,7 @@ import speaker from "./speaker.svg";
 		<p>
 			Send us your presentations until the <strong>30th of April!</strong>
 		</p>
-		<Image height={150} src={speaker} alt="Conference Speaker" />
+		<Speaker height={150} aria-label="Conference Speaker" />
 		<Button href="https://sessionize.com/cloud-native-days-austria-2026" external>
 			Submit a session
 		</Button>
