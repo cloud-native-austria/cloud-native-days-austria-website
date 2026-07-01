@@ -4,9 +4,10 @@ import PersonCard from "@components/PersonCard.astro";
 import SpeakerDetailModal from "@components/SpeakerDetailModal.astro";
 import { getCollection } from "astro:content";
 
-const speakers = (await getCollection("speakers")).map((entry) => entry.data);
-
-const displayedSpeakers = speakers.slice(0, 5);
+const displayedSpeakers = (await getCollection("speakers"))
+	.map((entry) => entry.data)
+	.filter((s) => s.isTopSpeaker)
+	.slice(0, 4);
 ---
 
 <section aria-labelledby="tickets">
@@ -131,27 +132,21 @@ const displayedSpeakers = speakers.slice(0, 5);
 	}
 
 	ul > li:nth-child(2) {
-		--base-y: 3px;
-		--tilt: -4deg;
+		--base-y: 2px;
+		--tilt: -3deg;
 		z-index: 2;
 	}
 
 	section > div > ul > li:nth-child(3) {
-		--base-y: 0px;
-		--tilt: 0deg;
+		--base-y: 2px;
+		--tilt: 3deg;
 		z-index: 3;
 	}
 
 	section > div > ul > li:nth-child(4) {
-		--base-y: 3px;
-		--tilt: 4deg;
-		z-index: 4;
-	}
-
-	section > div > ul > li:nth-child(5) {
 		--base-y: 8px;
 		--tilt: 8deg;
-		z-index: 5;
+		z-index: 4;
 	}
 
 	section > div > div:last-child {

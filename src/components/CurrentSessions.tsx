@@ -3,17 +3,9 @@
  * Only JavaScript in the project - polls Sessionize every 30 seconds
  */
 
-import { BASE_URL } from "@lib/sessionize";
+import { fetchAllSessions, type Session } from "@lib/sessionize";
 import { getSessionUrl } from "@lib/sessionize-app";
 import { useState, useEffect } from "preact/hooks";
-
-interface Session {
-	id: string;
-	title: string;
-	startsAt: string;
-	endsAt: string;
-	room: string;
-}
 
 interface SessionsForRoomProps {
 	roomName: string;
@@ -70,11 +62,9 @@ export default function CurrentSessions() {
 	const [loading, setLoading] = useState(true);
 
 	useEffect(() => {
-		const fetchSessions = async () => {
+		const loadSessions = async () => {
 			try {
-				const response = await fetch(`${BASE_URL}/Sessions`);
-				const data = await response.json();
-				const allSessions = data.at(0)?.sessions ?? [];
+				const allSessions = await fetchAllSessions();
 				setSessions(allSessions);
 				setLoading(false);
 			} catch (error) {
@@ -83,8 +73,8 @@ export default function CurrentSessions() {
 			}
 		};
 
-		fetchSessions();
-		const interval = setInterval(fetchSessions, 30000); // Poll every 30 seconds
+		loadSessions();
+		const interval = setInterval(loadSessions, 30000);
 
 		return () => clearInterval(interval);
 	}, []);

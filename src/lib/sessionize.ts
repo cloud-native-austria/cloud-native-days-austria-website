@@ -5,28 +5,6 @@
 
 const SESSIONIZE_API_ID = "7o54a33i";
 export const BASE_URL = `https://sessionize.com/api/v2/${SESSIONIZE_API_ID}/view`;
-export { sessionizeAppBaseUrl } from "./sessionize-app";
-
-export interface Speaker {
-	id: string;
-	firstName: string;
-	lastName: string;
-	fullName: string;
-	bio: string;
-	tagLine: string;
-	profilePicture: string;
-	isTopSpeaker: boolean;
-	links: Array<{
-		title: string;
-		url: string;
-		linkType: string;
-	}>;
-	sessions: Array<{
-		id: number;
-		name: string;
-	}>;
-	categoryItems: number[];
-}
 
 export interface Session {
 	id: string;
@@ -50,30 +28,6 @@ export interface SessionGroup {
 	groupId: number | null;
 	groupName: string;
 	sessions: Session[];
-}
-
-/**
- * Fetch all speakers from Sessionize API
- */
-export async function fetchSpeakers(): Promise<Speaker[]> {
-	try {
-		const response = await fetch(`${BASE_URL}/Speakers`);
-		if (!response.ok) {
-			throw new Error(`Failed to fetch speakers: ${response.status}`);
-		}
-		return await response.json();
-	} catch (error) {
-		console.error("Error fetching speakers:", error);
-		return [];
-	}
-}
-
-/**
- * Fetch keynote speakers (marked as "Top Speaker" in Sessionize)
- */
-export async function fetchKeynoteSpeakers(): Promise<Speaker[]> {
-	const speakers = await fetchSpeakers();
-	return speakers.filter((speaker) => speaker.isTopSpeaker);
 }
 
 /**

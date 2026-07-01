@@ -44,17 +44,27 @@ function shuffleArray<T>(array: T[]): T[] {
 						{shuffleArray(tierSponsors).map(({ name, url, logo }) => {
 							const imageBounds = getTierImageBounds(tier);
 
+							const isSvg = logo.format === "svg";
+
 							return (
 								<li>
 									<a href={url} target="_blank" rel="noopener noreferrer" aria-label={name}>
-										<Picture
-											src={logo}
-											alt={name}
-											width={imageBounds.width}
-											height={imageBounds.height}
-											fit="inside"
-											formats={["avif", "webp"]}
-										/>
+										{isSvg ? (
+											<img
+												src={logo.src}
+												alt={name}
+												style={`width: ${imageBounds.width}px; height: ${imageBounds.height}px; object-fit: contain;`}
+											/>
+										) : (
+											<Picture
+												src={logo}
+												alt={name}
+												width={imageBounds.width}
+												height={imageBounds.height}
+												fit="inside"
+												formats={["avif", "webp"]}
+											/>
+										)}
 									</a>
 								</li>
 							);
