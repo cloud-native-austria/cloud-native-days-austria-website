@@ -1,6 +1,6 @@
 # AI Agent Instructions for Cloud Native Days Austria Website
 
-This is the website for Cloud Native Days Austria (CNDA formerly Kubernetes Community Days KCD Austria), being migrated from Gatsby to Astro.
+This is the website for Cloud Native Days Austria (CNDA formerly Kubernetes Community Days KCD Austria).
 
 - Framework: Astro
 - Language: Typescript

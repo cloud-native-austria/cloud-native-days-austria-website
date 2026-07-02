@@ -23,6 +23,14 @@
 	/* Gray Scale */
 	--color-gray: #e6e6e6;
 
+	/* Sponsor logo background (transparent in light, white in dark) */
+	--color-sponsor-bg: transparent;
+
+	/* Link color (switches to orange in dark mode) */
+	--color-accent: var(--color-purple);
+
+	color-scheme: light;
+
 	/* Typography */
 	--font-body: var(--font-plus-jakarta-sans);
 	--font-heading: var(--font-fira-code);
@@ -69,6 +77,42 @@
 		var(--color-pink),
 		var(--color-orange)
 	);
+}
+
+/* --------------------------------------------------------------------------
+   Dark Mode
+   -------------------------------------------------------------------------- */
+
+@media (prefers-color-scheme: dark) {
+	:root {
+		--color-text: #e2e8f0;
+		--color-text-light: rgba(226, 232, 240, 0.65);
+		--color-white: #0f172a;
+		--color-bg-light: rgba(226, 232, 240, 0.05);
+		--color-gray: rgba(226, 232, 240, 0.12);
+		--shadow-elevated: 0 12px 24px rgba(0, 0, 0, 0.5);
+		--color-sponsor-bg: #ffffff;
+		--color-accent: var(--color-orange);
+		color-scheme: dark;
+	}
+
+}
+
+/* --------------------------------------------------------------------------
+   Logo Visibility (light/dark mode switching)
+   -------------------------------------------------------------------------- */
+
+.logo-dark {
+	display: none;
+}
+
+@media (prefers-color-scheme: dark) {
+	.logo-light {
+		display: none;
+	}
+	.logo-dark {
+		display: block;
+	}
 }
 
 /* --------------------------------------------------------------------------
@@ -164,7 +208,7 @@ h6 {
 }
 
 a {
-	color: var(--color-purple);
+	color: var(--color-accent);
 	text-decoration: none;
 	transition: color var(--transition-fast);
 }
@@ -179,7 +223,7 @@ a:hover {
 
 /* Focus visible */
 :focus-visible {
-	outline: 2px solid var(--color-purple);
+	outline: 2px solid var(--color-accent);
 	outline-offset: 2px;
 }
 

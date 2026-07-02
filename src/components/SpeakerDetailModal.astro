@@ -91,6 +91,8 @@ const { speaker, showSessions = true } = Astro.props;
 		max-height: 85vh;
 		overflow-y: auto;
 		box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+		background-color: var(--color-white);
+		color: var(--color-text);
 	}
 
 	dialog[open] {
@@ -140,7 +142,7 @@ const { speaker, showSessions = true } = Astro.props;
 		width: 100%;
 	}
 
-	dialog header > div > :first-child {
+	dialog header > div > :global(:first-child) {
 		max-width: 120px;
 	}
 
@@ -177,6 +179,7 @@ const { speaker, showSessions = true } = Astro.props;
 		position: absolute;
 		top: var(--space-6);
 		right: var(--space-6);
+		z-index: 1;
 	}
 
 	button:hover {
@@ -184,7 +187,7 @@ const { speaker, showSessions = true } = Astro.props;
 	}
 
 	button:focus-visible {
-		outline: 2px solid var(--color-purple);
+		outline: 2px solid var(--color-accent);
 		outline-offset: 2px;
 		border-radius: var(--radius);
 	}
@@ -225,7 +228,7 @@ const { speaker, showSessions = true } = Astro.props;
 	}
 
 	dialog > div > section:nth-child(2) a {
-		color: var(--color-purple);
+		color: var(--color-accent);
 		text-decoration: none;
 		transition: color 0.2s ease;
 	}
@@ -243,7 +246,7 @@ const { speaker, showSessions = true } = Astro.props;
 		height: 40px;
 		padding: var(--space-2);
 		background: var(--color-bg-light);
-		color: var(--color-purple);
+		color: var(--color-accent);
 		text-decoration: none;
 		border-radius: var(--radius-full);
 		transition: all 0.2s ease;
@@ -256,8 +259,8 @@ const { speaker, showSessions = true } = Astro.props;
 	}
 
 	.social-link:hover {
-		background: var(--color-purple);
-		color: var(--color-white);
+		background: var(--color-accent);
+		color: #ffffff;
 		transform: scale(1.05);
 	}
 
@@ -271,7 +274,7 @@ const { speaker, showSessions = true } = Astro.props;
 			right: var(--space-4);
 		}
 
-		dialog > div {
+dialog > div {
 			padding: var(--space-4);
 		}
 	}
