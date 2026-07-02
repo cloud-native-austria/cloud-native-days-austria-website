@@ -1,5 +1,6 @@
 ---
 import Logo from "./logo.svg";
+import LogoDark from "./logo_dark.svg";
 
 interface Props {
 	homepage?: boolean;
@@ -20,7 +21,8 @@ const menuItems = [
 <header>
 	<section>
 		<a href="/" aria-label="Go to Homepage">
-			<Logo width={176} height={48} aria-label="Cloud Native Days Austria" />
+			<Logo height={48} aria-label="Cloud Native Days Austria" class="logo-light" />
+			<LogoDark height={48} aria-label="Cloud Native Days Austria" class="logo-dark" />
 		</a>
 
 		<nav aria-label="Main navigation">
@@ -82,6 +84,12 @@ const menuItems = [
 	header img {
 		height: 48px;
 		width: auto;
+	}
+
+	:global(.logo-light),
+	:global(.logo-dark) {
+		height: 48px;
+		width: 67.625px;
 	}
 
 	/* Desktop Navigation */

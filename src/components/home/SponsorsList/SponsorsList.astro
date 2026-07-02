@@ -104,13 +104,15 @@ function shuffleArray<T>(array: T[]): T[] {
 
 	ol > li > ul {
 		list-style: none;
-		padding: 0;
+		padding: var(--space-6) var(--space-8);
 		margin: 0;
 		display: flex;
 		flex-wrap: wrap;
 		justify-content: center;
 		align-items: center;
 		gap: var(--space-8);
+		background-color: var(--color-sponsor-bg);
+		border-radius: var(--radius);
 	}
 
 	a {
@@ -125,7 +127,7 @@ function shuffleArray<T>(array: T[]): T[] {
 	}
 
 	a:focus-visible {
-		outline: 2px solid var(--color-purple);
+		outline: 2px solid var(--color-accent);
 		outline-offset: 4px;
 		box-shadow: 0 0 0 4px color-mix(in srgb, var(--color-white) 85%, transparent);
 	}
