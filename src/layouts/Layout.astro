@@ -45,6 +45,21 @@ const ogImage = new URL("/social-preview.png", Astro.site);
 
 		<Font cssVariable="--font-plus-jakarta-sans" preload />
 		<Font cssVariable="--font-fira-code" preload />
+
+		<script>
+			const l = "font-family: monospace; font-size: 2em; font-weight: bold; padding: 0 4px;";
+			console.log(
+				"%cC%cN%cD%cA",
+				l + "color: #531cb3;",
+				l + "color: #e30282;",
+				l + "color: #ffbc42;",
+				l + "color: #0ea5e9;"
+			);
+			console.log(
+				"%cYou seem to be more of a terminal user. Get all infos about the event by using cndactl\nhttps://npmx.dev/package/cndactl",
+				"font-size: 14px; color: #0ea5e9;"
+			);
+		</script>
 	</head>
 	<body>
 		<Header />

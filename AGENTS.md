@@ -27,6 +27,8 @@ This project aims for zero JavaScript except where absolutely necessary:
 6. **Single breakpoint**: Use only `768px` for major layout changes
 7. **Container queries**: Prefer `@container` over media queries for component-level responsiveness
 
+Styles in Astro components are component-scoped by default. Use `:global()` when a selector must cross a component boundary (e.g. targeting inner elements of `PersonCard` or `Picture`).
+
 ## Image Handling
 
 **ALWAYS** use Astro's `<Image>` or `<Picture>` component for images. Never use raw `<img>` tags.
