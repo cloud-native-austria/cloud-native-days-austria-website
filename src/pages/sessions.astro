@@ -1,4 +1,5 @@
 ---
+import Button from "@components/Button.astro";
 import PersonCard from "@components/PersonCard.astro";
 import SpeakerDetailModal from "@components/SpeakerDetailModal.astro";
 import Layout from "@layouts/Layout.astro";
@@ -28,7 +29,7 @@ const sessionSpeakers = speakers
 
 <Layout title="Sessions | Cloud Native Days Austria" description="Browse all conference sessions">
 	<h1>Sessions of 2026</h1>
-
+	<Button href="https://cloud-native-days-austria-2026.sessionize.com/schedule" external>Pick your favorite talks</Button>
 	{
 		sessions.length > 0 ? (
 			<section class="timeline" aria-label="Conference sessions">
@@ -110,6 +111,13 @@ const sessionSpeakers = speakers
 	<style>
 		h1 {
 			text-align: center;
+			margin-bottom: var(--space-8);
+		}
+
+		:global(main > a[data-variant]) {
+			display: block;
+			width: fit-content;
+			margin-inline: auto;
 			margin-bottom: var(--space-8);
 		}
 

@@ -13,37 +13,41 @@ const displayedSpeakers = (await getCollection("speakers"))
 <section aria-labelledby="tickets">
 	<h2 id="tickets">Tickets</h2>
 	<div>
-		<ul>
-			{
-				displayedSpeakers.map((speaker) => (
-					<li>
-						<SpeakerDetailModal speaker={speaker} />
-						<button
-							type="button"
-							commandfor={`speaker-${speaker.id}`}
-							command="show-modal"
-							data-speaker-target={`speaker-${speaker.id}`}
-							aria-label={`View details for ${speaker.fullName}`}
-						>
-							<PersonCard
-								name={speaker.fullName}
-								image={speaker.profilePicture}
-								showMeta={false}
-								sizes="(max-width: 768px) 80px, 120px"
-							/>
-						</button>
-					</li>
-				))
-			}
-		</ul>
+		<div class="speakers">
+			<ul>
+				{
+					displayedSpeakers.map((speaker) => (
+						<li>
+							<SpeakerDetailModal speaker={speaker} />
+							<button
+								type="button"
+								commandfor={`speaker-${speaker.id}`}
+								command="show-modal"
+								data-speaker-target={`speaker-${speaker.id}`}
+								aria-label={`View details for ${speaker.fullName}`}
+							>
+								<PersonCard
+									name={speaker.fullName}
+									image={speaker.profilePicture}
+									showMeta={false}
+									sizes="(max-width: 768px) 80px, 120px"
+								/>
+							</button>
+						</li>
+					))
+				}
+			</ul>
+			<p class="speakers-label">Keynote Speakers</p>
+		</div>
 
 		<div>
 			<p>
 				The conference pass gives you access to all <a href="/sessions">sessions</a> on both days and
-				the
+				the{' '}
 				<strong>evening event</strong>.
 			</p>
 
+			<Button href="https://cloud-native-days-austria-2026.sessionize.com/schedule" external variant='outline'>Pick your favorite talks</Button>
 			<Button href="https://tickets.cloudnativedays.at" external> Get your conference pass </Button>
 		</div>
 	</div>
@@ -55,6 +59,13 @@ const displayedSpeakers = (await getCollection("speakers"))
 		flex-direction: column;
 		align-items: center;
 		gap: var(--space-4);
+		background:
+			linear-gradient(var(--color-white), var(--color-white)) padding-box,
+			var(--gradient-brand) border-box;
+		border: 2px solid transparent;
+		border-radius: var(--radius);
+		padding: var(--space-6) var(--space-4);
+		box-shadow: var(--shadow-elevated);
 	}
 
 	h2 {
@@ -73,7 +84,22 @@ const displayedSpeakers = (await getCollection("speakers"))
 		margin-inline: auto;
 	}
 
-	section > div > ul {
+	.speakers {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: var(--space-2);
+	}
+
+	.speakers-label {
+		font-family: var(--font-heading);
+		font-size: 0.85rem;
+		color: var(--color-muted, currentColor);
+		opacity: 0.6;
+		margin: 0;
+	}
+
+	section > div > .speakers > ul {
 		display: flex;
 		justify-content: center;
 		align-items: center;
@@ -137,13 +163,13 @@ const displayedSpeakers = (await getCollection("speakers"))
 		z-index: 2;
 	}
 
-	section > div > ul > li:nth-child(3) {
+	ul > li:nth-child(3) {
 		--base-y: 2px;
 		--tilt: 3deg;
 		z-index: 3;
 	}
 
-	section > div > ul > li:nth-child(4) {
+	ul > li:nth-child(4) {
 		--base-y: 8px;
 		--tilt: 8deg;
 		z-index: 4;
@@ -181,12 +207,12 @@ const displayedSpeakers = (await getCollection("speakers"))
 	}
 
 	@media (prefers-reduced-motion: reduce) {
-		section > div > ul > li > button {
+		ul > li > button {
 			transition: none;
 		}
 
-		section > div > ul > li > button:hover,
-		section > div > ul > li > button:focus-visible {
+		ul > li > button:hover,
+		ul > li > button:focus-visible {
 			--lift: 0;
 		}
 	}
