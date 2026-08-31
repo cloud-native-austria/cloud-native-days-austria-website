@@ -430,7 +430,7 @@ for (const slot of timeSlots) {
 			display: none;
 		}
 
-		details:target { scroll-margin-top: var(--space-8); }
+		details:target { scroll-margin-top: calc(var(--space-8) + 3.5rem); }
 		details[data-side="left"]:is([open], :target, :focus-within, :hover)   { border-color: var(--room-left-color); }
 		details[data-side="right"]:is([open], :target, :focus-within, :hover)  { border-color: var(--room-right-color); }
 		details[data-side="center"]:is([open], :target, :focus-within, :hover) { border-color: var(--color-accent); }
