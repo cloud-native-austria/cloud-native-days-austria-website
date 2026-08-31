@@ -192,6 +192,7 @@ h1 {
 
 h2 {
 	font-size: var(--text-xl);
+	scroll-margin-top: var(--space-8);
 }
 
 h3 {
