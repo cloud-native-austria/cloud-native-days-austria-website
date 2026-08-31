@@ -8,16 +8,23 @@ import { getCollection } from "astro:content";
 const speakers = await getCollection("speakers");
 const speakersById = new Map(speakers.map((entry) => [entry.data.id, entry.data]));
 
-const sessions = (await getCollection("sessions")).map((entry) => {
-	return {
-		...entry.data,
-		speakers: entry.data.speakers.map((speaker) => ({
-			...speaker,
-			profilePicture: speakersById.get(speaker.id)?.profilePicture,
-		})),
-		anchorId: `session-${entry.data.id}`,
-	};
-});
+const sessions = (await getCollection("sessions"))
+	.map((entry) => {
+		return {
+			...entry.data,
+			speakers: entry.data.speakers.map((speaker) => ({
+				...speaker,
+				profilePicture: speakersById.get(speaker.id)?.profilePicture,
+			})),
+			anchorId: `session-${entry.data.id}`,
+		};
+	})
+	.sort((a, b) => {
+		if (!a.startsAt && !b.startsAt) return 0;
+		if (!a.startsAt) return 1;
+		if (!b.startsAt) return -1;
+		return new Date(a.startsAt).getTime() - new Date(b.startsAt).getTime();
+	});
 
 const sessionSpeakerIds = new Set(
 	sessions.flatMap((session) => session.speakers.map((speaker) => speaker.id)),
@@ -25,82 +32,170 @@ const sessionSpeakerIds = new Set(
 const sessionSpeakers = speakers
 	.map((entry) => entry.data)
 	.filter((speaker) => sessionSpeakerIds.has(speaker.id));
+
+const roomNames = [...new Set(sessions.map((s) => s.room).filter(Boolean))].sort();
+const leftRoom = roomNames[0] ?? null;
+const rightRoom = roomNames[1] ?? null;
+
+function getRoomSide(room: string | null): "left" | "right" | "center" {
+	if (room && room === leftRoom) return "left";
+	if (room && room === rightRoom) return "right";
+	return "center";
+}
+
+function formatSessionTime(startsAt: string | null): string | null {
+	if (!startsAt) return null;
+	return new Date(startsAt).toLocaleTimeString("en-AT", {
+		hour: "2-digit",
+		minute: "2-digit",
+		timeZone: "Europe/Vienna",
+	});
+}
+
+function getDay(startsAt: string | null): string | null {
+	if (!startsAt) return null;
+	return new Date(startsAt).toLocaleDateString("en-AT", {
+		weekday: "long",
+		year: "numeric",
+		month: "long",
+		day: "numeric",
+		timeZone: "Europe/Vienna",
+	});
+}
+
+const sessionsWithMeta = sessions.map((s) => ({
+	...s,
+	side: getRoomSide(s.room),
+	formattedTime: formatSessionTime(s.startsAt),
+}));
+
+type SessionWithMeta = (typeof sessionsWithMeta)[0];
+type TimeSlot = { left: SessionWithMeta | null; right: SessionWithMeta | null; center: SessionWithMeta[] };
+
+const slotMap = new Map<string, TimeSlot>();
+for (const session of sessionsWithMeta) {
+	const key = session.startsAt ?? `__unscheduled_${session.id}`;
+	if (!slotMap.has(key)) slotMap.set(key, { left: null, right: null, center: [] });
+	const slot = slotMap.get(key)!;
+	if (session.side === "left") slot.left = session;
+	else if (session.side === "right") slot.right = session;
+	else slot.center.push(session);
+}
+const timeSlots = [...slotMap.values()];
+
+type DayGroup = { day: string | null; slots: TimeSlot[] };
+const dayGroups: DayGroup[] = [];
+for (const slot of timeSlots) {
+	const firstSession = slot.left ?? slot.right ?? slot.center[0];
+	const day = firstSession ? getDay(firstSession.startsAt) : null;
+	const last = dayGroups.at(-1);
+	if (!last || last.day !== day) {
+		dayGroups.push({ day, slots: [slot] });
+	} else {
+		last.slots.push(slot);
+	}
+}
 ---
 
 <Layout title="Sessions | Cloud Native Days Austria" description="Browse all conference sessions">
 	<h1>Sessions of 2026</h1>
 	<Button href="https://cloud-native-days-austria-2026.sessionize.com/schedule" external>Pick your favorite talks</Button>
 	{
-		sessions.length > 0 ? (
+		timeSlots.length > 0 ? (
 			<section class="timeline" aria-label="Conference sessions">
-				{sessions.map((session) => (
-					<article class="timeline-item">
-						<div class="timeline-marker">
-							{session.speakers.some((speaker) => speaker.profilePicture) ? (
-								<div class="speaker-cards">
-									{session.speakers.map(
-										(speaker) =>
-											speaker.profilePicture && (
-												<SpeakerDetailModal speaker={sessionSpeakers.find((s) => s.id === speaker.id)!} showSessions={false} />
-												<button
-													type="button"
-													commandfor={`speaker-${speaker.id}`}
-													command="show-modal"
-													data-speaker-target={`speaker-${speaker.id}`}
-													class="speaker-card-link"
-													aria-label={`View speaker profile for ${speaker.name}`}
-												>
-													<PersonCard
-														name={speaker.name}
-														image={speaker.profilePicture}
-														showMeta={false}
-														sizes="48px"
-													/>
-												</button>
-											),
-									)}
-								</div>
-							) : (
-								<span class="fallback-marker" aria-hidden="true" />
-							)}
-						</div>
-						<details id={session.anchorId}>
-						<summary data-session-target={session.anchorId}>
-							<div class="summary-content">
-								<div>
-									<h2>{session.title}</h2>
-									{session.speakers.length > 0 && (
-										<p>
-											{session.speakers.map((speaker, index) => (
-												<>
-													{index > 0 && ", "}
-													<span class="speaker-name">{speaker.name}</span>
-												</>
-											))}
-										</p>
-									)}
-									{(session.topics.length > 0 || session.sessionFormat) && (
-										<ul class="session-meta" aria-label="Session details">
-											{session.sessionFormat && (
-												<li>{session.sessionFormat}</li>
-											)}
-											{session.topics.map((topic) => (
-												<li>{topic}</li>
-											))}
-										</ul>
-									)}
-								</div>
+				{dayGroups.map(({ day, slots }) => (
+					<>
+						{day && (
+							<div class="day-separator" role="separator" aria-label={day}>
+								<span class="day-label">{day}</span>
 							</div>
-						</summary>
-							<div>
-								{session.description ? (
-									<p>{session.description}</p>
-								) : (
-									<p>Session details will be available soon.</p>
-								)}
+						)}
+						{leftRoom && rightRoom && (
+							<div class="lane-labels">
+								<span class="lane-label" data-side="left">{leftRoom}</span>
+								<span class="lane-label" data-side="right">{rightRoom}</span>
 							</div>
-						</details>
-					</article>
+						)}
+						{slots.map((slot) => {
+							const slotSessions = [slot.left, slot.right, ...slot.center].filter(Boolean);
+							return (
+								<div class="time-slot">
+									{slotSessions.map((session) => (
+										<div class="session-row" data-side={session.side}>
+											<div class="timeline-marker" data-side={session.side}>
+												{session.speakers.some((speaker) => speaker.profilePicture) ? (
+													<div class="speaker-cards">
+														{session.speakers.map(
+															(speaker) =>
+																speaker.profilePicture && (
+																	<SpeakerDetailModal speaker={sessionSpeakers.find((s) => s.id === speaker.id)!} showSessions={false} />
+																	<button
+																		type="button"
+																		commandfor={`speaker-${speaker.id}`}
+																		command="show-modal"
+																		data-speaker-target={`speaker-${speaker.id}`}
+																		class="speaker-card-link"
+																		aria-label={`View speaker profile for ${speaker.name}`}
+																	>
+																		<PersonCard
+																			name={speaker.name}
+																			image={speaker.profilePicture}
+																			showMeta={false}
+																			sizes="48px"
+																		/>
+																	</button>
+																),
+														)}
+													</div>
+												) : (
+													<span class="fallback-marker" aria-hidden="true" />
+												)}
+											</div>
+											<details id={session.anchorId} data-side={session.side}>
+												<summary data-session-target={session.anchorId}>
+													<div class="summary-content">
+														<div>
+															<h2>{session.title}</h2>
+															{(session.speakers.length > 0 || session.formattedTime) && (
+																<p>
+																	{session.formattedTime && (
+																		<><time class="session-time" datetime={session.startsAt!}>{session.formattedTime}</time>{session.speakers.length > 0 && " · "}</>
+																	)}
+																	{session.speakers.map((speaker, index) => (
+																		<>
+																			{index > 0 && ", "}
+																			<span class="speaker-name">{speaker.name}</span>
+																		</>
+																	))}
+																</p>
+															)}
+															{(session.topics.length > 0 || session.sessionFormat) && (
+																<ul class="session-meta" aria-label="Session details">
+																	{session.sessionFormat && (
+																		<li>{session.sessionFormat}</li>
+																	)}
+																	{session.topics.map((topic) => (
+																		<li>{topic}</li>
+																	))}
+																</ul>
+															)}
+														</div>
+													</div>
+												</summary>
+												<div>
+													{session.description ? (
+														<p>{session.description}</p>
+													) : (
+														<p>Session details will be available soon.</p>
+													)}
+												</div>
+											</details>
+										</div>
+									))}
+								</div>
+							);
+						})}
+					</>
 				))}
 			</section>
 		) : (
@@ -122,46 +217,143 @@ const sessionSpeakers = speakers
 		}
 
 		.timeline {
-			--timeline-marker-column: 72px;
-			--timeline-avatar-size: 48px;
-			--timeline-marker-center-y: calc(var(--space-4) + 0.7rem);
-			--timeline-pointer-size: 8px;
+			--marker-col: 60px;
+			--center-gap: 8px;
+			--avatar-size: 48px;
+			--marker-center-y: calc(var(--space-4) + 0.7rem);
+
+			--room-left-color: var(--color-accent);
+			--room-right-color: var(--color-pink);
 			display: grid;
-			gap: var(--space-4);
+			grid-template-columns: 1fr var(--marker-col) var(--center-gap) var(--marker-col) 1fr;
+			gap: var(--space-4) 0;
 			position: relative;
 			padding-block: var(--space-2);
 		}
 
-		.timeline::before {
+		.timeline::before,
+		.timeline::after {
 			content: "";
 			position: absolute;
 			top: calc(var(--space-12) * -1);
 			bottom: calc(var(--space-10) * -1);
-			left: calc(var(--timeline-marker-column) / 2 - 1px);
 			width: 2px;
+			transform: translateX(-50%);
+		}
+
+		.timeline::before {
+			left: calc(50% - var(--marker-col) / 2 - var(--center-gap) / 2);
 			background: linear-gradient(
 				to bottom,
 				transparent 0%,
-				var(--color-gray) 12%,
-				var(--color-gray) 88%,
+				var(--room-left-color) 12%,
+				var(--room-left-color) 88%,
 				transparent 100%
 			);
+			opacity: 0.45;
 		}
 
-		.timeline-item {
-			display: grid;
-			grid-template-columns: var(--timeline-marker-column) 1fr;
-			gap: var(--space-3);
-			align-items: start;
-			position: relative;
+		.timeline::after {
+			left: calc(50% + var(--marker-col) / 2 + var(--center-gap) / 2);
+			background: linear-gradient(
+				to bottom,
+				transparent 0%,
+				var(--room-right-color) 12%,
+				var(--room-right-color) 88%,
+				transparent 100%
+			);
+			opacity: 0.45;
 		}
 
-		.timeline-marker {
+		/* Day separator: z-index + white background covers the branch lines */
+		.day-separator {
+			grid-column: 1 / -1;
 			position: relative;
 			z-index: 1;
 			display: flex;
+			align-items: center;
+			gap: var(--space-3);
+			padding-block: var(--space-3);
+			background: var(--color-white);
+			/* Soft white glow extends the background coverage over branch lines */
+			box-shadow: 0 0 var(--space-6) var(--space-4) var(--color-white);
+		}
+
+		.day-separator::before,
+		.day-separator::after {
+			content: "";
+			flex: 1;
+			height: 1px;
+			background: var(--color-gray);
+		}
+
+		.day-label {
+			font-size: var(--text-sm);
+			font-weight: 600;
+			color: var(--color-text-light);
+			white-space: nowrap;
+			padding: var(--space-1) var(--space-3);
+			border-radius: var(--radius-full);
+			border: 1px solid var(--color-gray);
+			background: var(--color-white);
+			box-shadow: 0 2px 8px color-mix(in srgb, var(--color-accent) 12%, transparent);
+		}
+
+		/* Room name labels above each lane */
+		.lane-labels {
+			grid-column: 1 / -1;
+			display: grid;
+			grid-template-columns: subgrid;
+			margin-block: var(--space-2);
+			position: relative;
+			z-index: 1;
+		}
+
+		.lane-label {
+			font-size: var(--text-sm);
+			font-weight: 700;
+			letter-spacing: 0.02em;
+			white-space: nowrap;
+			padding: 2px var(--space-2);
+			border-radius: var(--radius-full);
+			background: var(--color-white);
+			box-shadow: 0 0 var(--space-4) var(--space-3) var(--color-white);
+		}
+
+		.lane-label[data-side="left"]  { grid-column: 1 / 3; justify-self: end;   color: var(--room-left-color); }
+		.lane-label[data-side="right"] { grid-column: 4 / 6; justify-self: start; color: var(--room-right-color); }
+
+		/* Each time-slot spans all 5 columns as a subgrid row */
+		.time-slot {
+			grid-column: 1 / -1;
+			display: grid;
+			grid-template-columns: subgrid;
+			align-items: start;
+		}
+
+		/*
+		 * Explicit grid-row: 1 forces marker and card into the same row in the
+		 * time-slot's grid regardless of DOM order. This is what keeps left-side
+		 * sessions aligned: the card (col 1) comes after the marker (col 2) in
+		 * the DOM, so without this the card would fall into row 2.
+		 */
+		.timeline-marker { grid-row: 1; }
+		details          { grid-row: 1; }
+
+		.timeline-marker[data-side="left"]   { grid-column: 2; }
+		.timeline-marker[data-side="right"]  { grid-column: 4; }
+		.timeline-marker[data-side="center"] { grid-column: 2 / 5; }
+
+		details[data-side="left"]   { grid-column: 1; margin-right: var(--space-3); }
+		details[data-side="right"]  { grid-column: 5; margin-left: var(--space-3); }
+		details[data-side="center"] { grid-column: 1 / -1; }
+
+		.timeline-marker {
+			position: relative;
+			z-index: 2;
+			display: flex;
 			justify-content: center;
-			padding-top: calc(var(--timeline-marker-center-y) - (var(--timeline-avatar-size) / 2));
+			padding-top: calc(var(--marker-center-y) - (var(--avatar-size) / 2));
 		}
 
 		.fallback-marker {
@@ -170,8 +362,11 @@ const sessionSpeakers = speakers
 			height: 24px;
 			margin: 0;
 			border-radius: var(--radius-full);
-			background: var(--color-accent);
+			background: var(--color-gray);
 		}
+
+		.timeline-marker[data-side="left"]  .fallback-marker { background: var(--room-left-color); }
+		.timeline-marker[data-side="right"] .fallback-marker { background: var(--room-right-color); }
 
 		details {
 			border: 1px solid var(--color-gray);
@@ -180,15 +375,17 @@ const sessionSpeakers = speakers
 			overflow: visible;
 			interpolate-size: allow-keywords;
 			position: relative;
+			z-index: 1;
 		}
 
+		/* Default connector arrow: gray, points left ← */
 		details::before {
 			content: "";
 			position: absolute;
 			left: -10px;
-			top: calc(var(--timeline-marker-center-y) - var(--timeline-pointer-size));
-			border-top: var(--timeline-pointer-size) solid transparent;
-			border-bottom: var(--timeline-pointer-size) solid transparent;
+			top: calc(var(--marker-center-y) - 8px);
+			border-top: 8px solid transparent;
+			border-bottom: 8px solid transparent;
 			border-right: 10px solid var(--color-gray);
 		}
 
@@ -196,16 +393,46 @@ const sessionSpeakers = speakers
 			content: "";
 			position: absolute;
 			left: -8px;
-			top: calc(var(--timeline-marker-center-y) - 7px);
+			top: calc(var(--marker-center-y) - 7px);
 			border-top: 7px solid transparent;
 			border-bottom: 7px solid transparent;
 			border-right: 9px solid var(--color-white);
 		}
 
-		details:target {
-			scroll-margin-top: var(--space-8);
-			border-color: var(--color-accent);
+		/* Left-side cards: flip arrow to point right → (default gray) */
+		details[data-side="left"]::before {
+			left: auto;
+			right: -10px;
+			border-right: none;
+			border-left: 10px solid var(--color-gray);
 		}
+
+		details[data-side="left"]::after {
+			left: auto;
+			right: -8px;
+			border-right: none;
+			border-left: 9px solid var(--color-white);
+		}
+
+		/* Color the arrows on hover / open / focus / target */
+		details[data-side="right"]:is([open], :target, :focus-within, :hover)::before {
+			border-right-color: var(--room-right-color);
+		}
+
+		details[data-side="left"]:is([open], :target, :focus-within, :hover)::before {
+			border-left-color: var(--room-left-color);
+		}
+
+		/* Center sessions: no arrow */
+		details[data-side="center"]::before,
+		details[data-side="center"]::after {
+			display: none;
+		}
+
+		details:target { scroll-margin-top: var(--space-8); }
+		details[data-side="left"]:is([open], :target, :focus-within, :hover)   { border-color: var(--room-left-color); }
+		details[data-side="right"]:is([open], :target, :focus-within, :hover)  { border-color: var(--room-right-color); }
+		details[data-side="center"]:is([open], :target, :focus-within, :hover) { border-color: var(--color-accent); }
 
 		summary {
 			list-style: none;
@@ -213,14 +440,10 @@ const sessionSpeakers = speakers
 			cursor: pointer;
 		}
 
-		.summary-content {
-			display: block;
-		}
-
 		.speaker-cards {
 			display: flex;
 			flex-direction: column;
-			max-width: var(--timeline-avatar-size);
+			max-width: var(--avatar-size);
 			justify-content: flex-start;
 			align-items: center;
 			margin-inline: auto;
@@ -228,20 +451,23 @@ const sessionSpeakers = speakers
 
 		.speaker-card-link {
 			display: block;
-			width: var(--timeline-avatar-size);
-			height: var(--timeline-avatar-size);
+			width: var(--avatar-size);
+			height: var(--avatar-size);
 			padding: 0;
 			border-radius: var(--radius-full);
 			overflow: clip;
 			background: var(--color-white);
-			border: 1px solid var(--color-gray);
+			border: 2px solid var(--color-gray);
 			appearance: none;
 			line-height: 0;
 			position: relative;
 		}
 
+		.timeline-marker[data-side="left"]  .speaker-card-link { border-color: var(--room-left-color); }
+		.timeline-marker[data-side="right"] .speaker-card-link { border-color: var(--room-right-color); }
+
 		.speaker-card-link ~ .speaker-card-link {
-			margin-top: calc(var(--timeline-avatar-size) * -0.3);
+			margin-top: calc(var(--avatar-size) * -0.3);
 		}
 
 		.speaker-card-link:focus-visible {
@@ -256,8 +482,8 @@ const sessionSpeakers = speakers
 		.speaker-card-link :global(picture),
 		.speaker-card-link :global(img) {
 			display: block;
-			width: var(--timeline-avatar-size);
-			height: var(--timeline-avatar-size);
+			width: var(--avatar-size);
+			height: var(--avatar-size);
 			margin: 0;
 			filter: none;
 		}
@@ -282,6 +508,8 @@ const sessionSpeakers = speakers
 			color: var(--color-accent);
 			margin: 0;
 		}
+
+		details[data-side="right"] h2 { color: var(--room-right-color); }
 
 		summary p {
 			margin-top: var(--space-1);
@@ -312,20 +540,104 @@ const sessionSpeakers = speakers
 			padding: 2px var(--space-2);
 		}
 
+		/*
+		 * On desktop session-row is invisible to the grid — its children
+		 * participate directly in the time-slot subgrid via display:contents.
+		 */
+		.session-row { display: contents; }
+
+		/* Mobile: three-column layout — left lane | cards | right lane */
 		@media (max-width: 768px) {
 			.timeline {
-				--timeline-marker-column: 52px;
-				--timeline-avatar-size: 34px;
+				--marker-col: 52px;
+				--avatar-size: 34px;
+				grid-template-columns: var(--marker-col) 1fr var(--marker-col);
 			}
 
-			.timeline-item {
-				gap: var(--space-2);
+			/* Branch lines centered on their marker columns, aligned with avatars */
+			.timeline::before {
+				left: calc(var(--marker-col) / 2);
+				transform: translateX(-50%);
 			}
 
-			.fallback-marker {
-				width: 18px;
-				height: 18px;
+			.timeline::after {
+				display: block;
+				left: calc(100% - var(--marker-col) / 2);
+				transform: translateX(-50%);
 			}
+
+			/* Lane labels above their branch lines */
+			.lane-label[data-side="left"]  { grid-column: 1; justify-self: center; }
+			.lane-label[data-side="right"] { grid-column: 3; justify-self: center; }
+
+			/*
+			 * time-slot stays a subgrid. Session-rows are constrained to their lane columns
+			 * so cards never overlap a branch line, and right sessions are right-aligned.
+			 * Left (cols 1-2) and right (cols 2-3) overlap at col 2, so auto-placement
+			 * puts them in separate rows automatically.
+			 */
+			.time-slot {
+				display: grid;
+				grid-template-columns: subgrid;
+				row-gap: var(--space-3);
+			}
+
+			.session-row[data-side="left"],
+			.session-row[data-side="center"] {
+				display: grid;
+				grid-template-columns: var(--marker-col) 1fr;
+				column-gap: var(--space-2);
+			}
+
+			.session-row[data-side="left"]   { grid-column: 1 / 3; }
+			.session-row[data-side="center"] { grid-column: 1 / -1; }
+
+			/* Right sessions span cols 2-3: card in center, marker at right edge */
+			.session-row[data-side="right"] {
+				grid-column: 2 / 4;
+				display: grid;
+				grid-template-columns: 1fr var(--marker-col);
+				column-gap: var(--space-2);
+			}
+
+			/* Relative column numbers within each 2-col session-row */
+			.session-row[data-side="left"]   .timeline-marker,
+			.session-row[data-side="center"] .timeline-marker { grid-column: 1; }
+
+			.session-row[data-side="left"]   details,
+			.session-row[data-side="center"] details          { grid-column: 2; margin: 0; }
+
+			.session-row[data-side="right"] details          { grid-column: 1; margin: 0; }
+			.session-row[data-side="right"] .timeline-marker { grid-column: 2; }
+
+			/* Left arrows: ← toward marker on left */
+			details[data-side="left"]::before {
+				left: -10px; right: auto;
+				border-right: 10px solid var(--color-gray);
+				border-left: none;
+			}
+			details[data-side="left"]::after {
+				left: -8px; right: auto;
+				border-right: 9px solid var(--color-white);
+				border-left: none;
+			}
+
+			/* Right arrows on mobile: → toward marker on right */
+			details[data-side="right"]::before {
+				left: auto; right: -10px;
+				border-right: none;
+				border-left: 10px solid var(--color-gray);
+			}
+			details[data-side="right"]::after {
+				left: auto; right: -8px;
+				border-right: none;
+				border-left: 9px solid var(--color-white);
+			}
+
+			details[data-side="left"]:is([open], :target, :focus-within, :hover)::before  { border-right-color: var(--room-left-color); }
+			details[data-side="right"]:is([open], :target, :focus-within, :hover)::before { border-left-color: var(--room-right-color); }
+
+			.fallback-marker { width: 18px; height: 18px; }
 		}
 
 		@supports selector(details::details-content) {
@@ -354,10 +666,6 @@ const sessionSpeakers = speakers
 			white-space: pre-wrap;
 		}
 
-		ul {
-			margin: var(--space-3) 0 0;
-			padding-left: var(--space-6);
-		}
 	</style>
 
 	<script>
