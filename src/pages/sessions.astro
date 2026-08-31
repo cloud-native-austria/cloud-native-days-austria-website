@@ -265,11 +265,12 @@ for (const slot of timeSlots) {
 			opacity: 0.45;
 		}
 
-		/* Day separator: z-index + white background covers the branch lines */
+		/* Day separator: sticky header that floats above the timeline while scrolling */
 		.day-separator {
 			grid-column: 1 / -1;
-			position: relative;
-			z-index: 1;
+			position: sticky;
+			top: 0;
+			z-index: 10;
 			display: flex;
 			align-items: center;
 			gap: var(--space-3);
