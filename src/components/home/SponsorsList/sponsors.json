@@ -22,6 +22,11 @@
 				"name": "Exoscale",
 				"url": "https://www.exoscale.com",
 				"logo": "./images/exoscale.png"
+			},
+			{
+				"name": "Splunk",
+				"url": "https://www.splunk.com",
+				"logo": "./images/splunk.png"
 			}
 		]
 	},
@@ -53,6 +58,11 @@
 				"name": "Österreichische Post",
 				"url": "https://www.post.at/",
 				"logo": "./images/Post.png"
+			},
+			{
+				"name": "Datadog",
+				"url": "https://www.datadoghq.com",
+				"logo": "./images/datadog.png"
 			}
 		]
 	},
