@@ -63,6 +63,11 @@
 				"name": "Datadog",
 				"url": "https://www.datadoghq.com",
 				"logo": "./images/datadog.png"
+			},
+			{
+				"name": "Red Hat",
+				"url": "https://www.redhat.com",
+				"logo": "./images/red-hat.png"
 			}
 		]
 	},
