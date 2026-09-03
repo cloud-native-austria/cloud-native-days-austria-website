@@ -68,6 +68,11 @@
 				"name": "Red Hat",
 				"url": "https://www.redhat.com",
 				"logo": "./images/red-hat.png"
+			},
+			{
+				"name": "Dash0",
+				"url": "https://www.dash0.com/",
+				"logo": "./images/dash0.svg"
 			}
 		]
 	},
