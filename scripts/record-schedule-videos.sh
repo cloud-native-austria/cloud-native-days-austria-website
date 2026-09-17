@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 #
 # Records the portrait schedule videos and exports them as looping mp4s.
+# The intermediate .webm screencasts are kept alongside the mp4s.
 #
 # LOOP_SECONDS must match ROTATION in src/pages/video/[day].astro and the
 # hold/scroll timings in record-schedule-video.mjs. The screencast file runs a
@@ -34,6 +35,5 @@ for webm in recordings/schedule-day-*.webm; do
 		-an \
 		"$mp4"
 
-	rm "$webm"
-	printf 'exported %s\n' "$mp4"
+	printf 'exported %s (kept %s)\n' "$mp4" "$webm"
 done

@@ -114,9 +114,20 @@ const slides = Array.from({ length: SLIDE_COUNT }, (_, index) =>
 	}
 
 	/*
-	 * One group visible at a time, sliding left as the next enters — the same
-	 * shape of animation as the hero slideshow, but sized in percentages so it
-	 * does not depend on the banner width.
+	 * One group visible at a time, sliding left as the next enters.
+	 *
+	 * The percentages are deliberately uneven. A slide transition repaints the
+	 * banner, and when that coincides with the schedule scrolling the screencast
+	 * drops frames and the scroll visibly stutters. So every transition is placed
+	 * inside one of the recording's still phases:
+	 *
+	 *   0-7s    hold on the top of the schedule   -> group 1 -> 2 at 2.6-3.1s
+	 *   7-9s    scrolling down                    -> no transition (group 2 holds)
+	 *   9-16s   hold on the bottom                -> 2 -> 3, 3 -> 4, 4 -> 1
+	 *   16-18s  scrolling back up                 -> no transition (group 1 holds)
+	 *
+	 * Group 1 is visible at both 0% and 100% so the loop point is seamless. These
+	 * numbers assume the timings in scripts/record-schedule-video.mjs.
 	 */
 	.slide[data-slide="1"] { animation: sponsor-slide-1 var(--rotation) ease-in-out infinite; }
 	.slide[data-slide="2"] { animation: sponsor-slide-2 var(--rotation) ease-in-out infinite; }
@@ -124,26 +135,27 @@ const slides = Array.from({ length: SLIDE_COUNT }, (_, index) =>
 	.slide[data-slide="4"] { animation: sponsor-slide-4 var(--rotation) ease-in-out infinite; }
 
 	@keyframes sponsor-slide-1 {
-		0%, 20%, 100% { transform: translateX(0); opacity: 1; }
-		25% { transform: translateX(100%); opacity: 0; }
-		95% { transform: translateX(-100%); opacity: 0; }
+		0%, 14.44% { transform: translateX(0); opacity: 1; }
+		17.22% { transform: translateX(100%); opacity: 0; }
+		82.78% { transform: translateX(-100%); opacity: 0; }
+		85.56%, 100% { transform: translateX(0); opacity: 1; }
 	}
 
 	@keyframes sponsor-slide-2 {
-		0%, 20% { transform: translateX(-100%); opacity: 0; }
-		25%, 45% { transform: translateX(0); opacity: 1; }
-		50%, 100% { transform: translateX(100%); opacity: 0; }
+		0%, 14.44% { transform: translateX(-100%); opacity: 0; }
+		17.22%, 51.11% { transform: translateX(0); opacity: 1; }
+		53.89%, 100% { transform: translateX(100%); opacity: 0; }
 	}
 
 	@keyframes sponsor-slide-3 {
-		0%, 45% { transform: translateX(-100%); opacity: 0; }
-		50%, 70% { transform: translateX(0); opacity: 1; }
-		75%, 100% { transform: translateX(100%); opacity: 0; }
+		0%, 51.11% { transform: translateX(-100%); opacity: 0; }
+		53.89%, 66.94% { transform: translateX(0); opacity: 1; }
+		69.72%, 100% { transform: translateX(100%); opacity: 0; }
 	}
 
 	@keyframes sponsor-slide-4 {
-		0%, 70% { transform: translateX(-100%); opacity: 0; }
-		75%, 95% { transform: translateX(0); opacity: 1; }
-		100% { transform: translateX(100%); opacity: 0; }
+		0%, 66.94% { transform: translateX(-100%); opacity: 0; }
+		69.72%, 82.78% { transform: translateX(0); opacity: 1; }
+		85.56%, 100% { transform: translateX(100%); opacity: 0; }
 	}
 </style>
