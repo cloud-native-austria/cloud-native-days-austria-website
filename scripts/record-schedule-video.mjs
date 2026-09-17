@@ -18,8 +18,8 @@ async (page) => {
 
 	const WIDTH = 1080;
 	const HEIGHT = 1920;
-	const HOLD_MS = 7000;
-	const SCROLL_MS = 2000;
+	const HOLD_MS = 10000;
+	const SCROLL_MS = 1500;
 
 	/** Animates main's scrollTop between two offsets over `duration`. */
 	const scrollTo = (page, from, to, duration) =>
