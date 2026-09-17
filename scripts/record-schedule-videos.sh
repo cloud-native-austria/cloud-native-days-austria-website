@@ -14,7 +14,7 @@ set -euo pipefail
 
 cd "$(dirname "$0")/.."
 
-LOOP_SECONDS=18
+LOOP_SECONDS=23
 
 # Dedicated browser session so this does not disturb an interactive one
 playwright-cli -s=signage open >/dev/null

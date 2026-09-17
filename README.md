@@ -68,8 +68,10 @@ npm run record:videos
 ```
 
 This writes one mp4 per day to `recordings/` at 1080x1920. Each clip holds on the
-top of the schedule, scrolls to the bottom, holds, then scrolls back to the top,
-so the last frame matches the first and the video loops cleanly.
+top of the schedule for 10s, scrolls to the bottom in 1.5s, holds for another
+10s, then scrolls back to the top, so the last frame matches the first and the
+video loops cleanly. The long holds are there to give people time to read the
+schedule before it moves.
 
 The sponsor banner completes exactly one rotation per clip. If you change the
 timing, three values have to stay in sync:
