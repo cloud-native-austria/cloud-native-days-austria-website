@@ -450,18 +450,32 @@ for (const slot of timeSlots) {
 			border-left: 9px solid var(--color-white);
 		}
 
-		/* Color the arrows on hover / open / focus / target */
-		.session-card[data-side="right"]:is([open], :target, :focus-within, :hover)::before {
+		/* Color the arrows on hover / open / target; keyboard focus uses the outline ring alone */
+		.session-card[data-side="right"]:is([open], :target, :hover)::before {
 			border-right-color: var(--room-right-color);
 		}
 
-		.session-card[data-side="left"]:is([open], :target, :focus-within, :hover)::before {
+		.session-card[data-side="left"]:is([open], :target, :hover)::before {
 			border-left-color: var(--room-left-color);
 		}
 
+		/*
+		 * The card carries the focus ring rather than the summary, so it follows the
+		 * card's border-radius and can echo the lane colour.
+		 */
+		.card-header:focus-visible { outline: none; }
+
+		.session-card:has(.card-header:focus-visible) {
+			outline: 2px solid var(--color-accent);
+			outline-offset: 2px;
+		}
+
+		.session-card[data-side="left"]:has(.card-header:focus-visible)  { outline-color: var(--room-left-color); }
+		.session-card[data-side="right"]:has(.card-header:focus-visible) { outline-color: var(--room-right-color); }
+
 		.session-card:target { scroll-margin-top: calc(var(--space-8) + 3.5rem); }
-		.session-card[data-side="left"]:is([open], :target, :focus-within, :hover)   { border-color: var(--room-left-color); }
-		.session-card[data-side="right"]:is([open], :target, :focus-within, :hover)  { border-color: var(--room-right-color); }
+		.session-card[data-side="left"]:is([open], :target, :hover)   { border-color: var(--room-left-color); }
+		.session-card[data-side="right"]:is([open], :target, :hover)  { border-color: var(--room-right-color); }
 
 		.card-header {
 			list-style: none;
@@ -504,7 +518,14 @@ for (const slot of timeSlots) {
 			margin-top: calc(var(--avatar-size) * -0.3);
 		}
 
+		/*
+		 * clip-path clips outline and box-shadow away, so focus cannot be drawn
+		 * outside the heptagon. The ring keeps its lane colour and doubles in
+		 * thickness instead. The outline is kept for forced-colors mode, where the
+		 * ring colour may be overridden.
+		 */
 		.speaker-card-link:focus-visible {
+			--ring-width: 4px;
 			outline: 2px solid var(--color-accent);
 			outline-offset: 2px;
 		}
@@ -612,8 +633,19 @@ for (const slot of timeSlots) {
 
 		/* Mobile: three-column layout — left lane | cards | right lane */
 		@media (max-width: 768px) {
+			/*
+			 * The branch lines and avatars are both centred in the marker columns, so
+			 * narrowing those columns to the avatar is what pulls the lines out toward
+			 * the screen edges and hands the width back to the cards.
+			 */
 			.timeline {
-				--marker-col: 52px;
+				--marker-col: var(--avatar-size);
+				/*
+				 * The card's connector arrow pokes 10px out of its own box and into
+				 * this gap, so the visible space between avatar and arrow tip is
+				 * (gap - 10px).
+				 */
+				--marker-gap: var(--space-3);
 				--avatar-size: 34px;
 				grid-template-columns: var(--marker-col) 1fr var(--marker-col);
 			}
@@ -646,29 +678,26 @@ for (const slot of timeSlots) {
 				row-gap: var(--space-3);
 			}
 
-			.session-row[data-side="left"] {
-				display: grid;
-				grid-template-columns: var(--marker-col) 1fr;
-				column-gap: var(--space-2);
-			}
-
-			.session-row[data-side="left"] { grid-column: 1 / 3; }
-
-			/* Right sessions span cols 2-3: card in center, marker at right edge */
+			/*
+			 * Every row reserves both marker columns and always puts the card in the
+			 * middle one, so cards share the same left and right edge whichever lane
+			 * they belong to; only the marker swaps sides. Both lanes span every
+			 * column, so auto-placement puts them in separate rows automatically.
+			 */
+			.session-row[data-side="left"],
 			.session-row[data-side="right"] {
-				grid-column: 2 / 4;
+				grid-column: 1 / -1;
 				display: grid;
-				grid-template-columns: 1fr var(--marker-col);
-				column-gap: var(--space-2);
+				grid-template-columns: var(--marker-col) 1fr var(--marker-col);
+				column-gap: var(--marker-gap);
 			}
 
-			/* Relative column numbers within each 2-col session-row */
+			/* Relative column numbers within each 3-col session-row */
+			.session-row[data-side="left"]  .timeline-marker { grid-column: 1; }
+			.session-row[data-side="right"] .timeline-marker { grid-column: 3; }
 
-			.session-row[data-side="left"] .timeline-marker { grid-column: 1; }
-			.session-row[data-side="left"] .session-card          { grid-column: 2; margin: 0; }
-
-			.session-row[data-side="right"] .session-card          { grid-column: 1; margin: 0; }
-			.session-row[data-side="right"] .timeline-marker { grid-column: 2; }
+			.session-row[data-side="left"]  .session-card,
+			.session-row[data-side="right"] .session-card { grid-column: 2; margin: 0; }
 
 			/* Left arrows: ← toward marker on left */
 			.session-card[data-side="left"]::before {
@@ -694,8 +723,8 @@ for (const slot of timeSlots) {
 				border-left: 9px solid var(--color-white);
 			}
 
-			.session-card[data-side="left"]:is([open], :target, :focus-within, :hover)::before  { border-right-color: var(--room-left-color); }
-			.session-card[data-side="right"]:is([open], :target, :focus-within, :hover)::before { border-left-color: var(--room-right-color); }
+			.session-card[data-side="left"]:is([open], :target, :hover)::before  { border-right-color: var(--room-left-color); }
+			.session-card[data-side="right"]:is([open], :target, :hover)::before { border-left-color: var(--room-right-color); }
 
 			/* Breaks span the full width between the two branch lines on mobile */
 			.break-row { grid-column: 1 / -1; }
