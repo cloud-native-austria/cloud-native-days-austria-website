@@ -1,0 +1,149 @@
+---
+/**
+ * Rotating sponsor banner for the signage/video pages.
+ *
+ * Not every sponsor fits across the screen at once, so they are chunked into
+ * four groups that rotate with the same CSS-only slide pattern as the home page
+ * hero. `rotation` is the time for one full pass through every group — set it to
+ * the length of the recording so the banner completes exactly one rotation.
+ */
+import { Picture } from "astro:assets";
+import { getEntry, type CollectionEntry } from "astro:content";
+
+type SponsorTier = CollectionEntry<"sponsors">["data"]["tiers"][number];
+
+interface Props {
+	rotation?: string;
+}
+
+const { rotation = "20s" } = Astro.props;
+
+const sponsorsEntry = await getEntry("sponsors", "list");
+if (!sponsorsEntry) {
+	throw new Error("Sponsors data not found in content collection");
+}
+
+const tiers = sponsorsEntry.data.tiers as SponsorTier[];
+
+const tierImageBounds: Record<string, { width: number; height: number }> = {
+	gold: { width: 260, height: 116 },
+	silver: { width: 220, height: 96 },
+	community: { width: 180, height: 80 },
+};
+
+function getTierImageBounds(tier: string) {
+	return tierImageBounds[tier] ?? tierImageBounds.silver;
+}
+
+// Flattened in tier order so the largest sponsors lead the rotation.
+const allSponsors = tiers.flatMap(({ tier, sponsors }) =>
+	sponsors.map((sponsor) => ({ ...sponsor, tier })),
+);
+
+const SLIDE_COUNT = 4;
+const perSlide = Math.ceil(allSponsors.length / SLIDE_COUNT);
+const slides = Array.from({ length: SLIDE_COUNT }, (_, index) =>
+	allSponsors.slice(index * perSlide, (index + 1) * perSlide),
+).filter((slide) => slide.length > 0);
+---
+
+<div class="rotator" style={`--rotation: ${rotation}`} aria-label="Our sponsors">
+	{
+		slides.map((slide, index) => (
+			<ul class="slide" data-slide={index + 1}>
+				{slide.map(({ name, logo, tier }) => {
+					const bounds = getTierImageBounds(tier);
+
+					return (
+						<li>
+							{logo.format === "svg" ? (
+								<img
+									src={logo.src}
+									alt={name}
+									style={`width: ${bounds.width}px; height: ${bounds.height}px; object-fit: contain;`}
+								/>
+							) : (
+								<Picture
+									src={logo}
+									alt={name}
+									width={bounds.width}
+									height={bounds.height}
+									fit="inside"
+									formats={["avif", "webp"]}
+								/>
+							)}
+						</li>
+					);
+				})}
+			</ul>
+		))
+	}
+</div>
+
+<style>
+	.rotator {
+		position: relative;
+		width: 100%;
+		height: var(--banner-height, 150px);
+		overflow: hidden;
+	}
+
+	.slide {
+		position: absolute;
+		inset: 0;
+		list-style: none;
+		margin: 0;
+		padding: 0 var(--space-6);
+		display: flex;
+		align-items: center;
+		justify-content: space-evenly;
+		gap: var(--space-6);
+	}
+
+	.slide li {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+
+	.slide :global(img) {
+		height: auto;
+		width: auto;
+		max-height: var(--banner-height, 150px);
+		object-fit: contain;
+	}
+
+	/*
+	 * One group visible at a time, sliding left as the next enters — the same
+	 * shape of animation as the hero slideshow, but sized in percentages so it
+	 * does not depend on the banner width.
+	 */
+	.slide[data-slide="1"] { animation: sponsor-slide-1 var(--rotation) ease-in-out infinite; }
+	.slide[data-slide="2"] { animation: sponsor-slide-2 var(--rotation) ease-in-out infinite; }
+	.slide[data-slide="3"] { animation: sponsor-slide-3 var(--rotation) ease-in-out infinite; }
+	.slide[data-slide="4"] { animation: sponsor-slide-4 var(--rotation) ease-in-out infinite; }
+
+	@keyframes sponsor-slide-1 {
+		0%, 20%, 100% { transform: translateX(0); opacity: 1; }
+		25% { transform: translateX(100%); opacity: 0; }
+		95% { transform: translateX(-100%); opacity: 0; }
+	}
+
+	@keyframes sponsor-slide-2 {
+		0%, 20% { transform: translateX(-100%); opacity: 0; }
+		25%, 45% { transform: translateX(0); opacity: 1; }
+		50%, 100% { transform: translateX(100%); opacity: 0; }
+	}
+
+	@keyframes sponsor-slide-3 {
+		0%, 45% { transform: translateX(-100%); opacity: 0; }
+		50%, 70% { transform: translateX(0); opacity: 1; }
+		75%, 100% { transform: translateX(100%); opacity: 0; }
+	}
+
+	@keyframes sponsor-slide-4 {
+		0%, 70% { transform: translateX(-100%); opacity: 0; }
+		75%, 95% { transform: translateX(0); opacity: 1; }
+		100% { transform: translateX(100%); opacity: 0; }
+	}
+</style>
