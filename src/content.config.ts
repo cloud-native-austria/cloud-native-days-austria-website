@@ -160,6 +160,8 @@ const sessions = defineCollection({
 					startsAt: typeof sessionData.startsAt === "string" ? sessionData.startsAt : null,
 					endsAt: typeof sessionData.endsAt === "string" ? sessionData.endsAt : null,
 					room: typeof sessionData.room === "string" ? sessionData.room : null,
+					roomId: typeof sessionData.roomId === "number" ? sessionData.roomId : null,
+					isServiceSession: sessionData.isServiceSession === true,
 					speakers: Array.isArray(sessionData.speakers)
 						? (sessionData.speakers as Array<Record<string, unknown>>).map((speaker) => ({
 								id: String(speaker.id ?? ""),
@@ -179,6 +181,8 @@ const sessions = defineCollection({
 		startsAt: z.string().nullable(),
 		endsAt: z.string().nullable(),
 		room: z.string().nullable(),
+		roomId: z.number().nullable(),
+		isServiceSession: z.boolean(),
 		speakers: z.array(
 			z.object({
 				id: z.string(),
@@ -190,10 +194,33 @@ const sessions = defineCollection({
 	}),
 });
 
+const rooms = defineCollection({
+	loader: async () => {
+		const response = await fetch(`${BASE_URL}/All`);
+		if (!response.ok) {
+			throw new Error(`Failed to load rooms: ${response.status}`);
+		}
+		const data = (await response.json()) as { rooms?: Array<Record<string, unknown>> };
+		return (data.rooms ?? []).map((room) => ({
+			id: String(room.id ?? ""),
+			roomId: Number(room.id ?? 0),
+			name: String(room.name ?? ""),
+			sort: Number(room.sort ?? 0),
+		}));
+	},
+	schema: z.object({
+		id: z.string(),
+		roomId: z.number(),
+		name: z.string(),
+		sort: z.number(),
+	}),
+});
+
 export const collections = {
 	"markdown-pages": markdownPages,
 	team,
 	sponsors,
 	speakers,
 	sessions,
+	rooms,
 };

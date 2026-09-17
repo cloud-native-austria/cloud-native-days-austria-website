@@ -33,13 +33,25 @@ const sessionSpeakers = speakers
 	.map((entry) => entry.data)
 	.filter((speaker) => sessionSpeakerIds.has(speaker.id));
 
-const roomNames = [...new Set(sessions.map((s) => s.room).filter(Boolean))].sort();
-const leftRoom = roomNames[0] ?? null;
-const rightRoom = roomNames[1] ?? null;
+/*
+ * Lanes follow Sessionize's own room order. Rooms that only ever host service
+ * sessions (breaks, food, shuttles) get no lane, so adding or renaming a room
+ * in Sessionize can never push a talk room out of the timeline.
+ */
+const talkRoomIds = new Set(
+	sessions.filter((session) => !session.isServiceSession).map((session) => session.roomId),
+);
+const laneRooms = (await getCollection("rooms"))
+	.map((entry) => entry.data)
+	.sort((a, b) => a.sort - b.sort)
+	.filter((room) => talkRoomIds.has(room.roomId));
 
-function getRoomSide(room: string | null): "left" | "right" | "center" {
-	if (room && room === leftRoom) return "left";
-	if (room && room === rightRoom) return "right";
+const leftRoom = laneRooms[0] ?? null;
+const rightRoom = laneRooms[1] ?? null;
+
+function getRoomSide(roomId: number | null): "left" | "right" | "center" {
+	if (roomId !== null && roomId === leftRoom?.roomId) return "left";
+	if (roomId !== null && roomId === rightRoom?.roomId) return "right";
 	return "center";
 }
 
@@ -65,8 +77,9 @@ function getDay(startsAt: string | null): string | null {
 
 const sessionsWithMeta = sessions.map((s) => ({
 	...s,
-	side: getRoomSide(s.room),
+	side: getRoomSide(s.roomId),
 	formattedTime: formatSessionTime(s.startsAt),
+	formattedEndTime: formatSessionTime(s.endsAt),
 }));
 
 type SessionWithMeta = (typeof sessionsWithMeta)[0];
@@ -112,15 +125,32 @@ for (const slot of timeSlots) {
 						)}
 						{leftRoom && rightRoom && (
 							<div class="lane-labels">
-								<span class="lane-label" data-side="left">{leftRoom}</span>
-								<span class="lane-label" data-side="right">{rightRoom}</span>
+								<span class="lane-label" data-side="left">{leftRoom.name}</span>
+								<span class="lane-label" data-side="right">{rightRoom.name}</span>
 							</div>
 						)}
 						{slots.map((slot) => {
 							const slotSessions = [slot.left, slot.right, ...slot.center].filter(Boolean);
 							return (
 								<div class="time-slot">
-									{slotSessions.map((session) => (
+									{slotSessions.map((session) => {
+										const isExpandable = Boolean(session.description);
+										const Card = isExpandable ? "details" : "div";
+										const CardHeader = isExpandable ? "summary" : "div";
+										return session.side === "center" ? (
+										<div class="break-row">
+											<p class="break-card" id={session.anchorId}>
+												<span class="break-title">{session.title}</span>
+												{session.formattedTime && (
+													<>
+														{" · "}
+														<time datetime={session.startsAt!}>{session.formattedTime}</time>
+														{session.formattedEndTime && <>{"–"}<time datetime={session.endsAt!}>{session.formattedEndTime}</time></>}
+													</>
+												)}
+											</p>
+										</div>
+									) : (
 										<div class="session-row" data-side={session.side}>
 											<div class="timeline-marker" data-side={session.side}>
 												{session.speakers.some((speaker) => speaker.profilePicture) ? (
@@ -151,15 +181,21 @@ for (const slot of timeSlots) {
 													<span class="fallback-marker" aria-hidden="true" />
 												)}
 											</div>
-											<details id={session.anchorId} data-side={session.side}>
-												<summary data-session-target={session.anchorId}>
+											<Card id={session.anchorId} class="session-card" data-side={session.side}>
+												<CardHeader class="card-header" data-session-target={isExpandable ? session.anchorId : undefined}>
 													<div class="summary-content">
 														<div>
 															<h2>{session.title}</h2>
 															{(session.speakers.length > 0 || session.formattedTime) && (
 																<p>
 																	{session.formattedTime && (
-																		<><time class="session-time" datetime={session.startsAt!}>{session.formattedTime}</time>{session.speakers.length > 0 && " · "}</>
+																		<>
+																			<time class="session-time" datetime={session.startsAt!}>{session.formattedTime}</time>
+																			{session.formattedEndTime && (
+																				<>{"–"}<time class="session-time" datetime={session.endsAt!}>{session.formattedEndTime}</time></>
+																			)}
+																			{session.speakers.length > 0 && " · "}
+																		</>
 																	)}
 																	{session.speakers.map((speaker, index) => (
 																		<>
@@ -169,11 +205,8 @@ for (const slot of timeSlots) {
 																	))}
 																</p>
 															)}
-															{(session.topics.length > 0 || session.sessionFormat) && (
-																<ul class="session-meta" aria-label="Session details">
-																	{session.sessionFormat && (
-																		<li>{session.sessionFormat}</li>
-																	)}
+															{session.topics.length > 0 && (
+																<ul class="session-meta" aria-label="Session topics">
 																	{session.topics.map((topic) => (
 																		<li>{topic}</li>
 																	))}
@@ -181,17 +214,16 @@ for (const slot of timeSlots) {
 															)}
 														</div>
 													</div>
-												</summary>
-												<div>
-													{session.description ? (
+												</CardHeader>
+												{isExpandable && (
+													<div class="card-body">
 														<p>{session.description}</p>
-													) : (
-														<p>Session details will be available soon.</p>
-													)}
-												</div>
-											</details>
+													</div>
+												)}
+											</Card>
 										</div>
-									))}
+									);
+									})}
 								</div>
 							);
 						})}
@@ -339,15 +371,13 @@ for (const slot of timeSlots) {
 		 * the DOM, so without this the card would fall into row 2.
 		 */
 		.timeline-marker { grid-row: 1; }
-		details          { grid-row: 1; }
+		.session-card          { grid-row: 1; }
 
 		.timeline-marker[data-side="left"]   { grid-column: 2; }
 		.timeline-marker[data-side="right"]  { grid-column: 4; }
-		.timeline-marker[data-side="center"] { grid-column: 2 / 5; }
 
-		details[data-side="left"]   { grid-column: 1; margin-right: var(--space-3); }
-		details[data-side="right"]  { grid-column: 5; margin-left: var(--space-3); }
-		details[data-side="center"] { grid-column: 1 / -1; }
+		.session-card[data-side="left"]   { grid-column: 1; margin-right: var(--space-3); }
+		.session-card[data-side="right"]  { grid-column: 5; margin-left: var(--space-3); }
 
 		.timeline-marker {
 			position: relative;
@@ -357,19 +387,24 @@ for (const slot of timeSlots) {
 			padding-top: calc(var(--marker-center-y) - (var(--avatar-size) / 2));
 		}
 
+		/*
+		 * The marker column is padded down by half an avatar, so a dot smaller than
+		 * an avatar must be re-centred in that band to line up with the card arrow.
+		 */
 		.fallback-marker {
+			--dot-size: 24px;
 			display: block;
-			width: 24px;
-			height: 24px;
-			margin: 0;
-			border-radius: var(--radius-full);
+			width: var(--dot-size);
+			height: var(--dot-size);
+			margin: calc((var(--avatar-size) - var(--dot-size)) / 2) 0;
+			clip-path: var(--shape-heptagon);
 			background: var(--color-gray);
 		}
 
 		.timeline-marker[data-side="left"]  .fallback-marker { background: var(--room-left-color); }
 		.timeline-marker[data-side="right"] .fallback-marker { background: var(--room-right-color); }
 
-		details {
+		.session-card {
 			border: 1px solid var(--color-gray);
 			border-radius: var(--radius);
 			background: var(--color-white);
@@ -380,7 +415,7 @@ for (const slot of timeSlots) {
 		}
 
 		/* Default connector arrow: gray, points left ← */
-		details::before {
+		.session-card::before {
 			content: "";
 			position: absolute;
 			left: -10px;
@@ -390,7 +425,7 @@ for (const slot of timeSlots) {
 			border-right: 10px solid var(--color-gray);
 		}
 
-		details::after {
+		.session-card::after {
 			content: "";
 			position: absolute;
 			left: -8px;
@@ -401,14 +436,14 @@ for (const slot of timeSlots) {
 		}
 
 		/* Left-side cards: flip arrow to point right → (default gray) */
-		details[data-side="left"]::before {
+		.session-card[data-side="left"]::before {
 			left: auto;
 			right: -10px;
 			border-right: none;
 			border-left: 10px solid var(--color-gray);
 		}
 
-		details[data-side="left"]::after {
+		.session-card[data-side="left"]::after {
 			left: auto;
 			right: -8px;
 			border-right: none;
@@ -416,30 +451,24 @@ for (const slot of timeSlots) {
 		}
 
 		/* Color the arrows on hover / open / focus / target */
-		details[data-side="right"]:is([open], :target, :focus-within, :hover)::before {
+		.session-card[data-side="right"]:is([open], :target, :focus-within, :hover)::before {
 			border-right-color: var(--room-right-color);
 		}
 
-		details[data-side="left"]:is([open], :target, :focus-within, :hover)::before {
+		.session-card[data-side="left"]:is([open], :target, :focus-within, :hover)::before {
 			border-left-color: var(--room-left-color);
 		}
 
-		/* Center sessions: no arrow */
-		details[data-side="center"]::before,
-		details[data-side="center"]::after {
-			display: none;
-		}
+		.session-card:target { scroll-margin-top: calc(var(--space-8) + 3.5rem); }
+		.session-card[data-side="left"]:is([open], :target, :focus-within, :hover)   { border-color: var(--room-left-color); }
+		.session-card[data-side="right"]:is([open], :target, :focus-within, :hover)  { border-color: var(--room-right-color); }
 
-		details:target { scroll-margin-top: calc(var(--space-8) + 3.5rem); }
-		details[data-side="left"]:is([open], :target, :focus-within, :hover)   { border-color: var(--room-left-color); }
-		details[data-side="right"]:is([open], :target, :focus-within, :hover)  { border-color: var(--room-right-color); }
-		details[data-side="center"]:is([open], :target, :focus-within, :hover) { border-color: var(--color-accent); }
-
-		summary {
+		.card-header {
 			list-style: none;
 			padding: var(--space-4);
-			cursor: pointer;
 		}
+
+		summary.card-header { cursor: pointer; }
 
 		.speaker-cards {
 			display: flex;
@@ -450,22 +479,26 @@ for (const slot of timeSlots) {
 			margin-inline: auto;
 		}
 
+		/*
+		 * A border cannot follow a clip-path, so the lane-coloured ring is a clipped
+		 * background and the image is inset by the padding to sit inside it.
+		 */
 		.speaker-card-link {
+			--ring-width: 2px;
 			display: block;
 			width: var(--avatar-size);
 			height: var(--avatar-size);
-			padding: 0;
-			border-radius: var(--radius-full);
-			overflow: clip;
-			background: var(--color-white);
-			border: 2px solid var(--color-gray);
+			padding: var(--ring-width);
+			clip-path: var(--shape-heptagon);
+			background: var(--color-gray);
+			border: none;
 			appearance: none;
 			line-height: 0;
 			position: relative;
 		}
 
-		.timeline-marker[data-side="left"]  .speaker-card-link { border-color: var(--room-left-color); }
-		.timeline-marker[data-side="right"] .speaker-card-link { border-color: var(--room-right-color); }
+		.timeline-marker[data-side="left"]  .speaker-card-link { background: var(--room-left-color); }
+		.timeline-marker[data-side="right"] .speaker-card-link { background: var(--room-right-color); }
 
 		.speaker-card-link ~ .speaker-card-link {
 			margin-top: calc(var(--avatar-size) * -0.3);
@@ -483,22 +516,17 @@ for (const slot of timeSlots) {
 		.speaker-card-link :global(picture),
 		.speaker-card-link :global(img) {
 			display: block;
-			width: var(--avatar-size);
-			height: var(--avatar-size);
+			width: 100%;
+			height: 100%;
 			margin: 0;
 			filter: none;
 		}
 
-		.speaker-card-link :global(.heptagon) {
-			clip-path: none;
-			border-radius: var(--radius-full);
-		}
-
-		summary::-webkit-details-marker {
+		.card-header::-webkit-details-marker {
 			display: none;
 		}
 
-		details[open] summary {
+		.session-card[open] .card-header {
 			border-bottom: 1px solid var(--color-gray);
 		}
 
@@ -510,15 +538,15 @@ for (const slot of timeSlots) {
 			margin: 0;
 		}
 
-		details[data-side="right"] h2 { color: var(--room-right-color); }
+		.session-card[data-side="right"] h2 { color: var(--room-right-color); }
 
-		summary p {
+		.card-header p {
 			margin-top: var(--space-1);
 			color: var(--color-text-light);
 			font-size: 0.95rem;
 		}
 
-		summary p .speaker-name {
+		.card-header p .speaker-name {
 			color: inherit;
 			font-weight: 700;
 		}
@@ -546,6 +574,41 @@ for (const slot of timeSlots) {
 		 * participate directly in the time-slot subgrid via display:contents.
 		 */
 		.session-row { display: contents; }
+
+		/*
+		 * Breaks, food and shuttles live in their own Sessionize room and carry no
+		 * speaker, description or topics, so they render as a single compact line
+		 * straddling both lanes rather than as an expandable talk card.
+		 */
+		.break-row {
+			grid-column: 1 / -1;
+			display: flex;
+			justify-content: center;
+			position: relative;
+			z-index: 2;
+		}
+
+		.break-card {
+			margin: 0;
+			max-width: 100%;
+			text-align: center;
+			text-wrap: balance;
+			font-size: 0.95rem;
+			color: var(--color-text-light);
+			/* Opaque base under the translucent tint, so the lane lines can't bleed through */
+			background-color: var(--color-white);
+			background-image: linear-gradient(var(--color-bg-light), var(--color-bg-light));
+			border: 1px dashed var(--color-gray);
+			border-radius: var(--radius);
+			padding: var(--space-2) var(--space-4);
+			scroll-margin-top: calc(var(--space-8) + 3.5rem);
+		}
+
+		.break-title {
+			font-weight: 700;
+			color: var(--color-text);
+		}
+
 
 		/* Mobile: three-column layout — left lane | cards | right lane */
 		@media (max-width: 768px) {
@@ -583,15 +646,13 @@ for (const slot of timeSlots) {
 				row-gap: var(--space-3);
 			}
 
-			.session-row[data-side="left"],
-			.session-row[data-side="center"] {
+			.session-row[data-side="left"] {
 				display: grid;
 				grid-template-columns: var(--marker-col) 1fr;
 				column-gap: var(--space-2);
 			}
 
-			.session-row[data-side="left"]   { grid-column: 1 / 3; }
-			.session-row[data-side="center"] { grid-column: 1 / -1; }
+			.session-row[data-side="left"] { grid-column: 1 / 3; }
 
 			/* Right sessions span cols 2-3: card in center, marker at right edge */
 			.session-row[data-side="right"] {
@@ -602,47 +663,53 @@ for (const slot of timeSlots) {
 			}
 
 			/* Relative column numbers within each 2-col session-row */
-			.session-row[data-side="left"]   .timeline-marker,
-			.session-row[data-side="center"] .timeline-marker { grid-column: 1; }
 
-			.session-row[data-side="left"]   details,
-			.session-row[data-side="center"] details          { grid-column: 2; margin: 0; }
+			.session-row[data-side="left"] .timeline-marker { grid-column: 1; }
+			.session-row[data-side="left"] .session-card          { grid-column: 2; margin: 0; }
 
-			.session-row[data-side="right"] details          { grid-column: 1; margin: 0; }
+			.session-row[data-side="right"] .session-card          { grid-column: 1; margin: 0; }
 			.session-row[data-side="right"] .timeline-marker { grid-column: 2; }
 
 			/* Left arrows: ← toward marker on left */
-			details[data-side="left"]::before {
+			.session-card[data-side="left"]::before {
 				left: -10px; right: auto;
 				border-right: 10px solid var(--color-gray);
 				border-left: none;
 			}
-			details[data-side="left"]::after {
+			.session-card[data-side="left"]::after {
 				left: -8px; right: auto;
 				border-right: 9px solid var(--color-white);
 				border-left: none;
 			}
 
 			/* Right arrows on mobile: → toward marker on right */
-			details[data-side="right"]::before {
+			.session-card[data-side="right"]::before {
 				left: auto; right: -10px;
 				border-right: none;
 				border-left: 10px solid var(--color-gray);
 			}
-			details[data-side="right"]::after {
+			.session-card[data-side="right"]::after {
 				left: auto; right: -8px;
 				border-right: none;
 				border-left: 9px solid var(--color-white);
 			}
 
-			details[data-side="left"]:is([open], :target, :focus-within, :hover)::before  { border-right-color: var(--room-left-color); }
-			details[data-side="right"]:is([open], :target, :focus-within, :hover)::before { border-left-color: var(--room-right-color); }
+			.session-card[data-side="left"]:is([open], :target, :focus-within, :hover)::before  { border-right-color: var(--room-left-color); }
+			.session-card[data-side="right"]:is([open], :target, :focus-within, :hover)::before { border-left-color: var(--room-right-color); }
 
-			.fallback-marker { width: 18px; height: 18px; }
+			/* Breaks span the full width between the two branch lines on mobile */
+			.break-row { grid-column: 1 / -1; }
+
+			.break-card {
+				width: 100%;
+				padding: var(--space-2) var(--space-3);
+			}
+
+			.fallback-marker { --dot-size: 18px; }
 		}
 
-		@supports selector(details::details-content) {
-			details::details-content {
+		@supports selector(.session-card::details-content) {
+			.session-card::details-content {
 				display: block;
 				block-size: 0;
 				overflow: hidden;
@@ -653,17 +720,17 @@ for (const slot of timeSlots) {
 					content-visibility 250ms ease allow-discrete;
 			}
 
-			details[open]::details-content {
+			.session-card[open]::details-content {
 				block-size: auto;
 				opacity: 1;
 			}
 		}
 
-		details > div {
+		.card-body {
 			padding: var(--space-4);
 		}
 
-		details > div p {
+		.card-body p {
 			white-space: pre-wrap;
 		}
 

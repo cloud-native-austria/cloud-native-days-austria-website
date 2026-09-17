@@ -62,6 +62,9 @@
 	--radius: 0.5rem;
 	--radius-full: 9999px;
 
+	/* Kubernetes-style heptagon, shared by profile images and timeline markers */
+	--shape-heptagon: polygon(50% 0%, 90% 20%, 100% 60%, 75% 100%, 25% 100%, 0% 60%, 10% 20%);
+
 	/* Shadows */
 	--shadow-elevated: 0 12px 24px
 		color-mix(in srgb, var(--color-text) 16%, transparent);
@@ -112,6 +115,33 @@
 	}
 	.logo-dark {
 		display: block;
+	}
+}
+
+/*
+ * Softened heptagon corners: each vertex is trimmed back along both edges and
+ * bridged with a quadratic curve through the original point. polygon() cannot
+ * express curves, so it stays as the sharp-cornered fallback above.
+ */
+@supports (clip-path: shape(from 0% 0%, curve to 100% 0% with 50% 50%, close)) {
+	:root {
+		--shape-heptagon: shape(
+			from 46.42% 1.79%,
+			curve to 53.58% 1.79% with 50% 0%,
+			line to 86.42% 18.21%,
+			curve to 90.97% 23.88% with 90% 20%,
+			line to 99.03% 56.12%,
+			curve to 97.88% 63.39% with 100% 60%,
+			line to 77.12% 96.61%,
+			curve to 71% 100% with 75% 100%,
+			line to 29% 100%,
+			curve to 22.88% 96.61% with 25% 100%,
+			line to 2.12% 63.39%,
+			curve to 0.97% 56.12% with 0% 60%,
+			line to 9.03% 23.88%,
+			curve to 13.58% 18.21% with 10% 20%,
+			close
+		);
 	}
 }
 
@@ -248,17 +278,9 @@ a:hover {
    -------------------------------------------------------------------------- */
 
 /* Heptagon Clip Path (for profile images)
-   Used in: team.astro, speakers.astro */
+   Used in: team.astro, speakers.astro, sessions.astro */
 .heptagon {
-	clip-path: polygon(
-		50% 0%,
-		90% 20%,
-		100% 60%,
-		75% 100%,
-		25% 100%,
-		0% 60%,
-		10% 20%
-	);
+	clip-path: var(--shape-heptagon);
 }
 
 /* --------------------------------------------------------------------------
