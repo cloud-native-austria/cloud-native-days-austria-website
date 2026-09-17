@@ -142,11 +142,11 @@ for (const slot of timeSlots) {
 											<p class="break-card" id={session.anchorId}>
 												<span class="break-title">{session.title}</span>
 												{session.formattedTime && (
-													<>
-														{" · "}
-														<time datetime={session.startsAt!}>{session.formattedTime}</time>
+													<span class="break-time">
+														{/* Plain space so copied text and screen readers keep a separator */}
+														{" "}<time datetime={session.startsAt!}>{session.formattedTime}</time>
 														{session.formattedEndTime && <>{"–"}<time datetime={session.endsAt!}>{session.formattedEndTime}</time></>}
-													</>
+													</span>
 												)}
 											</p>
 										</div>
@@ -628,6 +628,11 @@ for (const slot of timeSlots) {
 		.break-title {
 			font-weight: 700;
 			color: var(--color-text);
+		}
+
+		/* Spacing lives on the time so it disappears with it, leaving no trailing gap */
+		.break-time {
+			margin-inline-start: var(--space-3);
 		}
 
 
