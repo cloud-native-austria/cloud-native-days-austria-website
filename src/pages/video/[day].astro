@@ -1,0 +1,51 @@
+---
+/**
+ * One signage page per conference day, e.g. /video/2026-09-29.
+ *
+ * Reuses the schedule timeline from the sessions page, without its heading and
+ * "pick your favourite talks" button, filtered to a single day.
+ */
+import SessionTimeline from "@components/SessionTimeline.astro";
+import SignageLayout from "@layouts/SignageLayout.astro";
+import { getCollection } from "astro:content";
+
+/**
+ * Time for one full sponsor rotation. Must match the total recording length in
+ * scripts/record-schedule-video.mjs (hold + down + hold + up), so the banner
+ * ends where it started and the video loops seamlessly.
+ */
+const ROTATION = "18s";
+
+export async function getStaticPaths() {
+	const sessions = await getCollection("sessions");
+
+	const days = [
+		...new Set(
+			sessions
+				.map((session) =>
+					session.data.startsAt
+						? new Date(session.data.startsAt).toLocaleDateString("en-CA", {
+								timeZone: "Europe/Vienna",
+							})
+						: null,
+				)
+				.filter((day): day is string => day !== null),
+		),
+	].sort();
+
+	return days.map((day) => ({ params: { day }, props: { day } }));
+}
+
+const { day } = Astro.props;
+
+const label = new Date(`${day}T12:00:00Z`).toLocaleDateString("en-AT", {
+	weekday: "long",
+	day: "numeric",
+	month: "long",
+	timeZone: "Europe/Vienna",
+});
+---
+
+<SignageLayout title={`Schedule ${label} | Cloud Native Days Austria`} rotation={ROTATION}>
+	<SessionTimeline day={day} />
+</SignageLayout>

@@ -8,6 +8,7 @@
 		"dev": "astro dev",
 		"build": "astro build",
 		"preview": "astro preview",
+		"record:videos": "./scripts/record-schedule-videos.sh",
 		"astro": "astro"
 	},
 	"dependencies": {

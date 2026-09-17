@@ -1,127 +1,16 @@
 ---
 import Button from "@components/Button.astro";
-import SessionsTimeline from "@components/SessionsTimeline.astro";
+import SessionTimeline from "@components/SessionTimeline.astro";
 import Layout from "@layouts/Layout.astro";
-import { getCollection } from "astro:content";
-
-const speakers = await getCollection("speakers");
-const speakersById = new Map(speakers.map((entry) => [entry.data.id, entry.data]));
-
-const sessions = (await getCollection("sessions"))
-	.map((entry) => {
-		return {
-			...entry.data,
-			speakers: entry.data.speakers.map((speaker) => ({
-				...speaker,
-				profilePicture: speakersById.get(speaker.id)?.profilePicture,
-			})),
-			anchorId: `session-${entry.data.id}`,
-		};
-	})
-	.sort((a, b) => {
-		if (!a.startsAt && !b.startsAt) return 0;
-		if (!a.startsAt) return 1;
-		if (!b.startsAt) return -1;
-		return new Date(a.startsAt).getTime() - new Date(b.startsAt).getTime();
-	});
-
-const sessionSpeakerIds = new Set(
-	sessions.flatMap((session) => session.speakers.map((speaker) => speaker.id)),
-);
-const sessionSpeakers = speakers
-	.map((entry) => entry.data)
-	.filter((speaker) => sessionSpeakerIds.has(speaker.id));
-
-/*
- * Lanes follow Sessionize's own room order. Rooms that only ever host service
- * sessions (breaks, food, shuttles) get no lane, so adding or renaming a room
- * in Sessionize can never push a talk room out of the timeline.
- */
-const talkRoomIds = new Set(
-	sessions.filter((session) => !session.isServiceSession).map((session) => session.roomId),
-);
-const laneRooms = (await getCollection("rooms"))
-	.map((entry) => entry.data)
-	.sort((a, b) => a.sort - b.sort)
-	.filter((room) => talkRoomIds.has(room.roomId));
-
-const leftRoom = laneRooms[0] ?? null;
-const rightRoom = laneRooms[1] ?? null;
-
-function getRoomSide(roomId: number | null): "left" | "right" | "center" {
-	if (roomId !== null && roomId === leftRoom?.roomId) return "left";
-	if (roomId !== null && roomId === rightRoom?.roomId) return "right";
-	return "center";
-}
-
-function formatSessionTime(startsAt: string | null): string | null {
-	if (!startsAt) return null;
-	return new Date(startsAt).toLocaleTimeString("en-AT", {
-		hour: "2-digit",
-		minute: "2-digit",
-		timeZone: "Europe/Vienna",
-	});
-}
-
-function getDay(startsAt: string | null): string | null {
-	if (!startsAt) return null;
-	return new Date(startsAt).toLocaleDateString("en-AT", {
-		weekday: "long",
-		year: "numeric",
-		month: "long",
-		day: "numeric",
-		timeZone: "Europe/Vienna",
-	});
-}
-
-const sessionsWithMeta = sessions.map((s) => ({
-	...s,
-	side: getRoomSide(s.roomId),
-	formattedTime: formatSessionTime(s.startsAt),
-	formattedEndTime: formatSessionTime(s.endsAt),
-}));
-
-type SessionWithMeta = (typeof sessionsWithMeta)[0];
-type TimeSlot = { left: SessionWithMeta | null; right: SessionWithMeta | null; center: SessionWithMeta[] };
-
-const slotMap = new Map<string, TimeSlot>();
-for (const session of sessionsWithMeta) {
-	const key = session.startsAt ?? `__unscheduled_${session.id}`;
-	if (!slotMap.has(key)) slotMap.set(key, { left: null, right: null, center: [] });
-	const slot = slotMap.get(key)!;
-	if (session.side === "left") slot.left = session;
-	else if (session.side === "right") slot.right = session;
-	else slot.center.push(session);
-}
-const timeSlots = [...slotMap.values()];
-
-type DayGroup = { day: string | null; slots: TimeSlot[] };
-const dayGroups: DayGroup[] = [];
-for (const slot of timeSlots) {
-	const firstSession = slot.left ?? slot.right ?? slot.center[0];
-	const day = firstSession ? getDay(firstSession.startsAt) : null;
-	const last = dayGroups.at(-1);
-	if (!last || last.day !== day) {
-		dayGroups.push({ day, slots: [slot] });
-	} else {
-		last.slots.push(slot);
-	}
-}
 ---
 
 <Layout title="Sessions | Cloud Native Days Austria" description="Browse all conference sessions">
 	<h1>Sessions of 2026</h1>
-	<Button href="https://cloud-native-days-austria-2026.sessionize.com/schedule" external>Pick your favorite talks</Button>
-	{timeSlots.length > 0 ? (
-		<SessionsTimeline
-			dayGroups={dayGroups}
-			sessionSpeakers={sessionSpeakers}
-			leftRoom={leftRoom}
-			rightRoom={rightRoom}
-		/>
-	) : (
-		<p>No sessions are available at the moment.</p>
-	)}
+	<Button href="https://cloud-native-days-austria-2026.sessionize.com/schedule" external
+		>Pick your favorite talks</Button
+	>
+	<SessionTimeline />
+
 	<style>
 		h1 {
 			text-align: center;

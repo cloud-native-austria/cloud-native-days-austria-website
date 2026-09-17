@@ -23,3 +23,9 @@ yarn-error.log
 .pnp.js
 # Yarn Integrity file
 .yarn-integrity
+
+# Browser automation scratch output
+.playwright-cli/
+
+# Exported signage videos
+recordings/

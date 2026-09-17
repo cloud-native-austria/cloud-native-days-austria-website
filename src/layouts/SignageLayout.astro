@@ -1,0 +1,126 @@
+---
+/**
+ * Full-screen portrait layout for the venue screens and the recorded videos.
+ *
+ * No site navigation: a full-width header image, a scrolling schedule, and a
+ * rotating sponsor banner pinned to the bottom. The page itself never scrolls —
+ * only the middle region does, which is what the recording script drives.
+ */
+import "@styles/global.css";
+import SponsorBanner from "@components/SponsorBanner.astro";
+import headerImage from "@images/video-header.png";
+import { Font, Image } from "astro:assets";
+
+interface Props {
+	title: string;
+	/** Time for one full sponsor rotation. Match to the recording length. */
+	rotation?: string;
+}
+
+const { title, rotation } = Astro.props;
+---
+
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<!-- Signage is always on a lit screen, so keep it light regardless of the device -->
+		<meta name="color-scheme" content="light" />
+		<meta name="robots" content="noindex" />
+		<title>{title}</title>
+		<Font cssVariable="--font-plus-jakarta-sans" preload />
+		<Font cssVariable="--font-fira-code" preload />
+	</head>
+	<body>
+		<header>
+			<Image src={headerImage} alt="Cloud Native Days Austria" widths={[1080, 2160]} loading="eager" />
+		</header>
+
+		<div class="scroll-area">
+			<main><slot /></main>
+			<!-- Fades sit above the scrolling content so it appears to pass under the chrome -->
+			<span class="fade fade-top" aria-hidden="true"></span>
+			<span class="fade fade-bottom" aria-hidden="true"></span>
+		</div>
+
+		<footer>
+			<SponsorBanner rotation={rotation} />
+		</footer>
+	</body>
+</html>
+
+<style>
+	body {
+		display: grid;
+		/* minmax(0, 1fr) lets the middle row shrink so only it scrolls */
+		grid-template-rows: auto minmax(0, 1fr) auto;
+		block-size: 100svh;
+		margin: 0;
+		overflow: hidden;
+		background: var(--color-white);
+	}
+
+	header {
+		line-height: 0;
+	}
+
+	header :global(img) {
+		display: block;
+		width: 100%;
+		height: auto;
+	}
+
+	.scroll-area {
+		position: relative;
+		min-block-size: 0;
+	}
+
+	main {
+		block-size: 100%;
+		overflow-y: auto;
+		/* The header image already ends in white, so the schedule starts flush */
+		padding: 0 var(--space-6) var(--space-10);
+		scrollbar-width: none;
+	}
+
+	main::-webkit-scrollbar {
+		display: none;
+	}
+
+	main :global(.timeline) {
+		padding-block-start: 0;
+	}
+
+	.fade {
+		position: absolute;
+		inset-inline: 0;
+		block-size: var(--space-8);
+		pointer-events: none;
+		z-index: 5;
+	}
+
+	.fade-top {
+		top: 0;
+		background: linear-gradient(to bottom, var(--color-white), transparent);
+	}
+
+	.fade-bottom {
+		bottom: 0;
+		background: linear-gradient(to top, var(--color-white), transparent);
+	}
+
+	footer {
+		position: relative;
+		background: var(--color-white);
+	}
+
+	/* Thin brand-gradient rule separating the banner from the schedule */
+	footer::before {
+		content: "";
+		position: absolute;
+		inset-inline: 0;
+		top: 0;
+		block-size: 3px;
+		background: var(--gradient-brand);
+	}
+</style>
