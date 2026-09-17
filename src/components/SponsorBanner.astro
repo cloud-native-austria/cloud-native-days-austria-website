@@ -114,20 +114,23 @@ const slides = Array.from({ length: SLIDE_COUNT }, (_, index) =>
 	}
 
 	/*
-	 * One group visible at a time, sliding left as the next enters.
+	 * One group visible at a time, sliding left as the next enters. Every group is
+	 * visible for exactly the same 4s.
 	 *
-	 * The percentages are deliberately uneven. A slide transition repaints the
-	 * banner, and when that coincides with the schedule scrolling the screencast
-	 * drops frames and the scroll visibly stutters. So every transition is placed
-	 * inside one of the recording's still phases:
+	 * A slide transition repaints the banner, and when that coincides with the
+	 * schedule scrolling the screencast drops frames and the scroll visibly
+	 * stutters. Evenly spaced transitions would land at 8.5s and 17.5s, inside both
+	 * scrolls, so the whole rotation is phase-shifted by 1s. That keeps the spacing
+	 * even and puts all four transitions inside the still phases:
 	 *
-	 *   0-7s    hold on the top of the schedule   -> group 1 -> 2 at 2.6-3.1s
-	 *   7-9s    scrolling down                    -> no transition (group 2 holds)
-	 *   9-16s   hold on the bottom                -> 2 -> 3, 3 -> 4, 4 -> 1
-	 *   16-18s  scrolling back up                 -> no transition (group 1 holds)
+	 *   0-7s    hold on the top of the schedule   -> transitions at 0.5s and 5.0s
+	 *   7-9s    scrolling down                    -> inside group 3's 4s
+	 *   9-16s   hold on the bottom                -> transitions at 9.5s and 14.0s
+	 *   16-18s  scrolling back up                 -> inside group 1's 4s
 	 *
-	 * Group 1 is visible at both 0% and 100% so the loop point is seamless. These
-	 * numbers assume the timings in scripts/record-schedule-video.mjs.
+	 * Group 1 therefore straddles the loop point, visible 14.5-18s and 0-0.5s,
+	 * which is one continuous 4s once the video loops. These percentages assume the
+	 * timings in scripts/record-schedule-video.mjs.
 	 */
 	.slide[data-slide="1"] { animation: sponsor-slide-1 var(--rotation) ease-in-out infinite; }
 	.slide[data-slide="2"] { animation: sponsor-slide-2 var(--rotation) ease-in-out infinite; }
@@ -135,27 +138,27 @@ const slides = Array.from({ length: SLIDE_COUNT }, (_, index) =>
 	.slide[data-slide="4"] { animation: sponsor-slide-4 var(--rotation) ease-in-out infinite; }
 
 	@keyframes sponsor-slide-1 {
-		0%, 14.44% { transform: translateX(0); opacity: 1; }
-		17.22% { transform: translateX(100%); opacity: 0; }
-		82.78% { transform: translateX(-100%); opacity: 0; }
-		85.56%, 100% { transform: translateX(0); opacity: 1; }
+		0%, 2.78% { transform: translateX(0); opacity: 1; }
+		5.56% { transform: translateX(100%); opacity: 0; }
+		77.78% { transform: translateX(-100%); opacity: 0; }
+		80.56%, 100% { transform: translateX(0); opacity: 1; }
 	}
 
 	@keyframes sponsor-slide-2 {
-		0%, 14.44% { transform: translateX(-100%); opacity: 0; }
-		17.22%, 51.11% { transform: translateX(0); opacity: 1; }
-		53.89%, 100% { transform: translateX(100%); opacity: 0; }
+		0%, 2.78% { transform: translateX(-100%); opacity: 0; }
+		5.56%, 27.78% { transform: translateX(0); opacity: 1; }
+		30.56%, 100% { transform: translateX(100%); opacity: 0; }
 	}
 
 	@keyframes sponsor-slide-3 {
-		0%, 51.11% { transform: translateX(-100%); opacity: 0; }
-		53.89%, 66.94% { transform: translateX(0); opacity: 1; }
-		69.72%, 100% { transform: translateX(100%); opacity: 0; }
+		0%, 27.78% { transform: translateX(-100%); opacity: 0; }
+		30.56%, 52.78% { transform: translateX(0); opacity: 1; }
+		55.56%, 100% { transform: translateX(100%); opacity: 0; }
 	}
 
 	@keyframes sponsor-slide-4 {
-		0%, 66.94% { transform: translateX(-100%); opacity: 0; }
-		69.72%, 82.78% { transform: translateX(0); opacity: 1; }
-		85.56%, 100% { transform: translateX(100%); opacity: 0; }
+		0%, 52.78% { transform: translateX(-100%); opacity: 0; }
+		55.56%, 77.78% { transform: translateX(0); opacity: 1; }
+		80.56%, 100% { transform: translateX(100%); opacity: 0; }
 	}
 </style>
