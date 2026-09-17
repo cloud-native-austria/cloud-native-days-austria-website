@@ -82,3 +82,11 @@ timing, three values have to stay in sync:
 
 `HOLD_MS * 2 + SCROLL_MS * 2` must equal both `ROTATION` and `LOOP_SECONDS`,
 otherwise the banner is mid-slide when the video restarts.
+
+The banner's keyframe percentages in `src/components/SponsorBanner.astro` also
+assume those timings. A slide transition repaints the banner, and when that
+coincides with the schedule scrolling the screencast drops frames and the scroll
+visibly stutters — so each transition is scheduled inside one of the still
+phases. If you change the hold or scroll lengths, move those percentages too.
+
+The intermediate `.webm` screencasts are kept next to the mp4s in `recordings/`.
