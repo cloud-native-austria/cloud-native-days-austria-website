@@ -84,9 +84,11 @@ timing, three values have to stay in sync:
 otherwise the banner is mid-slide when the video restarts.
 
 The banner's keyframe percentages in `src/components/SponsorBanner.astro` also
-assume those timings. A slide transition repaints the banner, and when that
-coincides with the schedule scrolling the screencast drops frames and the scroll
-visibly stutters — so each transition is scheduled inside one of the still
-phases. If you change the hold or scroll lengths, move those percentages too.
+assume those timings. Every group is visible for the same length of time, but the
+rotation is phase-shifted so that none of the transitions coincide with a scroll:
+a transition repaints the banner, and when that lands mid-scroll the screencast
+drops frames and the scroll visibly stutters. If you change the hold or scroll
+lengths, re-derive those percentages so the transitions stay inside the two
+still phases.
 
 The intermediate `.webm` screencasts are kept next to the mp4s in `recordings/`.
