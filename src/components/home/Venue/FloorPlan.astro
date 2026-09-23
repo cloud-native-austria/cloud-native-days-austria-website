@@ -1,0 +1,211 @@
+---
+import { Picture } from "astro:assets";
+import level0 from "./images/level0_padded.png";
+import level1 from "./images/level-1_padded.png";
+import level2 from "./images/level-2_padded.png";
+
+const floors = [
+	{ image: level0, level: "Level 0",  number: "0",  title: "Registration" },
+	{ image: level1, level: "Level -1", number: "-1", title: "Talks" },
+	{ image: level2, level: "Level -2", number: "-2", title: "Food & Sponsors" },
+];
+---
+
+<section class="fp-section" data-floor="0">
+	<h3>Floor Plan</h3>
+	<div class="fp-wrapper">
+		<div class="fp-layers">
+			{floors.map(({ image, level, title }, i) => (
+				<figure class="fp-layer">
+					<Picture src={image} alt={`${level} ${title}`} formats={["avif", "webp"]} />
+					{i > 0 && (
+						<button class="fp-hotspot fp-hotspot-top" data-target={i - 1} aria-hidden="true" tabindex="-1"></button>
+					)}
+					{i < floors.length - 1 && (
+						<button class="fp-hotspot fp-hotspot-bottom" data-target={i + 1} aria-hidden="true" tabindex="-1"></button>
+					)}
+				</figure>
+			))}
+		</div>
+	</div>
+	<nav class="fp-tabs" aria-label="Floor navigation">
+		{floors.map(({ level, number, title }, i) => (
+			<button class="fp-tab" data-target={i} aria-label={`${level} ${title}`}>
+				<span class="fp-level">{number}</span>
+				<span>{title}</span>
+			</button>
+		))}
+	</nav>
+</section>
+
+<script>
+	document.querySelectorAll<HTMLElement>(".fp-section").forEach(fp => {
+		fp.querySelectorAll<HTMLElement>("[data-target]").forEach(btn => {
+			btn.addEventListener("click", () => {
+				fp.dataset.floor = btn.dataset.target;
+			});
+		});
+	});
+</script>
+
+<style>
+	.fp-section {
+		width: 100%;
+		display: flex;
+		flex-direction: column;
+		gap: var(--space-2);
+	}
+
+	h3 {
+		text-align: center;
+	}
+
+	/* ── image stack ── */
+
+	.fp-wrapper {
+		position: relative;
+		width: 100%;
+		aspect-ratio: 7597 / 4323;
+	}
+
+	.fp-layers {
+		position: absolute;
+		inset: 0;
+		overflow: hidden;
+		border-radius: var(--radius);
+		background: transparent;
+		pointer-events: none;
+	}
+
+	.fp-layer {
+		position: absolute;
+		inset: 0;
+		margin: 0;
+		background: transparent;
+		transition: transform 0.4s ease-in-out, opacity 0.4s ease-in-out;
+	}
+
+	/* floor 0: default */
+	.fp-layer:nth-child(1) { z-index: 3; transform: translateY(0); opacity: 1; }
+	.fp-layer:nth-child(2) { z-index: 2; opacity: 0; }
+	.fp-layer:nth-child(3) { z-index: 1; opacity: 0; }
+
+	/* floor 1 */
+	.fp-section[data-floor="1"] .fp-layer:nth-child(1) { transform: translateY(-105%); }
+	.fp-section[data-floor="1"] .fp-layer:nth-child(2) { opacity: 1; }
+
+	/* floor 2 */
+	.fp-section[data-floor="2"] .fp-layer:nth-child(1) { transform: translateY(-105%); }
+	.fp-section[data-floor="2"] .fp-layer:nth-child(2) { opacity: 1; transform: translateY(-105%); }
+	.fp-section[data-floor="2"] .fp-layer:nth-child(3) { opacity: 1; }
+
+	.fp-layer :global(picture) {
+		position: absolute;
+		inset: 0;
+		border-radius: 0;
+		overflow: hidden;
+		pointer-events: none;
+	}
+
+	.fp-layer :global(img) {
+		width: 100%;
+		height: 100%;
+		object-fit: contain;
+	}
+
+	.fp-hotspot {
+		position: absolute;
+		left: 0;
+		right: 0;
+		height: 50%;
+		pointer-events: auto;
+		cursor: pointer;
+		appearance: none;
+		background: transparent;
+		border: none;
+		padding: 0;
+	}
+
+	.fp-hotspot-top    { top: 0; }
+	.fp-hotspot-bottom { bottom: 0; }
+
+
+	/* ── tab list ── */
+
+	.fp-tabs {
+		position: relative;
+		display: flex;
+		flex-direction: column;
+		border-left: 1px solid var(--color-gray);
+		align-self: center;
+	}
+
+	.fp-tabs::before {
+		content: '';
+		position: absolute;
+		top: 0;
+		left: -1px;
+		width: 2px;
+		height: calc(100% / 3);
+		background: var(--color-accent);
+		transition: transform 0.4s ease-in-out;
+		transform: translateY(0%);
+	}
+
+	.fp-section[data-floor="1"] .fp-tabs::before { transform: translateY(100%); }
+	.fp-section[data-floor="2"] .fp-tabs::before { transform: translateY(200%); }
+
+	.fp-tab {
+		flex: 1;
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		justify-content: flex-start;
+		padding: var(--space-2) var(--space-6);
+		gap: var(--space-4);
+		color: var(--color-text);
+		font-family: var(--font-heading);
+		appearance: none;
+		background: transparent;
+		border: none;
+		cursor: pointer;
+	}
+
+	.fp-tab:hover {
+		color: var(--color-pink);
+	}
+
+	.fp-level {
+		font-weight: 600;
+		display: inline-block;
+		min-width: 2ch;
+		text-align: right;
+	}
+
+	/* ── desktop: image + list side by side ── */
+
+	@media (min-width: 900px) {
+		.fp-section {
+			display: grid;
+			grid-template-columns: 1fr auto;
+			grid-template-areas:
+				"heading heading"
+				"image   tabs";
+			column-gap: var(--space-6);
+			padding-inline: 0;
+		}
+
+		h3 { grid-area: heading; }
+
+		.fp-wrapper {
+			grid-area: image;
+			width: 100%;
+			margin-inline: 0;
+		}
+
+		.fp-tabs {
+			grid-area: tabs;
+			align-self: center;
+		}
+	}
+</style>

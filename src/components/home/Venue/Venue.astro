@@ -1,6 +1,7 @@
 ---
 import { Picture } from "astro:assets";
 import venueImage from "./images/venue.webp";
+import FloorPlan from "./FloorPlan.astro";
 
 const venueDescription = `apiVersion: event.cloudnativedays.at/v1
 kind: Venue
@@ -39,6 +40,8 @@ status:
 		>
 	</div>
 </section>
+
+<FloorPlan />
 
 <style>
 	h2 {
