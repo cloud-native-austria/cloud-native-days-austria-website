@@ -2,6 +2,7 @@
 import Layout from "@layouts/Layout.astro";
 import Button from "@components/Button.astro";
 import CurrentSessions from "@components/CurrentSessions";
+import FloorPlan from "@components/home/Venue/FloorPlan.astro";
 import { scheduleUrl } from "../lib/sessionize-app";
 
 const title = "CNDA 2026 - Live";
@@ -19,6 +20,10 @@ const description = "Everything you need to know at the event.";
 			<h2>Current and upcoming sessions</h2>
 			<CurrentSessions client:load />
 			<Button href={scheduleUrl} external variant="primary"> See the full schedule </Button>
+		</section>
+
+		<section class="floorplan-section">
+			<FloorPlan />
 		</section>
 
 		<section>
@@ -90,7 +95,8 @@ const description = "Everything you need to know at the event.";
 		text-align: center;
 	}
 
-	section:first-child {
+	section:first-child,
+	.floorplan-section {
 		grid-column: 1 / -1;
 	}
 
