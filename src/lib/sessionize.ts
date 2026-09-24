@@ -22,6 +22,13 @@ export interface Session {
 	roomId: number;
 	room: string;
 	status: string;
+	topics: string[];
+}
+
+export interface Speaker {
+	id: string;
+	fullName: string;
+	profilePicture: string;
 }
 
 export interface SessionGroup {
@@ -30,26 +37,66 @@ export interface SessionGroup {
 	sessions: Session[];
 }
 
-/**
- * Fetch all sessions from Sessionize
- */
-export async function fetchSessions(): Promise<SessionGroup[]> {
+function extractTopics(categories: Array<Record<string, unknown>>): string[] {
+	const topicCategory = categories.find((c) => c.name === "Topic(s)");
+	if (!topicCategory || !Array.isArray(topicCategory.categoryItems)) return [];
+	return (topicCategory.categoryItems as Array<Record<string, unknown>>).map((item) =>
+		String(item.name ?? ""),
+	);
+}
+
+export async function fetchAllSessions(): Promise<Session[]> {
 	try {
 		const response = await fetch(`${BASE_URL}/Sessions`);
 		if (!response.ok) {
 			throw new Error(`Failed to fetch sessions: ${response.status}`);
 		}
-		return await response.json();
+		const groups = (await response.json()) as Array<Record<string, unknown>>;
+		return groups.flatMap((group) => {
+			const groupSessions = Array.isArray(group.sessions) ? group.sessions : [];
+			return (groupSessions as Array<Record<string, unknown>>).map((s) => ({
+				id: String(s.id ?? ""),
+				title: String(s.title ?? ""),
+				description: String(s.description ?? ""),
+				startsAt: String(s.startsAt ?? ""),
+				endsAt: String(s.endsAt ?? ""),
+				isServiceSession: s.isServiceSession === true,
+				isPlenumSession: s.isPlenumSession === true,
+				speakers: Array.isArray(s.speakers)
+					? (s.speakers as Array<Record<string, unknown>>).map((sp) => ({
+							id: String(sp.id ?? ""),
+							name: String(sp.name ?? ""),
+						}))
+					: [],
+				categoryItems: Array.isArray(s.categoryItems) ? (s.categoryItems as number[]) : [],
+				roomId: Number(s.roomId ?? 0),
+				room: String(s.room ?? ""),
+				status: String(s.status ?? ""),
+				topics: extractTopics(
+					Array.isArray(s.categories) ? (s.categories as Array<Record<string, unknown>>) : [],
+				),
+			}));
+		});
 	} catch (error) {
 		console.error("Error fetching sessions:", error);
 		return [];
 	}
 }
 
-/**
- * Get a flat list of all sessions
- */
-export async function fetchAllSessions(): Promise<Session[]> {
-	const groups = await fetchSessions();
-	return groups.flatMap((group) => group.sessions);
+export async function fetchSpeakers(): Promise<Speaker[]> {
+	try {
+		const response = await fetch(`${BASE_URL}/Speakers`);
+		if (!response.ok) {
+			throw new Error(`Failed to fetch speakers: ${response.status}`);
+		}
+		const data = (await response.json()) as Array<Record<string, unknown>>;
+		return data.map((s) => ({
+			id: String(s.id ?? ""),
+			fullName: String(s.fullName ?? ""),
+			profilePicture: String(s.profilePicture ?? ""),
+		}));
+	} catch (error) {
+		console.error("Error fetching speakers:", error);
+		return [];
+	}
 }

@@ -1,25 +1,128 @@
 ---
 import Layout from "@layouts/Layout.astro";
 import Button from "@components/Button.astro";
-import CurrentSessions from "@components/CurrentSessions";
 import FloorPlan from "@components/home/Venue/FloorPlan.astro";
-import { scheduleUrl } from "../lib/sessionize-app";
+import SessionsTimeline from "@components/SessionsTimeline.astro";
+import { getCollection } from "astro:content";
 
 const title = "CNDA 2026 - Live";
 const description = "Everything you need to know at the event.";
+
+const speakers = await getCollection("speakers");
+const speakersById = new Map(speakers.map((entry) => [entry.data.id, entry.data]));
+
+const sessions = (await getCollection("sessions"))
+	.map((entry) => ({
+		...entry.data,
+		speakers: entry.data.speakers.map((speaker) => ({
+			...speaker,
+			profilePicture: speakersById.get(speaker.id)?.profilePicture,
+		})),
+		anchorId: `session-${entry.data.id}`,
+	}))
+	.sort((a, b) => {
+		if (!a.startsAt && !b.startsAt) return 0;
+		if (!a.startsAt) return 1;
+		if (!b.startsAt) return -1;
+		return new Date(a.startsAt).getTime() - new Date(b.startsAt).getTime();
+	});
+
+const sessionSpeakerIds = new Set(
+	sessions.flatMap((session) => session.speakers.map((speaker) => speaker.id)),
+);
+const sessionSpeakers = speakers
+	.map((entry) => entry.data)
+	.filter((speaker) => sessionSpeakerIds.has(speaker.id));
+
+const talkRoomIds = new Set(
+	sessions.filter((session) => !session.isServiceSession).map((session) => session.roomId),
+);
+const laneRooms = (await getCollection("rooms"))
+	.map((entry) => entry.data)
+	.sort((a, b) => a.sort - b.sort)
+	.filter((room) => talkRoomIds.has(room.roomId));
+
+const leftRoom = laneRooms[0] ?? null;
+const rightRoom = laneRooms[1] ?? null;
+
+function getRoomSide(roomId: number | null): "left" | "right" | "center" {
+	if (roomId !== null && roomId === leftRoom?.roomId) return "left";
+	if (roomId !== null && roomId === rightRoom?.roomId) return "right";
+	return "center";
+}
+
+function formatSessionTime(startsAt: string | null): string | null {
+	if (!startsAt) return null;
+	return new Date(startsAt).toLocaleTimeString("en-AT", {
+		hour: "2-digit",
+		minute: "2-digit",
+		timeZone: "Europe/Vienna",
+	});
+}
+
+function getDay(startsAt: string | null): string | null {
+	if (!startsAt) return null;
+	return new Date(startsAt).toLocaleDateString("en-AT", {
+		weekday: "long",
+		year: "numeric",
+		month: "long",
+		day: "numeric",
+		timeZone: "Europe/Vienna",
+	});
+}
+
+const sessionsWithMeta = sessions.map((s) => ({
+	...s,
+	side: getRoomSide(s.roomId),
+	formattedTime: formatSessionTime(s.startsAt),
+	formattedEndTime: formatSessionTime(s.endsAt),
+}));
+
+type TimeSlot = { left: typeof sessionsWithMeta[0] | null; right: typeof sessionsWithMeta[0] | null; center: typeof sessionsWithMeta };
+
+const slotMap = new Map<string, TimeSlot>();
+for (const session of sessionsWithMeta) {
+	const key = session.startsAt ?? `__unscheduled_${session.id}`;
+	if (!slotMap.has(key)) slotMap.set(key, { left: null, right: null, center: [] });
+	const slot = slotMap.get(key)!;
+	if (session.side === "left") slot.left = session;
+	else if (session.side === "right") slot.right = session;
+	else slot.center.push(session);
+}
+const timeSlots = [...slotMap.values()];
+
+type DayGroup = { day: string | null; slots: TimeSlot[] };
+const dayGroups: DayGroup[] = [];
+for (const slot of timeSlots) {
+	const firstSession = slot.left ?? slot.right ?? slot.center[0];
+	const day = firstSession ? getDay(firstSession.startsAt) : null;
+	const last = dayGroups.at(-1);
+	if (!last || last.day !== day) {
+		dayGroups.push({ day, slots: [slot] });
+	} else {
+		last.slots.push(slot);
+	}
+}
 ---
 
 <Layout title={title} description={description}>
 	<header>
 		<h1>{title}</h1>
-		<p>{description}</p>
 	</header>
 
 	<div>
 		<section>
 			<h2>Current and upcoming sessions</h2>
-			<CurrentSessions client:load />
-			<Button href={scheduleUrl} external variant="primary"> See the full schedule </Button>
+			<SessionsTimeline
+				dayGroups={dayGroups}
+				sessionSpeakers={sessionSpeakers}
+				leftRoom={leftRoom}
+				rightRoom={rightRoom}
+				liveMode
+			/>
+			<div class="sessions-button-wrap">
+				<Button href="https://cloud-native-days-austria-2026.sessionize.com/schedule" external>Pick your favorite talks</Button>
+			</div>
 		</section>
 
 		<section class="floorplan-section">
@@ -98,6 +201,35 @@ const description = "Everything you need to know at the event.";
 	section:first-child,
 	.floorplan-section {
 		grid-column: 1 / -1;
+		text-align: left;
+		background: transparent;
+		padding: 0;
+	}
+
+	section:first-child :global(.day-separator) {
+		display: none;
+	}
+
+	section:first-child :global(.timeline) {
+		padding-top: var(--space-8);
+	}
+
+	section:first-child :global(.timeline::before),
+	section:first-child :global(.timeline::after) {
+		top: var(--space-8);
+		bottom: var(--space-6);
+	}
+
+	section:first-child :global(.lane-labels) {
+		display: grid;
+	}
+
+	.sessions-button-wrap {
+		display: flex;
+		justify-content: center;
+		margin-top: var(--space-6);
+		position: relative;
+		z-index: 1;
 	}
 
 	section h2 {
@@ -107,62 +239,8 @@ const description = "Everything you need to know at the event.";
 	}
 
 	section:first-child h2 {
+		text-align: center;
 		margin-bottom: var(--space-6);
-	}
-
-	/* CurrentSessions component styles */
-	section:first-child :global(.rooms-grid) {
-		display: grid;
-		grid-template-columns: 1fr 1fr;
-		gap: var(--space-6);
-		margin-bottom: var(--space-6);
-	}
-
-	section:first-child :global(.room-sessions) {
-		text-align: left;
-	}
-
-	section:first-child :global(.room-sessions h3) {
-		font-family: var(--font-heading);
-		font-size: var(--text-base);
-		margin-bottom: var(--space-4);
-	}
-
-	section:first-child :global(.session) {
-		padding: var(--space-4) 0;
-		border-bottom: 1px solid var(--color-gray);
-	}
-
-	section:first-child :global(.session:last-child) {
-		border-bottom: none;
-	}
-
-	section:first-child :global(.session-time) {
-		display: inline-block;
-		background: var(--color-pink);
-		color: #ffffff;
-		font-size: var(--text-base);
-		font-weight: 600;
-		padding: var(--space-2) var(--space-3);
-		border-radius: var(--radius-full);
-		margin-bottom: var(--space-2);
-	}
-
-	section:first-child :global(.session-title) {
-		margin-top: var(--space-2);
-	}
-
-	section:first-child :global(.session-title a) {
-		color: var(--color-accent);
-		text-decoration: none;
-		display: -webkit-box;
-		-webkit-line-clamp: 3;
-		-webkit-box-orient: vertical;
-		overflow: hidden;
-	}
-
-	section:first-child :global(.session-title a:hover) {
-		color: var(--color-pink);
 	}
 
 	/* Table styles for Wi-Fi and Emergency sections */
@@ -192,10 +270,6 @@ const description = "Everything you need to know at the event.";
 
 	@media (max-width: 768px) {
 		div {
-			grid-template-columns: 1fr;
-		}
-
-		section:first-child :global(.rooms-grid) {
 			grid-template-columns: 1fr;
 		}
 	}

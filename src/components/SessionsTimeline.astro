@@ -1,0 +1,960 @@
+---
+import PersonCard from "@components/PersonCard.astro";
+import SpeakerDetailModal from "@components/SpeakerDetailModal.astro";
+import type { CollectionEntry } from "astro:content";
+
+type Speaker = CollectionEntry<"speakers">["data"];
+
+interface Room {
+	id: string;
+	roomId: number;
+	name: string;
+	sort: number;
+}
+
+interface SessionWithMeta {
+	id: string;
+	title: string;
+	description: string;
+	startsAt: string | null;
+	endsAt: string | null;
+	isServiceSession: boolean;
+	speakers: Array<{ id: string; name: string; profilePicture?: string }>;
+	topics: string[];
+	roomId: number | null;
+	side: "left" | "right" | "center";
+	formattedTime: string | null;
+	formattedEndTime: string | null;
+	anchorId: string;
+}
+
+interface TimeSlot {
+	left: SessionWithMeta | null;
+	right: SessionWithMeta | null;
+	center: SessionWithMeta[];
+}
+
+interface DayGroup {
+	day: string | null;
+	slots: TimeSlot[];
+}
+
+interface Props {
+	dayGroups: DayGroup[];
+	sessionSpeakers: Speaker[];
+	leftRoom: Room | null;
+	rightRoom: Room | null;
+	liveMode?: boolean;
+}
+
+const { dayGroups, sessionSpeakers, leftRoom, rightRoom, liveMode = false } = Astro.props;
+---
+
+<section class:list={["timeline", { "live-mode": liveMode }]} aria-label="Conference sessions">
+	{dayGroups.map(({ day, slots }) => (
+		<>
+			{day && (
+				<div class="day-separator" role="separator" aria-label={day}>
+					<span class="day-label">{day}</span>
+				</div>
+			)}
+			{leftRoom && rightRoom && (
+				<div class="lane-labels">
+					<span class="lane-label" data-side="left">{leftRoom.name}</span>
+					<span class="lane-label" data-side="right">{rightRoom.name}</span>
+				</div>
+			)}
+			{slots.map((slot) => {
+				const slotSessions = [slot.left, slot.right, ...slot.center].filter(Boolean);
+				return (
+					<div class="time-slot">
+						{slotSessions.map((session) => {
+							const isExpandable = Boolean(session.description);
+							const Card = isExpandable ? "details" : "div";
+							const CardHeader = isExpandable ? "summary" : "div";
+							return session.side === "center" ? (
+								<div class="break-row">
+									<p
+										class="break-card"
+										id={session.anchorId}
+										data-starts-at={session.startsAt ?? ""}
+										data-ends-at={session.endsAt ?? ""}
+									>
+										<span class="break-title">{session.title}</span>
+										{session.formattedTime && (
+											<span class="break-time">
+												{" "}<time datetime={session.startsAt!}>{session.formattedTime}</time>
+												{session.formattedEndTime && <>{"–"}<time datetime={session.endsAt!}>{session.formattedEndTime}</time></>}
+											</span>
+										)}
+									</p>
+								</div>
+							) : (
+								<div class="session-row" data-side={session.side}>
+									<div class="timeline-marker" data-side={session.side}>
+										{session.speakers.some((speaker) => speaker.profilePicture) ? (
+											<div class="speaker-cards">
+												{session.speakers.map(
+													(speaker) =>
+														speaker.profilePicture && (
+															<SpeakerDetailModal speaker={sessionSpeakers.find((s) => s.id === speaker.id)!} showSessions={false} />
+															<button
+																type="button"
+																commandfor={`speaker-${speaker.id}`}
+																command="show-modal"
+																data-speaker-target={`speaker-${speaker.id}`}
+																class="speaker-card-link"
+																aria-label={`View speaker profile for ${speaker.name}`}
+															>
+																<PersonCard
+																	name={speaker.name}
+																	image={speaker.profilePicture}
+																	showMeta={false}
+																	sizes="48px"
+																/>
+															</button>
+														),
+												)}
+											</div>
+										) : (
+											<span class="fallback-marker" aria-hidden="true" />
+										)}
+									</div>
+									<Card
+										id={session.anchorId}
+										class="session-card"
+										data-side={session.side}
+										data-starts-at={session.startsAt ?? ""}
+										data-ends-at={session.endsAt ?? ""}
+									>
+										<CardHeader class="card-header" data-session-target={isExpandable ? session.anchorId : undefined}>
+											<div class="summary-content">
+												<div>
+													<h2>{session.title}</h2>
+													{(session.speakers.length > 0 || session.formattedTime) && (
+														<p>
+															{session.formattedTime && (
+																<>
+																	<time class="session-time" datetime={session.startsAt!}>{session.formattedTime}</time>
+																	{session.formattedEndTime && (
+																		<>{"–"}<time class="session-time" datetime={session.endsAt!}>{session.formattedEndTime}</time></>
+																	)}
+																	{session.speakers.length > 0 && " · "}
+																</>
+															)}
+															{session.speakers.map((speaker, index) => (
+																<>
+																	{index > 0 && ", "}
+																	<span class="speaker-name">{speaker.name}</span>
+																</>
+															))}
+														</p>
+													)}
+													{session.topics.length > 0 && (
+														<ul class="session-meta" aria-label="Session topics">
+															{session.topics.map((topic) => (
+																<li>{topic}</li>
+															))}
+														</ul>
+													)}
+												</div>
+											</div>
+										</CardHeader>
+										{isExpandable && (
+											<div class="card-body">
+												<p>{session.description}</p>
+											</div>
+										)}
+									</Card>
+								</div>
+							);
+						})}
+					</div>
+				);
+			})}
+		</>
+	))}
+	{liveMode && <div class="end-of-day" hidden></div>}
+</section>
+
+<style>
+	.timeline {
+		--marker-col: 60px;
+		--center-gap: 8px;
+		--avatar-size: 48px;
+		--marker-center-y: calc(var(--space-4) + 0.7rem);
+
+		--room-left-color: var(--color-accent);
+		--room-right-color: var(--color-pink);
+		--timeline-bg: var(--color-white);
+		display: grid;
+		grid-template-columns: 1fr var(--marker-col) var(--center-gap) var(--marker-col) 1fr;
+		gap: var(--space-4) 0;
+		position: relative;
+		padding-block: var(--space-2);
+	}
+
+	.timeline::before,
+	.timeline::after {
+		content: "";
+		position: absolute;
+		top: calc(var(--space-12) * -1);
+		bottom: calc(var(--space-10) * -1);
+		width: 2px;
+		transform: translateX(-50%);
+	}
+
+	.timeline::before {
+		left: calc(50% - var(--marker-col) / 2 - var(--center-gap) / 2);
+		background: linear-gradient(
+			to bottom,
+			transparent 0%,
+			var(--room-left-color) 12%,
+			var(--room-left-color) 88%,
+			transparent 100%
+		);
+		opacity: 0.45;
+	}
+
+	.timeline::after {
+		left: calc(50% + var(--marker-col) / 2 + var(--center-gap) / 2);
+		background: linear-gradient(
+			to bottom,
+			transparent 0%,
+			var(--room-right-color) 12%,
+			var(--room-right-color) 88%,
+			transparent 100%
+		);
+		opacity: 0.45;
+	}
+
+	/* Day separator: sticky header that floats above the timeline while scrolling */
+	.day-separator {
+		grid-column: 1 / -1;
+		position: sticky;
+		top: 0;
+		z-index: 10;
+		display: flex;
+		align-items: center;
+		gap: var(--space-3);
+		padding-block: var(--space-3);
+		background: var(--color-white);
+		/* Soft white glow extends the background coverage over branch lines */
+		box-shadow: 0 0 var(--space-6) var(--space-4) var(--color-white);
+	}
+
+	.day-separator::before,
+	.day-separator::after {
+		content: "";
+		flex: 1;
+		height: 1px;
+		background: var(--color-gray);
+	}
+
+	.day-label {
+		font-size: var(--text-sm);
+		font-weight: 600;
+		color: var(--color-text-light);
+		white-space: nowrap;
+		padding: var(--space-1) var(--space-3);
+		border-radius: var(--radius-full);
+		border: 1px solid var(--color-gray);
+		background: var(--color-white);
+		box-shadow: 0 2px 8px color-mix(in srgb, var(--color-accent) 12%, transparent);
+	}
+
+	/* Room name labels above each lane */
+	.lane-labels {
+		grid-column: 1 / -1;
+		display: grid;
+		grid-template-columns: subgrid;
+		margin-block: var(--space-2);
+		position: relative;
+		z-index: 1;
+	}
+
+	.lane-label {
+		font-size: var(--text-sm);
+		font-weight: 700;
+		letter-spacing: 0.02em;
+		white-space: nowrap;
+		padding: 2px var(--space-2);
+		border-radius: var(--radius-full);
+		background: var(--color-white);
+		box-shadow: 0 0 var(--space-4) var(--space-3) var(--timeline-bg);
+	}
+
+	.lane-label[data-side="left"]  { grid-column: 1 / 3; justify-self: end;   color: var(--room-left-color); }
+	.lane-label[data-side="right"] { grid-column: 4 / 6; justify-self: start; color: var(--room-right-color); }
+
+	/* Each time-slot spans all 5 columns as a subgrid row */
+	.time-slot {
+		grid-column: 1 / -1;
+		display: grid;
+		grid-template-columns: subgrid;
+		align-items: start;
+	}
+
+	/*
+	 * Explicit grid-row: 1 forces marker and card into the same row in the
+	 * time-slot's grid regardless of DOM order. This is what keeps left-side
+	 * sessions aligned: the card (col 1) comes after the marker (col 2) in
+	 * the DOM, so without this the card would fall into row 2.
+	 */
+	.timeline-marker { grid-row: 1; }
+	.session-card          { grid-row: 1; }
+
+	.timeline-marker[data-side="left"]   { grid-column: 2; }
+	.timeline-marker[data-side="right"]  { grid-column: 4; }
+
+	.session-card[data-side="left"]   { grid-column: 1; margin-right: var(--space-3); }
+	.session-card[data-side="right"]  { grid-column: 5; margin-left: var(--space-3); }
+
+	.timeline-marker {
+		position: relative;
+		z-index: 2;
+		display: flex;
+		justify-content: center;
+		padding-top: calc(var(--marker-center-y) - (var(--avatar-size) / 2));
+	}
+
+	/*
+	 * The marker column is padded down by half an avatar, so a dot smaller than
+	 * an avatar must be re-centred in that band to line up with the card arrow.
+	 */
+	.fallback-marker {
+		--dot-size: 24px;
+		display: block;
+		width: var(--dot-size);
+		height: var(--dot-size);
+		margin: calc((var(--avatar-size) - var(--dot-size)) / 2) 0;
+		clip-path: var(--shape-heptagon);
+		background: var(--color-gray);
+	}
+
+	.timeline-marker[data-side="left"]  .fallback-marker { background: var(--room-left-color); }
+	.timeline-marker[data-side="right"] .fallback-marker { background: var(--room-right-color); }
+
+	.session-card {
+		border: 1px solid var(--color-gray);
+		border-radius: var(--radius);
+		background: var(--color-white);
+		overflow: visible;
+		interpolate-size: allow-keywords;
+		position: relative;
+		z-index: 1;
+	}
+
+	/* Default connector arrow: gray, points left ← */
+	.session-card::before {
+		content: "";
+		position: absolute;
+		left: -10px;
+		top: calc(var(--marker-center-y) - 8px);
+		border-top: 8px solid transparent;
+		border-bottom: 8px solid transparent;
+		border-right: 10px solid var(--color-gray);
+	}
+
+	.session-card::after {
+		content: "";
+		position: absolute;
+		left: -8px;
+		top: calc(var(--marker-center-y) - 7px);
+		border-top: 7px solid transparent;
+		border-bottom: 7px solid transparent;
+		border-right: 9px solid var(--color-white);
+	}
+
+	/* Left-side cards: flip arrow to point right → (default gray) */
+	.session-card[data-side="left"]::before {
+		left: auto;
+		right: -10px;
+		border-right: none;
+		border-left: 10px solid var(--color-gray);
+	}
+
+	.session-card[data-side="left"]::after {
+		left: auto;
+		right: -8px;
+		border-right: none;
+		border-left: 9px solid var(--color-white);
+	}
+
+	/* Color the arrows on hover / open / target; keyboard focus uses the outline ring alone */
+	.session-card[data-side="right"]:is([open], :target, :hover)::before {
+		border-right-color: var(--room-right-color);
+	}
+
+	.session-card[data-side="left"]:is([open], :target, :hover)::before {
+		border-left-color: var(--room-left-color);
+	}
+
+	/*
+	 * The card carries the focus ring rather than the summary, so it follows the
+	 * card's border-radius and can echo the lane colour.
+	 */
+	.card-header:focus-visible { outline: none; }
+
+	.session-card:has(.card-header:focus-visible) {
+		outline: 2px solid var(--color-accent);
+		outline-offset: 2px;
+	}
+
+	.session-card[data-side="left"]:has(.card-header:focus-visible)  { outline-color: var(--room-left-color); }
+	.session-card[data-side="right"]:has(.card-header:focus-visible) { outline-color: var(--room-right-color); }
+
+	.session-card:target { scroll-margin-top: calc(var(--space-8) + 3.5rem); }
+	.session-card[data-side="left"]:is([open], :target, :hover)   { border-color: var(--room-left-color); }
+	.session-card[data-side="right"]:is([open], :target, :hover)  { border-color: var(--room-right-color); }
+
+	.card-header {
+		list-style: none;
+		padding: var(--space-4);
+	}
+
+	summary.card-header { cursor: pointer; }
+
+	.speaker-cards {
+		display: flex;
+		flex-direction: column;
+		max-width: var(--avatar-size);
+		justify-content: flex-start;
+		align-items: center;
+		margin-inline: auto;
+	}
+
+	/*
+	 * A border cannot follow a clip-path, so the lane-coloured ring is a clipped
+	 * background and the image is inset by the padding to sit inside it.
+	 */
+	.speaker-card-link {
+		--ring-width: 2px;
+		display: block;
+		width: var(--avatar-size);
+		height: var(--avatar-size);
+		padding: var(--ring-width);
+		clip-path: var(--shape-heptagon);
+		background: var(--color-gray);
+		border: none;
+		appearance: none;
+		line-height: 0;
+		position: relative;
+	}
+
+	.timeline-marker[data-side="left"]  .speaker-card-link { background: var(--room-left-color); }
+	.timeline-marker[data-side="right"] .speaker-card-link { background: var(--room-right-color); }
+
+	.speaker-card-link ~ .speaker-card-link {
+		margin-top: calc(var(--avatar-size) * -0.3);
+	}
+
+	/*
+	 * clip-path clips outline and box-shadow away, so focus cannot be drawn
+	 * outside the heptagon. The ring keeps its lane colour and doubles in
+	 * thickness instead. The outline is kept for forced-colors mode, where the
+	 * ring colour may be overridden.
+	 */
+	.speaker-card-link:focus-visible {
+		--ring-width: 4px;
+		outline: 2px solid var(--color-accent);
+		outline-offset: 2px;
+	}
+
+	.speaker-card-link :global(div) {
+		text-align: left;
+	}
+
+	.speaker-card-link :global(picture),
+	.speaker-card-link :global(img) {
+		display: block;
+		width: 100%;
+		height: 100%;
+		margin: 0;
+		filter: none;
+	}
+
+	.card-header::-webkit-details-marker {
+		display: none;
+	}
+
+	.session-card[open] .card-header {
+		border-bottom: 1px solid var(--color-gray);
+	}
+
+	h2 {
+		font-size: var(--text-base);
+		font-family: var(--font-body);
+		font-weight: 600;
+		color: var(--color-accent);
+		margin: 0;
+	}
+
+	.session-card[data-side="right"] h2 { color: var(--room-right-color); }
+
+	.card-header p {
+		margin-top: var(--space-1);
+		color: var(--color-text-light);
+		font-size: 0.95rem;
+	}
+
+	.card-header p .speaker-name {
+		color: inherit;
+		font-weight: 700;
+	}
+
+	.session-meta {
+		display: flex;
+		flex-wrap: wrap;
+		gap: var(--space-1);
+		list-style: none;
+		margin: var(--space-2) 0 0;
+		padding: 0;
+	}
+
+	.session-meta li {
+		font-size: var(--text-sm);
+		color: var(--color-text-light);
+		background: var(--color-bg-light);
+		border: 1px solid var(--color-gray);
+		border-radius: var(--radius);
+		padding: 2px var(--space-2);
+	}
+
+	/*
+	 * On desktop session-row is invisible to the grid — its children
+	 * participate directly in the time-slot subgrid via display:contents.
+	 */
+	.session-row { display: contents; }
+
+	/*
+	 * Breaks, food and shuttles live in their own Sessionize room and carry no
+	 * speaker, description or topics, so they render as a single compact line
+	 * straddling both lanes rather than as an expandable talk card.
+	 */
+	.break-row {
+		grid-column: 1 / -1;
+		display: flex;
+		justify-content: center;
+		position: relative;
+		z-index: 2;
+	}
+
+	.break-card {
+		margin: 0;
+		max-width: 100%;
+		text-align: center;
+		text-wrap: balance;
+		font-size: 0.95rem;
+		color: var(--color-text-light);
+		/* Opaque base under the translucent tint, so the lane lines can't bleed through */
+		background-color: var(--color-white);
+		background-image: linear-gradient(var(--color-bg-light), var(--color-bg-light));
+		border: 1px dashed var(--color-gray);
+		border-radius: var(--radius);
+		padding: var(--space-2) var(--space-4);
+		scroll-margin-top: calc(var(--space-8) + 3.5rem);
+	}
+
+	.break-title {
+		font-weight: 700;
+		color: var(--color-text);
+	}
+
+	/* Spacing lives on the time so it disappears with it, leaving no trailing gap */
+	.break-time {
+		margin-inline-start: var(--space-3);
+	}
+
+	/* Mobile: three-column layout — left lane | cards | right lane */
+	@media (max-width: 768px) {
+		/*
+		 * The branch lines and avatars are both centred in the marker columns, so
+		 * narrowing those columns to the avatar is what pulls the lines out toward
+		 * the screen edges and hands the width back to the cards.
+		 */
+		.timeline {
+			--marker-col: var(--avatar-size);
+			/*
+			 * The card's connector arrow pokes 10px out of its own box and into
+			 * this gap, so the visible space between avatar and arrow tip is
+			 * (gap - 10px).
+			 */
+			--marker-gap: var(--space-3);
+			--avatar-size: 34px;
+			grid-template-columns: var(--marker-col) 1fr var(--marker-col);
+		}
+
+		/* Branch lines centered on their marker columns, aligned with avatars */
+		.timeline::before {
+			left: calc(var(--marker-col) / 2);
+			transform: translateX(-50%);
+		}
+
+		.timeline::after {
+			display: block;
+			left: calc(100% - var(--marker-col) / 2);
+			transform: translateX(-50%);
+		}
+
+		/* Lane labels above their branch lines */
+		.lane-label[data-side="left"]  { grid-column: 1; justify-self: center; }
+		.lane-label[data-side="right"] { grid-column: 3; justify-self: center; }
+
+		/*
+		 * time-slot stays a subgrid. Session-rows are constrained to their lane columns
+		 * so cards never overlap a branch line, and right sessions are right-aligned.
+		 * Left (cols 1-2) and right (cols 2-3) overlap at col 2, so auto-placement
+		 * puts them in separate rows automatically.
+		 */
+		.time-slot {
+			display: grid;
+			grid-template-columns: subgrid;
+			row-gap: var(--space-3);
+		}
+
+		/*
+		 * Every row reserves both marker columns and always puts the card in the
+		 * middle one, so cards share the same left and right edge whichever lane
+		 * they belong to; only the marker swaps sides. Both lanes span every
+		 * column, so auto-placement puts them in separate rows automatically.
+		 */
+		.session-row[data-side="left"],
+		.session-row[data-side="right"] {
+			grid-column: 1 / -1;
+			display: grid;
+			grid-template-columns: var(--marker-col) 1fr var(--marker-col);
+			column-gap: var(--marker-gap);
+		}
+
+		/* Relative column numbers within each 3-col session-row */
+		.session-row[data-side="left"]  .timeline-marker { grid-column: 1; }
+		.session-row[data-side="right"] .timeline-marker { grid-column: 3; }
+
+		.session-row[data-side="left"]  .session-card,
+		.session-row[data-side="right"] .session-card { grid-column: 2; margin: 0; }
+
+		/* Left arrows: ← toward marker on left */
+		.session-card[data-side="left"]::before {
+			left: -10px; right: auto;
+			border-right: 10px solid var(--color-gray);
+			border-left: none;
+		}
+		.session-card[data-side="left"]::after {
+			left: -8px; right: auto;
+			border-right: 9px solid var(--color-white);
+			border-left: none;
+		}
+
+		/* Right arrows on mobile: → toward marker on right */
+		.session-card[data-side="right"]::before {
+			left: auto; right: -10px;
+			border-right: none;
+			border-left: 10px solid var(--color-gray);
+		}
+		.session-card[data-side="right"]::after {
+			left: auto; right: -8px;
+			border-right: none;
+			border-left: 9px solid var(--color-white);
+		}
+
+		.session-card[data-side="left"]:is([open], :target, :hover)::before  { border-right-color: var(--room-left-color); }
+		.session-card[data-side="right"]:is([open], :target, :hover)::before { border-left-color: var(--room-right-color); }
+
+		/* Breaks span the full width between the two branch lines on mobile */
+		.break-row { grid-column: 1 / -1; }
+
+		.break-card {
+			width: 100%;
+			padding: var(--space-2) var(--space-3);
+		}
+
+		.fallback-marker { --dot-size: 18px; }
+	}
+
+	@supports selector(.session-card::details-content) {
+		.session-card::details-content {
+			display: block;
+			block-size: 0;
+			overflow: hidden;
+			opacity: 0;
+			transition:
+				block-size 250ms ease,
+				opacity 250ms ease,
+				content-visibility 250ms ease allow-discrete;
+		}
+
+		.session-card[open]::details-content {
+			block-size: auto;
+			opacity: 1;
+		}
+	}
+
+	.card-body {
+		padding: var(--space-4);
+	}
+
+	.card-body p {
+		white-space: pre-wrap;
+	}
+
+	/* Live mode: hide out-of-window items */
+	.live-mode .session-card.is-hidden,
+	.live-mode .timeline-marker.is-hidden {
+		display: none;
+	}
+
+	.live-mode .break-row.is-hidden,
+	.live-mode .time-slot.is-hidden,
+	.live-mode .day-separator.is-hidden,
+	.live-mode .lane-labels.is-hidden {
+		display: none;
+	}
+
+	/* Live mode: highlight current session */
+	.live-mode .session-card.is-current[data-side="left"] {
+		border-color: var(--room-left-color);
+		box-shadow: 0 0 0 3px color-mix(in srgb, var(--room-left-color) 20%, transparent);
+	}
+
+	.live-mode .session-card.is-current[data-side="right"] {
+		border-color: var(--room-right-color);
+		box-shadow: 0 0 0 3px color-mix(in srgb, var(--room-right-color) 20%, transparent);
+	}
+
+	.end-of-day {
+		grid-column: 1 / -1;
+		text-align: center;
+		padding: var(--space-12) var(--space-4);
+		color: var(--color-text-light);
+		font-family: monospace;
+		font-size: var(--text-sm);
+		white-space: pre-wrap;
+	}
+
+	.timeline:has(.end-of-day:not([hidden]))::before,
+	.timeline:has(.end-of-day:not([hidden]))::after {
+		display: none;
+	}
+</style>
+
+<script>
+	const openSessionFromHash = () => {
+		if (!window.location.hash) return;
+
+		const targetId = decodeURIComponent(window.location.hash.slice(1));
+		const target = document.getElementById(targetId);
+
+		if (target instanceof HTMLDetailsElement) {
+			target.open = true;
+		}
+	};
+
+	const syncHashFromSummary = (event: Event) => {
+		const summary = event.currentTarget;
+
+		if (!(summary instanceof HTMLElement)) return;
+
+		const targetId = summary.dataset.sessionTarget;
+
+		if (!targetId) return;
+
+		window.location.hash = targetId;
+	};
+
+	document
+		.querySelectorAll("summary[data-session-target]")
+		.forEach((summary) => summary.addEventListener("click", syncHashFromSummary));
+
+	openSessionFromHash();
+	window.addEventListener("hashchange", openSessionFromHash);
+
+	// Live session highlighting and windowed filtering
+	const timeline = document.querySelector(".live-mode");
+	if (timeline) {
+		const getFakeOrRealDate = () => {
+			const param = new URLSearchParams(window.location.search).get("fakeDate");
+			return param ? new Date(param) : new Date();
+		};
+
+		let initialScrollDone = false;
+		let preciseTimer: ReturnType<typeof setTimeout> | null = null;
+
+		const updateHighlights = () => {
+			const now = getFakeOrRealDate();
+			const nowMs = now.getTime();
+			const futureBoundaries: number[] = [];
+
+			const todayStr = now.toDateString();
+			let todayHasSessions = false;
+
+			// Pass 1: find each room's first upcoming session to establish the visibility boundary.
+			// The boundary is the latest of those start times — sessions in any room that start
+			// at or before it are shown, so no room "disappears" because another room starts later.
+			const firstFutureMsPerSide: number[] = [];
+			for (const side of ["left", "right"] as const) {
+				for (const row of Array.from(document.querySelectorAll<HTMLElement>(`.session-row[data-side="${side}"]`))) {
+					const card = row.querySelector<HTMLElement>(".session-card");
+					if (!card?.dataset.startsAt || !card.dataset.endsAt) continue;
+					if (new Date(card.dataset.startsAt).toDateString() !== todayStr) continue;
+					const ms = new Date(card.dataset.startsAt).getTime();
+					if (ms > nowMs) { firstFutureMsPerSide.push(ms); break; }
+				}
+			}
+			const futureBoundaryMs = firstFutureMsPerSide.length > 0 ? Math.max(...firstFutureMsPerSide) : -Infinity;
+
+			// Pass 2: apply visibility. Show current sessions and any future session that starts
+			// at or before the boundary computed above.
+			for (const side of ["left", "right"] as const) {
+				document.querySelectorAll<HTMLElement>(`.session-row[data-side="${side}"]`).forEach((row) => {
+					const card = row.querySelector<HTMLElement>(".session-card");
+					const marker = row.querySelector<HTMLElement>(".timeline-marker");
+					if (!card?.dataset.startsAt || !card.dataset.endsAt) return;
+
+					const sessionDate = new Date(card.dataset.startsAt);
+					if (sessionDate.toDateString() !== todayStr) {
+						[card, marker].forEach((el) => el?.classList.add("is-hidden"));
+						return;
+					}
+					todayHasSessions = true;
+
+					const start = sessionDate.getTime();
+					const end = new Date(card.dataset.endsAt).getTime();
+					const isCurrent = start <= nowMs && end > nowMs;
+					const isFuture = start > nowMs;
+					const show = isCurrent || (isFuture && start <= futureBoundaryMs);
+
+					if (end > nowMs) futureBoundaries.push(end);
+					if (isFuture) futureBoundaries.push(start);
+
+					[card, marker].forEach((el) => {
+						if (!el) return;
+						el.classList.toggle("is-current", isCurrent);
+						el.classList.toggle("is-hidden", !show);
+					});
+				});
+			}
+
+			// Breaks: show the next one only (current or upcoming), today only
+			let breakShown = false;
+			document.querySelectorAll<HTMLElement>(".break-row").forEach((row) => {
+				const card = row.querySelector<HTMLElement>(".break-card");
+				if (!card?.dataset.startsAt || !card.dataset.endsAt) {
+					row.classList.add("is-hidden");
+					return;
+				}
+				const sessionDate = new Date(card.dataset.startsAt);
+				if (sessionDate.toDateString() !== todayStr) {
+					row.classList.add("is-hidden");
+					return;
+				}
+				todayHasSessions = true;
+				const start = sessionDate.getTime();
+				const end = new Date(card.dataset.endsAt).getTime();
+				const isUpcoming = start > nowMs || (start <= nowMs && end > nowMs);
+				const show = isUpcoming && !breakShown;
+				if (show) breakShown = true;
+				if (end > nowMs) futureBoundaries.push(end);
+				if (start > nowMs) futureBoundaries.push(start);
+				card.classList.toggle("is-current", start <= nowMs && end > nowMs);
+				row.classList.toggle("is-hidden", !show);
+			});
+
+			// Time-slots: hide if all children are hidden
+			document.querySelectorAll<HTMLElement>(".time-slot").forEach((slot) => {
+				const hasVisible =
+					[...slot.querySelectorAll(".session-card")].some((c) => !c.classList.contains("is-hidden")) ||
+					[...slot.querySelectorAll(".break-row")].some((r) => !r.classList.contains("is-hidden"));
+				slot.classList.toggle("is-hidden", !hasVisible);
+			});
+
+			// Day separators and lane labels: hide when their day has no visible time-slots
+			const timelineEl = document.querySelector(".live-mode");
+			if (timelineEl) {
+				let daySep: HTMLElement | null = null;
+				let laneLabels: HTMLElement | null = null;
+				let dayHasVisible = false;
+
+				const flushDay = () => {
+					daySep?.classList.toggle("is-hidden", !dayHasVisible);
+					laneLabels?.classList.toggle("is-hidden", !dayHasVisible);
+				};
+
+				for (const child of Array.from(timelineEl.children) as HTMLElement[]) {
+					if (child.classList.contains("day-separator")) {
+						flushDay();
+						daySep = child;
+						laneLabels = null;
+						dayHasVisible = false;
+					} else if (child.classList.contains("lane-labels")) {
+						laneLabels = child;
+					} else if (child.classList.contains("time-slot")) {
+						if (!child.classList.contains("is-hidden")) dayHasVisible = true;
+					}
+				}
+				flushDay();
+			}
+
+			// End-of-day / post-conference message
+			const endOfDayEl = timeline.querySelector<HTMLElement>(".end-of-day");
+			if (endOfDayEl) {
+				const hasAnyVisible =
+					[...timeline.querySelectorAll(".session-card")].some((c) => !c.classList.contains("is-hidden")) ||
+					[...timeline.querySelectorAll(".break-row")].some((r) => !r.classList.contains("is-hidden"));
+				const hasAnyFutureSessionToday = [...document.querySelectorAll<HTMLElement>(".session-card")].some((c) => {
+					const t = c.dataset.startsAt;
+					if (!t) return false;
+					const d = new Date(t);
+					return d.toDateString() === todayStr && d.getTime() > nowMs;
+				});
+				const hasAnyFutureSession = [...document.querySelectorAll<HTMLElement>(".session-card")].some((c) => {
+					const t = c.dataset.startsAt;
+					return t ? new Date(t).getTime() > nowMs : false;
+				});
+				const endOfDay = todayHasSessions && !hasAnyFutureSessionToday && !hasAnyVisible;
+				const postConference = !hasAnyFutureSession && !hasAnyVisible;
+				const show = endOfDay || postConference;
+				if (show && endOfDayEl.hidden) {
+					const dayMessages = [
+						"503 Service Unavailable — All sessions have been scaled to zero replicas.",
+						"Error: CrashLoopBackOff — conference.schedule has exited with code 0.",
+						"kubectl get sessions --today\nNo resources found in namespace 'today'.",
+						"OutOfMemory: brain heap limit exceeded. Garbage collection recommended.",
+						"Connection refused: no healthy speaker endpoints available.",
+						"Namespace 'conference/today' has been garbage collected.",
+						"All pods have terminated. The cluster is now resting.",
+						"HealthCheck failed: no sessions responding. Have you tried turning it off and on again?",
+					];
+					const finalMessages = [
+						"SIGTERM received. Initiating graceful shutdown. See you next year.",
+						"Rate limit exceeded: 0 remaining sessions. Retry-After: 365d.",
+					];
+					const pool = postConference ? finalMessages : dayMessages;
+					endOfDayEl.textContent = pool[Math.floor(Math.random() * pool.length)];
+				}
+				endOfDayEl.hidden = !show;
+			}
+
+			// Auto-scroll to first current session on first run
+			if (!initialScrollDone) {
+				initialScrollDone = true;
+				const current = document.querySelector<HTMLElement>(".session-card.is-current");
+				if (current) {
+					setTimeout(() => current.scrollIntoView({ behavior: "smooth", block: "center" }), 100);
+				}
+			}
+
+			// Schedule an update at the exact moment the next session boundary hits
+			if (preciseTimer) clearTimeout(preciseTimer);
+			const nextChange = futureBoundaries.filter((t) => t > nowMs).sort((a, b) => a - b)[0];
+			if (nextChange) {
+				// +500 ms buffer so the clock has definitely ticked past the boundary
+				preciseTimer = setTimeout(updateHighlights, nextChange - nowMs + 500);
+			}
+		};
+
+		updateHighlights();
+		// 30-second fallback in case the precise timer drifts (e.g. device sleep)
+		setInterval(updateHighlights, 30_000);
+	}
+</script>
