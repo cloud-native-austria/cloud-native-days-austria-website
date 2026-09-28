@@ -895,7 +895,7 @@ const { dayGroups, sessionSpeakers, leftRoom, rightRoom, liveMode = false } = As
 				flushDay();
 			}
 
-			// End-of-day / post-conference message
+			// End-of-day / post-conference / pre-conference message
 			const endOfDayEl = timeline.querySelector<HTMLElement>(".end-of-day");
 			if (endOfDayEl) {
 				const hasAnyVisible =
@@ -911,10 +911,24 @@ const { dayGroups, sessionSpeakers, leftRoom, rightRoom, liveMode = false } = As
 					const t = c.dataset.startsAt;
 					return t ? new Date(t).getTime() > nowMs : false;
 				});
+				const firstSessionMs = Math.min(
+					...[...document.querySelectorAll<HTMLElement>(".session-card")]
+						.map((c) => (c.dataset.startsAt ? new Date(c.dataset.startsAt).getTime() : Infinity))
+						.filter((t) => isFinite(t)),
+				);
+				const preConference = isFinite(firstSessionMs) && nowMs < firstSessionMs;
+				if (preConference) futureBoundaries.push(firstSessionMs);
+
 				const endOfDay = todayHasSessions && !hasAnyFutureSessionToday && !hasAnyVisible;
 				const postConference = !hasAnyFutureSession && !hasAnyVisible;
-				const show = endOfDay || postConference;
+				const show = endOfDay || postConference || preConference;
 				if (show && endOfDayEl.hidden) {
+					const preMessages = [
+						"Awaiting start. Stand by for conference launch.",
+						"Deployment pending. Sessions will be scheduled shortly.",
+						"Pod status: Pending. Waiting for conference node to become Ready.",
+						"Scheduled job not yet triggered. Next run: conference day.",
+					];
 					const dayMessages = [
 						"503 Service Unavailable — All sessions have been scaled to zero replicas.",
 						"Error: CrashLoopBackOff — conference.schedule has exited with code 0.",
@@ -929,7 +943,7 @@ const { dayGroups, sessionSpeakers, leftRoom, rightRoom, liveMode = false } = As
 						"SIGTERM received. Initiating graceful shutdown. See you next year.",
 						"Rate limit exceeded: 0 remaining sessions. Retry-After: 365d.",
 					];
-					const pool = postConference ? finalMessages : dayMessages;
+					const pool = preConference ? preMessages : postConference ? finalMessages : dayMessages;
 					endOfDayEl.textContent = pool[Math.floor(Math.random() * pool.length)];
 				}
 				endOfDayEl.hidden = !show;
