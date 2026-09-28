@@ -1,0 +1,141 @@
+---
+/**
+ * Rotating sponsor column for the landscape signage pages.
+ *
+ * Sponsors are chunked into four groups that rotate with a vertical slide,
+ * using the same timing keyframes as SponsorBanner so the two components stay
+ * in sync when both appear on screen.
+ */
+import { Picture } from "astro:assets";
+import { getEntry, type CollectionEntry } from "astro:content";
+
+type SponsorTier = CollectionEntry<"sponsors">["data"]["tiers"][number];
+
+interface Props {
+	rotation?: string;
+}
+
+const { rotation = "20s" } = Astro.props;
+
+const sponsorsEntry = await getEntry("sponsors", "list");
+if (!sponsorsEntry) {
+	throw new Error("Sponsors data not found in content collection");
+}
+
+const tiers = sponsorsEntry.data.tiers as SponsorTier[];
+
+const imageBounds = { width: 500, height: 200 };
+
+function getTierImageBounds(_tier: string) {
+	return imageBounds;
+}
+
+const allSponsors = tiers.flatMap(({ tier, sponsors }) =>
+	sponsors.map((sponsor) => ({ ...sponsor, tier })),
+);
+
+const SLIDE_COUNT = 4;
+const perSlide = Math.ceil(allSponsors.length / SLIDE_COUNT);
+const slides = Array.from({ length: SLIDE_COUNT }, (_, index) =>
+	allSponsors.slice(index * perSlide, (index + 1) * perSlide),
+).filter((slide) => slide.length > 0);
+---
+
+<div class="rotator" style={`--rotation: ${rotation}`} aria-label="Our sponsors">
+	{
+		slides.map((slide, index) => (
+			<ul class="slide" data-slide={index + 1}>
+				{slide.map(({ name, logo, tier }) => {
+					const bounds = getTierImageBounds(tier);
+					return (
+						<li>
+							{logo.format === "svg" ? (
+								<img
+									src={logo.src}
+									alt={name}
+									style={`width: ${bounds.width}px; height: ${bounds.height}px; object-fit: contain;`}
+								/>
+							) : (
+								<Picture
+									src={logo}
+									alt={name}
+									width={bounds.width}
+									height={bounds.height}
+									fit="inside"
+									formats={["avif", "webp"]}
+								/>
+							)}
+						</li>
+					);
+				})}
+			</ul>
+		))
+	}
+</div>
+
+<style>
+	.rotator {
+		position: relative;
+		width: 100%;
+		height: 100%;
+		overflow: hidden;
+	}
+
+	.slide {
+		position: absolute;
+		inset: 0;
+		list-style: none;
+		margin: 0;
+		padding: var(--space-6) var(--space-4);
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: space-evenly;
+		gap: var(--space-6);
+	}
+
+	.slide li {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+
+	.slide :global(img) {
+		max-width: 100%;
+		object-fit: contain;
+	}
+
+	/*
+	 * Vertical slide animations — same percentage timing as SponsorBanner so
+	 * group transitions fall in the same still phases of the recording.
+	 */
+	.slide[data-slide="1"] { animation: sponsor-col-1 var(--rotation) ease-in-out infinite; }
+	.slide[data-slide="2"] { animation: sponsor-col-2 var(--rotation) ease-in-out infinite; }
+	.slide[data-slide="3"] { animation: sponsor-col-3 var(--rotation) ease-in-out infinite; }
+	.slide[data-slide="4"] { animation: sponsor-col-4 var(--rotation) ease-in-out infinite; }
+
+	@keyframes sponsor-col-1 {
+		0%, 6.52% { transform: translateY(0); opacity: 1; }
+		8.7% { transform: translateY(-100%); opacity: 0; }
+		81.52% { transform: translateY(100%); opacity: 0; }
+		83.7%, 100% { transform: translateY(0); opacity: 1; }
+	}
+
+	@keyframes sponsor-col-2 {
+		0%, 6.52% { transform: translateY(100%); opacity: 0; }
+		8.7%, 31.52% { transform: translateY(0); opacity: 1; }
+		33.7%, 100% { transform: translateY(-100%); opacity: 0; }
+	}
+
+	@keyframes sponsor-col-3 {
+		0%, 31.52% { transform: translateY(100%); opacity: 0; }
+		33.7%, 56.52% { transform: translateY(0); opacity: 1; }
+		58.7%, 100% { transform: translateY(-100%); opacity: 0; }
+	}
+
+	@keyframes sponsor-col-4 {
+		0%, 56.52% { transform: translateY(100%); opacity: 0; }
+		58.7%, 81.52% { transform: translateY(0); opacity: 1; }
+		83.7%, 100% { transform: translateY(-100%); opacity: 0; }
+	}
+</style>

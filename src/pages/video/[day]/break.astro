@@ -1,0 +1,43 @@
+---
+import SessionTimeline from "@components/SessionTimeline.astro";
+import DualRoomSignageLayout from "@layouts/DualRoomSignageLayout.astro";
+import { getCollection } from "astro:content";
+
+const ROTATION = "23s";
+
+export async function getStaticPaths() {
+	const sessions = await getCollection("sessions");
+
+	const days = [
+		...new Set(
+			sessions
+				.map((session) =>
+					session.data.startsAt
+						? new Date(session.data.startsAt).toLocaleDateString("en-CA", {
+								timeZone: "Europe/Vienna",
+							})
+						: null,
+				)
+				.filter((day): day is string => day !== null),
+		),
+	].sort();
+
+	return days.map((day) => ({ params: { day }, props: { day } }));
+}
+
+const { day } = Astro.props;
+
+const label = new Date(`${day}T12:00:00Z`).toLocaleDateString("en-AT", {
+	weekday: "long",
+	day: "numeric",
+	month: "long",
+	timeZone: "Europe/Vienna",
+});
+---
+
+<DualRoomSignageLayout
+	title={`Schedule ${label} | Cloud Native Days Austria`}
+	rotation={ROTATION}
+>
+	<SessionTimeline day={day} />
+</DualRoomSignageLayout>

@@ -1,0 +1,173 @@
+---
+import "@styles/global.css";
+import SponsorColumn from "@components/SponsorColumn.astro";
+import { Font } from "astro:assets";
+
+interface Props {
+	title: string;
+	rotation?: string;
+}
+
+const { title, rotation } = Astro.props;
+---
+
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<meta name="color-scheme" content="light" />
+		<meta name="robots" content="noindex" />
+		<title>{title}</title>
+		<Font cssVariable="--font-plus-jakarta-sans" preload />
+		<Font cssVariable="--font-fira-code" preload />
+	</head>
+	<body>
+		<div class="content">
+			<div class="schedule-area">
+				<div class="scroll-area">
+					<main><slot /></main>
+					<span class="fade fade-top" aria-hidden="true"></span>
+					<span class="fade fade-bottom" aria-hidden="true"></span>
+				</div>
+			</div>
+
+			<aside class="sponsor-pane" aria-label="Sponsors">
+				<SponsorColumn rotation={rotation} />
+			</aside>
+		</div>
+	</body>
+</html>
+
+<script>
+	const HOLD_TOP = 8_000;
+	const SCROLL_DOWN = 20_000;
+	const HOLD_BOTTOM = 3_000;
+	const SCROLL_UP = 1_200;
+
+	const main = document.querySelector("main") as HTMLElement;
+
+	const easeInOut = (t: number) => t < 0.5 ? 2 * t * t : 1 - (-2 * t + 2) ** 2 / 2;
+	const easeOut   = (t: number) => 1 - (1 - t) * (1 - t);
+
+	function animateScroll(
+		from: number,
+		to: number,
+		duration: number,
+		ease: (t: number) => number,
+	): Promise<void> {
+		return new Promise((resolve) => {
+			const max = main.scrollHeight - main.clientHeight;
+			const start = performance.now();
+			function step(now: number) {
+				const t = Math.min(1, (now - start) / duration);
+				main.scrollTop = max * (from + (to - from) * ease(t));
+				if (t < 1) requestAnimationFrame(step);
+				else resolve();
+			}
+			requestAnimationFrame(step);
+		});
+	}
+
+	async function loop() {
+		while (true) {
+			main.scrollTop = 0;
+			await new Promise((r) => setTimeout(r, HOLD_TOP));
+			await animateScroll(0, 1, SCROLL_DOWN, easeInOut);
+			await new Promise((r) => setTimeout(r, HOLD_BOTTOM));
+			await animateScroll(1, 0, SCROLL_UP, easeOut);
+		}
+	}
+
+	document.fonts.ready.then(loop);
+</script>
+
+<style>
+	body {
+		display: grid;
+		grid-template-rows: minmax(0, 1fr);
+		block-size: 100svh;
+		margin: 0;
+		overflow: hidden;
+	}
+
+	.content {
+		display: grid;
+		grid-template-columns: 1fr var(--sponsor-col-width, 300px);
+		min-block-size: 0;
+	}
+
+	.schedule-area {
+		display: grid;
+		grid-template-rows: minmax(0, 1fr);
+		min-block-size: 0;
+		overflow: hidden;
+	}
+
+	.scroll-area {
+		position: relative;
+		min-block-size: 0;
+	}
+
+	main {
+		block-size: 100%;
+		overflow-y: auto;
+		padding-block-start: var(--space-16);
+		padding-block-end: calc(var(--space-16) * 2);
+		padding-inline: var(--space-6);
+		scrollbar-width: none;
+		pointer-events: none;
+		user-select: none;
+		zoom: 1.4;
+	}
+
+	main > :global(*) {
+		max-inline-size: 1300px;
+		margin-inline: auto;
+	}
+
+	main::-webkit-scrollbar {
+		display: none;
+	}
+
+	main :global(.timeline) {
+		padding-block-start: 0;
+	}
+
+	main :global(.day-separator) {
+		display: none;
+	}
+
+	.fade {
+		position: absolute;
+		inset-inline: 0;
+		block-size: var(--space-8);
+		pointer-events: none;
+		z-index: 5;
+	}
+
+	.fade-top {
+		top: 0;
+		background: linear-gradient(to bottom, var(--color-white), transparent);
+	}
+
+	.fade-bottom {
+		bottom: 0;
+		background: linear-gradient(to top, var(--color-white), transparent);
+	}
+
+	.sponsor-pane {
+		position: relative;
+		background: #fff;
+		color-scheme: light;
+		padding-inline: var(--space-6);
+	}
+
+	.sponsor-pane::before {
+		content: "";
+		position: absolute;
+		inset-block: 0;
+		left: 0;
+		width: 3px;
+		background: var(--gradient-brand);
+	}
+</style>
