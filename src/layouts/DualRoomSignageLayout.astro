@@ -51,8 +51,8 @@ const { title, rotation } = Astro.props;
 
 	const main = document.querySelector("main") as HTMLElement;
 
-	const easeIn  = (t: number) => t * t;
-	const easeOut = (t: number) => 1 - (1 - t) * (1 - t);
+	const easeInOut = (t: number) => t < 0.5 ? 2 * t * t : 1 - (-2 * t + 2) ** 2 / 2;
+	const easeOut   = (t: number) => 1 - (1 - t) * (1 - t);
 
 	function animateScroll(
 		from: number,
@@ -77,7 +77,7 @@ const { title, rotation } = Astro.props;
 		while (true) {
 			main.scrollTop = 0;
 			await new Promise((r) => setTimeout(r, HOLD_TOP));
-			await animateScroll(0, 1, SCROLL_DOWN, easeIn);
+			await animateScroll(0, 1, SCROLL_DOWN, easeInOut);
 			await new Promise((r) => setTimeout(r, HOLD_BOTTOM));
 			await animateScroll(1, 0, SCROLL_UP, easeOut);
 		}
