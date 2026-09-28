@@ -6,11 +6,9 @@ import { Font } from "astro:assets";
 interface Props {
 	title: string;
 	rotation?: string;
-	room1Name: string;
-	room2Name: string;
 }
 
-const { title, rotation, room1Name, room2Name } = Astro.props;
+const { title, rotation } = Astro.props;
 ---
 
 <html lang="en">
@@ -27,18 +25,7 @@ const { title, rotation, room1Name, room2Name } = Astro.props;
 		<div class="content">
 			<div class="schedule-area">
 				<div class="scroll-area">
-					<main>
-						<div class="rooms">
-							<div class="room-col room-col--1">
-								<h1 class="room-title">{room1Name}</h1>
-								<slot name="room1" />
-							</div>
-							<div class="room-col room-col--2">
-								<h1 class="room-title">{room2Name}</h1>
-								<slot name="room2" />
-							</div>
-						</div>
-					</main>
+					<main><slot /></main>
 					<span class="fade fade-top" aria-hidden="true"></span>
 					<span class="fade fade-bottom" aria-hidden="true"></span>
 				</div>
@@ -134,47 +121,8 @@ const { title, rotation, room1Name, room2Name } = Astro.props;
 		display: none;
 	}
 
-	main :global(.timeline--room),
 	main :global(.timeline) {
 		padding-block-start: 0;
-	}
-
-	.rooms {
-		display: grid;
-		grid-template-columns: 1fr 1fr;
-	}
-
-	.room-col {
-		padding-inline: var(--space-6);
-	}
-
-	.room-col--1 {
-		--room-color: var(--color-accent);
-		position: relative;
-	}
-
-	/* Gradient separator between the two room columns */
-	.room-col--1::after {
-		content: "";
-		position: absolute;
-		inset-block: 0;
-		right: 0;
-		width: 3px;
-		background: var(--gradient-brand);
-		pointer-events: none;
-	}
-
-	.room-col--2 {
-		--room-color: var(--color-pink);
-	}
-
-	.room-title {
-		font-family: var(--font-body);
-		font-size: var(--text-2xl);
-		font-weight: 700;
-		letter-spacing: -0.01em;
-		margin: 0 0 var(--space-4);
-		color: var(--room-color);
 	}
 
 	.fade {
