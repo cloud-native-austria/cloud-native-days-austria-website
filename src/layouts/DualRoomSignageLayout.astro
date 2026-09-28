@@ -25,12 +25,7 @@ const { title, rotation } = Astro.props;
 		<div class="content">
 			<div class="schedule-area">
 				<div class="scroll-area">
-					<main>
-					<slot />
-					<div class="now-marker" aria-hidden="true">
-						<span class="now-label"></span>
-					</div>
-				</main>
+					<main><slot /></main>
 					<span class="fade fade-top" aria-hidden="true"></span>
 					<span class="fade fade-bottom" aria-hidden="true"></span>
 				</div>
@@ -86,62 +81,6 @@ const { title, rotation } = Astro.props;
 	document.fonts.ready.then(loop);
 </script>
 
-<script>
-	const marker = document.querySelector(".now-marker") as HTMLElement;
-	const label  = marker.querySelector(".now-label") as HTMLElement;
-
-	function currentTime(): number {
-		const param = new URLSearchParams(location.search).get("now");
-		if (param) {
-			const dayMatch = location.pathname.match(/(\d{4}-\d{2}-\d{2})/);
-			const date = dayMatch ? dayMatch[1] : new Date().toISOString().slice(0, 10);
-			// Treat HH:MM as Vienna time (CEST = UTC+2)
-			return new Date(`${date}T${param}:00+02:00`).getTime();
-		}
-		return Date.now();
-	}
-
-	function updateNowMarker() {
-		const now = currentTime();
-		const slots = [...document.querySelectorAll<HTMLElement>(".time-slot[data-starts-at]")];
-		if (!slots.length) return;
-
-		// Find the slot that straddles "now"
-		let target: HTMLElement | null = null;
-		let progress = 0;
-
-		for (let i = 0; i < slots.length; i++) {
-			const start = new Date(slots[i].dataset.startsAt!).getTime();
-			const end   = slots[i].dataset.endsAt ? new Date(slots[i].dataset.endsAt!).getTime() : null;
-			const nextStart = slots[i + 1]?.dataset.startsAt ? new Date(slots[i + 1].dataset.startsAt!).getTime() : null;
-			const slotEnd = end ?? nextStart ?? start;
-
-			if (now >= start && now < slotEnd) {
-				target = slots[i];
-				progress = slotEnd > start ? (now - start) / (slotEnd - start) : 0;
-				break;
-			}
-		}
-
-		if (!target) {
-			marker.classList.remove("visible");
-			return;
-		}
-
-		// offsetTop is in pre-zoom CSS pixels — the marker lives inside the same
-		// zoomed container so no correction needed
-		const top = target.offsetTop + target.offsetHeight * progress;
-		marker.style.top = `${top}px`;
-		marker.classList.add("visible");
-
-		const time = new Date(now).toLocaleTimeString("en-AT", { hour: "2-digit", minute: "2-digit", timeZone: "Europe/Vienna" });
-		label.textContent = time;
-	}
-
-	updateNowMarker();
-	setInterval(updateNowMarker, 30_000);
-</script>
-
 <style>
 	body {
 		display: grid;
@@ -170,7 +109,6 @@ const { title, rotation } = Astro.props;
 	}
 
 	main {
-		position: relative;
 		block-size: 100%;
 		overflow-y: auto;
 		padding-block-start: var(--space-16);
@@ -193,32 +131,6 @@ const { title, rotation } = Astro.props;
 
 	main :global(.timeline) {
 		padding-block-start: 0;
-	}
-
-	.now-marker {
-		position: absolute;
-		inset-inline: 0;
-		height: 2px;
-		background: var(--color-pink);
-		pointer-events: none;
-		display: none;
-	}
-
-	.now-marker.visible {
-		display: block;
-	}
-
-	.now-label {
-		position: absolute;
-		right: var(--space-2);
-		top: 50%;
-		transform: translateY(-50%);
-		font-size: var(--text-sm);
-		font-weight: 600;
-		color: var(--color-pink);
-		background: var(--color-white);
-		padding-inline: var(--space-1);
-		line-height: 1;
 	}
 
 	main :global(.day-separator) {

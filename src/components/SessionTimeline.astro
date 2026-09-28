@@ -241,8 +241,6 @@ for (const slot of timeSlots) {
 							return (
 								<div
 									class="time-slot"
-									data-starts-at={firstSession?.startsAt ?? undefined}
-									data-ends-at={firstSession?.endsAt ?? undefined}
 								>
 									{slotSessions.map((session) => {
 										const isExpandable = Boolean(session.description);
