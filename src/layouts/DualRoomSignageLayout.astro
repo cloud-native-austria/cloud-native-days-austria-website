@@ -83,7 +83,7 @@ const { title, rotation } = Astro.props;
 
 <style>
 	:global(html) {
-		font-size: 120%;
+		font-size: 150%;
 	}
 
 	body {
@@ -96,7 +96,7 @@ const { title, rotation } = Astro.props;
 
 	.content {
 		display: grid;
-		grid-template-columns: 1fr var(--sponsor-col-width, 320px);
+		grid-template-columns: 1fr var(--sponsor-col-width, 420px);
 		min-block-size: 0;
 	}
 
@@ -115,7 +115,7 @@ const { title, rotation } = Astro.props;
 	main {
 		block-size: 100%;
 		overflow-y: auto;
-		padding-block: var(--space-8) var(--space-16);
+		padding-block: var(--space-16);
 		padding-inline: var(--space-6);
 		scrollbar-width: none;
 		pointer-events: none;
@@ -133,6 +133,10 @@ const { title, rotation } = Astro.props;
 
 	main :global(.timeline) {
 		padding-block-start: 0;
+	}
+
+	main :global(.day-separator) {
+		display: none;
 	}
 
 	.fade {
@@ -157,6 +161,7 @@ const { title, rotation } = Astro.props;
 		position: relative;
 		background: #fff;
 		color-scheme: light;
+		padding-inline: var(--space-6);
 	}
 
 	.sponsor-pane::before {
