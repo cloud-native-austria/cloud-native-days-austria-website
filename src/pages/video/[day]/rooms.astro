@@ -1,0 +1,70 @@
+---
+import SessionTimeline from "@components/SessionTimeline.astro";
+import DualRoomSignageLayout from "@layouts/DualRoomSignageLayout.astro";
+import { getCollection } from "astro:content";
+
+const ROTATION = "23s";
+
+export async function getStaticPaths() {
+	const sessions = await getCollection("sessions");
+	const allRooms = await getCollection("rooms");
+
+	const days = [
+		...new Set(
+			sessions
+				.map((session) =>
+					session.data.startsAt
+						? new Date(session.data.startsAt).toLocaleDateString("en-CA", {
+								timeZone: "Europe/Vienna",
+							})
+						: null,
+				)
+				.filter((day): day is string => day !== null),
+		),
+	].sort();
+
+	const talkRoomIds = new Set(
+		sessions
+			.filter((s) => !s.data.isServiceSession)
+			.map((s) => s.data.roomId)
+			.filter((id): id is number => id !== null),
+	);
+
+	const talkRooms = allRooms
+		.map((r) => r.data)
+		.sort((a, b) => a.sort - b.sort)
+		.filter((r) => talkRoomIds.has(r.roomId));
+
+	return days.map((day) => ({
+		params: { day },
+		props: {
+			day,
+			room1: { roomId: talkRooms[0].roomId, name: talkRooms[0].name },
+			room2: { roomId: talkRooms[1].roomId, name: talkRooms[1].name },
+		},
+	}));
+}
+
+const { day, room1, room2 } = Astro.props;
+
+const label = new Date(`${day}T12:00:00Z`).toLocaleDateString("en-AT", {
+	weekday: "long",
+	day: "numeric",
+	month: "long",
+	timeZone: "Europe/Vienna",
+});
+---
+
+<DualRoomSignageLayout
+	title={`Schedule ${label} | Cloud Native Days Austria`}
+	rotation={ROTATION}
+	room1Name={room1.name}
+	room2Name={room2.name}
+>
+	<Fragment slot="room1">
+		<SessionTimeline day={day} roomId={room1.roomId} />
+	</Fragment>
+	<Fragment slot="room2">
+		<SessionTimeline day={day} roomId={room2.roomId} />
+	</Fragment>
+</DualRoomSignageLayout>
