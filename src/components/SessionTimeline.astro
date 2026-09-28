@@ -237,8 +237,13 @@ for (const slot of timeSlots) {
 						)}
 						{slots.map((slot) => {
 							const slotSessions = [slot.left, slot.right, ...slot.center].filter(Boolean);
+							const firstSession = slot.left ?? slot.right ?? slot.center[0];
 							return (
-								<div class="time-slot">
+								<div
+									class="time-slot"
+									data-starts-at={firstSession?.startsAt ?? undefined}
+									data-ends-at={firstSession?.endsAt ?? undefined}
+								>
 									{slotSessions.map((session) => {
 										const isExpandable = Boolean(session.description);
 										const Card = isExpandable ? "details" : "div";
