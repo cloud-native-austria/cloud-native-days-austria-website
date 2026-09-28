@@ -24,14 +24,10 @@ if (!sponsorsEntry) {
 
 const tiers = sponsorsEntry.data.tiers as SponsorTier[];
 
-const tierImageBounds: Record<string, { width: number; height: number }> = {
-	gold: { width: 500, height: 200 },
-	silver: { width: 420, height: 170 },
-	community: { width: 340, height: 140 },
-};
+const imageBounds = { width: 500, height: 200 };
 
-function getTierImageBounds(tier: string) {
-	return tierImageBounds[tier] ?? tierImageBounds.silver;
+function getTierImageBounds(_tier: string) {
+	return imageBounds;
 }
 
 const allSponsors = tiers.flatMap(({ tier, sponsors }) =>
