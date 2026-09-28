@@ -1,0 +1,505 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - generic [ref=e4]:
+      - main:
+        - region "Conference sessions":
+          - generic:
+            - generic: Room 4
+            - generic: Room 6
+          - generic:
+            - generic:
+              - paragraph:
+                - text: Checkin & Breakfast ☕
+                - generic:
+                  - time: 08:00
+                  - text: –
+                  - time: 09:00
+          - generic:
+            - generic:
+              - generic:
+                - generic:
+                  - generic:
+                    - generic:
+                      - heading "Welcome from the Host" [level=2]
+                      - paragraph:
+                        - time: 09:00
+                        - text: –
+                        - time: 09:15
+          - generic:
+            - generic:
+              - generic:
+                - generic:
+                  - button "View speaker profile for Paul Guschlbauer":
+                    - generic:
+                      - generic:
+                        - img "Paul Guschlbauer"
+              - group:
+                - generic "Fly Your Path - The Human Edge in an AI-Accelerated World 09:20–09:50 · Paul Guschlbauer Session topics":
+                  - generic:
+                    - generic:
+                      - heading "Fly Your Path - The Human Edge in an AI-Accelerated World" [level=2]
+                      - paragraph:
+                        - time: 09:20
+                        - text: –
+                        - time: 09:50
+                        - text: · Paul Guschlbauer
+                      - list "Session topics":
+                        - listitem: People & Experiences
+            - generic:
+              - generic:
+                - generic:
+                  - generic:
+                    - generic:
+                      - heading "Keynote Stream" [level=2]
+                      - paragraph:
+                        - time: 09:20
+                        - text: –
+                        - time: 09:50
+          - generic:
+            - generic:
+              - generic:
+                - generic:
+                  - button "View speaker profile for Marcelo Ancelmo":
+                    - generic:
+                      - generic:
+                        - img "Marcelo Ancelmo"
+              - group:
+                - generic "AI Made Us Faster at Solving the Wrong Problems 09:55–10:25 · Marcelo Ancelmo Session topics":
+                  - generic:
+                    - generic:
+                      - heading "AI Made Us Faster at Solving the Wrong Problems" [level=2]
+                      - paragraph:
+                        - time: 09:55
+                        - text: –
+                        - time: 10:25
+                        - text: · Marcelo Ancelmo
+                      - list "Session topics":
+                        - listitem: Developer Experience
+                        - listitem: People & Experiences
+            - generic:
+              - generic:
+                - generic:
+                  - button "View speaker profile for Aarno Aukia":
+                    - generic:
+                      - generic:
+                        - img "Aarno Aukia"
+              - group:
+                - generic "Data Sovereignty Is Built, Not Bought 09:55–10:25 · Aarno Aukia Session topics":
+                  - generic:
+                    - generic:
+                      - heading "Data Sovereignty Is Built, Not Bought" [level=2]
+                      - paragraph:
+                        - time: 09:55
+                        - text: –
+                        - time: 10:25
+                        - text: · Aarno Aukia
+                      - list "Session topics":
+                        - listitem: Kubernetes & Container
+                        - listitem: Network & Security
+                        - listitem: Platform Engineering
+                        - listitem: Developer Experience
+                        - listitem: Policy & Compliance
+          - generic:
+            - generic:
+              - paragraph:
+                - text: Have a coffee and visit the sponsors! 👋
+                - generic:
+                  - time: 10:25
+                  - text: –
+                  - time: 10:55
+          - generic:
+            - generic:
+              - generic:
+                - generic:
+                  - button "View speaker profile for Diana Todea":
+                    - generic:
+                      - generic:
+                        - img "Diana Todea"
+              - group:
+                - generic "How to Defeat OTel’s Silent Killer, the Performance Overhead 10:55–11:40 · Diana Todea Session topics":
+                  - generic:
+                    - generic:
+                      - heading "How to Defeat OTel’s Silent Killer, the Performance Overhead" [level=2]
+                      - paragraph:
+                        - time: 10:55
+                        - text: –
+                        - time: 11:40
+                        - text: · Diana Todea
+                      - list "Session topics":
+                        - listitem: Observability
+                        - listitem: OS & Cloud Native Infrastructure
+                        - listitem: Operations & Performance
+            - generic:
+              - generic:
+                - generic:
+                  - button "View speaker profile for Tom Graupner":
+                    - generic:
+                      - generic:
+                        - img "Tom Graupner"
+              - group:
+                - 'generic "Beyond API Keys: Fine-Grained AI Agent Authorization for DevOps with OpenFGA 10:55–11:40 · Tom Graupner Session topics"':
+                  - generic:
+                    - generic:
+                      - 'heading "Beyond API Keys: Fine-Grained AI Agent Authorization for DevOps with OpenFGA" [level=2]'
+                      - paragraph:
+                        - time: 10:55
+                        - text: –
+                        - time: 11:40
+                        - text: · Tom Graupner
+                      - list "Session topics":
+                        - listitem: Platform Engineering
+                        - listitem: AI, ML & Big Data
+          - generic:
+            - generic:
+              - generic:
+                - generic:
+                  - button "View speaker profile for Adrian Reber":
+                    - generic:
+                      - generic:
+                        - img "Adrian Reber"
+              - group:
+                - generic "Building the Next Generation of Checkpoint/Restore in the Open 11:45–12:15 · Adrian Reber Session topics":
+                  - generic:
+                    - generic:
+                      - heading "Building the Next Generation of Checkpoint/Restore in the Open" [level=2]
+                      - paragraph:
+                        - time: 11:45
+                        - text: –
+                        - time: 12:15
+                        - text: · Adrian Reber
+                      - list "Session topics":
+                        - listitem: Kubernetes & Container
+                        - listitem: OS & Cloud Native Infrastructure
+                        - listitem: Operations & Performance
+            - generic:
+              - generic:
+                - generic:
+                  - button "View speaker profile for Christian Schabetsberger":
+                    - generic:
+                      - generic:
+                        - img "Christian Schabetsberger"
+              - group:
+                - generic "CRAcking Compliance - The EU Cyber Resilience Act 11:45–12:30 · Christian Schabetsberger Session topics":
+                  - generic:
+                    - generic:
+                      - heading "CRAcking Compliance - The EU Cyber Resilience Act" [level=2]
+                      - paragraph:
+                        - time: 11:45
+                        - text: –
+                        - time: 12:30
+                        - text: · Christian Schabetsberger
+                      - list "Session topics":
+                        - listitem: Network & Security
+                        - listitem: Policy & Compliance
+          - generic:
+            - generic:
+              - paragraph:
+                - text: Lunch Break 🍽️
+                - generic:
+                  - time: 12:15
+                  - text: –
+                  - time: 13:00
+          - generic:
+            - generic:
+              - generic:
+                - generic:
+                  - button "View speaker profile for Marcel Gredler":
+                    - generic:
+                      - generic:
+                        - img "Marcel Gredler"
+                  - button "View speaker profile for Johannes Atzmüller":
+                    - generic:
+                      - generic:
+                        - img "Johannes Atzmüller"
+              - group:
+                - 'generic "Broadcasting Deployments: ORF''s Journey to Bulletproof Kubernetes Releases 13:00–13:45 · Marcel Gredler, Johannes Atzmüller Session topics"':
+                  - generic:
+                    - generic:
+                      - 'heading "Broadcasting Deployments: ORF''s Journey to Bulletproof Kubernetes Releases" [level=2]'
+                      - paragraph:
+                        - time: 13:00
+                        - text: –
+                        - time: 13:45
+                        - text: · Marcel Gredler, Johannes Atzmüller
+                      - list "Session topics":
+                        - listitem: Kubernetes & Container
+                        - listitem: Platform Engineering
+                        - listitem: Developer Experience
+                        - listitem: Operations & Performance
+                        - listitem: People & Experiences
+          - generic:
+            - generic:
+              - generic:
+                - generic:
+                  - button "View speaker profile for Krisztián Papp":
+                    - generic:
+                      - generic:
+                        - img "Krisztián Papp"
+              - group:
+                - generic "You Call That an AI Agent? 13:15–13:45 · Krisztián Papp Session topics":
+                  - generic:
+                    - generic:
+                      - heading "You Call That an AI Agent?" [level=2]
+                      - paragraph:
+                        - time: 13:15
+                        - text: –
+                        - time: 13:45
+                        - text: · Krisztián Papp
+                      - list "Session topics":
+                        - listitem: AI, ML & Big Data
+          - generic:
+            - generic:
+              - generic:
+                - generic:
+                  - button "View speaker profile for Dimitrij Klesev":
+                    - generic:
+                      - generic:
+                        - img "Dimitrij Klesev"
+                  - button "View speaker profile for Felix Hochleitner":
+                    - generic:
+                      - generic:
+                        - img "Felix Hochleitner"
+                  - button "View speaker profile for Uwe Kirchengast":
+                    - generic:
+                      - generic:
+                        - img "Uwe Kirchengast"
+              - group:
+                - 'generic "EKS Hybrid Nodes Deep Dive: Cilium, Crossplane and On-Prem 13:50–14:35 · Dimitrij Klesev, Felix Hochleitner, Uwe Kirchengast Session topics"':
+                  - generic:
+                    - generic:
+                      - 'heading "EKS Hybrid Nodes Deep Dive: Cilium, Crossplane and On-Prem" [level=2]'
+                      - paragraph:
+                        - time: 13:50
+                        - text: –
+                        - time: 14:35
+                        - text: · Dimitrij Klesev, Felix Hochleitner, Uwe Kirchengast
+                      - list "Session topics":
+                        - listitem: Kubernetes & Container
+                        - listitem: Network & Security
+                        - listitem: Platform Engineering
+                        - listitem: Developer Experience
+                        - listitem: OS & Cloud Native Infrastructure
+            - generic:
+              - generic:
+                - generic:
+                  - button "View speaker profile for Nico Meisenzahl":
+                    - generic:
+                      - generic:
+                        - img "Nico Meisenzahl"
+              - group:
+                - 'generic "Agentic AI Under Attack: Live Demos of Exploits Through Autonomy and Trust 13:50–14:35 · Nico Meisenzahl Session topics"':
+                  - generic:
+                    - generic:
+                      - 'heading "Agentic AI Under Attack: Live Demos of Exploits Through Autonomy and Trust" [level=2]'
+                      - paragraph:
+                        - time: 13:50
+                        - text: –
+                        - time: 14:35
+                        - text: · Nico Meisenzahl
+                      - list "Session topics":
+                        - listitem: Network & Security
+                        - listitem: AI, ML & Big Data
+          - generic:
+            - generic:
+              - paragraph:
+                - text: More coffee, more networking 🛜
+                - generic:
+                  - time: 14:35
+                  - text: –
+                  - time: 15:00
+          - generic:
+            - generic:
+              - generic:
+                - generic:
+                  - button "View speaker profile for Anton Babenko":
+                    - generic:
+                      - generic:
+                        - img "Anton Babenko"
+              - group:
+                - 'generic "No More Forks: Policy Transformation for Terraform at Scale 15:00–15:45 · Anton Babenko Session topics"':
+                  - generic:
+                    - generic:
+                      - 'heading "No More Forks: Policy Transformation for Terraform at Scale" [level=2]'
+                      - paragraph:
+                        - time: 15:00
+                        - text: –
+                        - time: 15:45
+                        - text: · Anton Babenko
+                      - list "Session topics":
+                        - listitem: OS & Cloud Native Infrastructure
+                        - listitem: Policy & Compliance
+            - generic:
+              - generic:
+                - generic:
+                  - button "View speaker profile for Lukas Zainzinger":
+                    - generic:
+                      - generic:
+                        - img "Lukas Zainzinger"
+              - group:
+                - 'generic "Blueprint for Independence: Reclaiming Data Sovereignty with Open-Source 15:00–15:45 · Lukas Zainzinger Session topics"':
+                  - generic:
+                    - generic:
+                      - 'heading "Blueprint for Independence: Reclaiming Data Sovereignty with Open-Source" [level=2]'
+                      - paragraph:
+                        - time: 15:00
+                        - text: –
+                        - time: 15:45
+                        - text: · Lukas Zainzinger
+                      - list "Session topics":
+                        - listitem: Kubernetes & Container
+                        - listitem: AI, ML & Big Data
+                        - listitem: OS & Cloud Native Infrastructure
+          - generic:
+            - generic:
+              - generic:
+                - generic:
+                  - button "View speaker profile for Bartłomiej Pisulak":
+                    - generic:
+                      - generic:
+                        - img "Bartłomiej Pisulak"
+                  - button "View speaker profile for Dominika Korzec":
+                    - generic:
+                      - generic:
+                        - img "Dominika Korzec"
+              - group:
+                - 'generic "From CVE Noise to Action: AI-Assisted CVE Assessment for Container Images 15:50–16:20 · Bartłomiej Pisulak, Dominika Korzec Session topics"':
+                  - generic:
+                    - generic:
+                      - 'heading "From CVE Noise to Action: AI-Assisted CVE Assessment for Container Images" [level=2]'
+                      - paragraph:
+                        - time: 15:50
+                        - text: –
+                        - time: 16:20
+                        - text: · Bartłomiej Pisulak, Dominika Korzec
+                      - list "Session topics":
+                        - listitem: Network & Security
+                        - listitem: AI, ML & Big Data
+                        - listitem: Policy & Compliance
+            - generic:
+              - generic:
+                - generic:
+                  - button "View speaker profile for Aris Tzoumas":
+                    - generic:
+                      - generic:
+                        - img "Aris Tzoumas"
+              - group:
+                - generic "Hard-won lessons after processing 6.7T events through PostgreSQL queues 15:50–16:20 · Aris Tzoumas Session topics":
+                  - generic:
+                    - generic:
+                      - heading "Hard-won lessons after processing 6.7T events through PostgreSQL queues" [level=2]
+                      - paragraph:
+                        - time: 15:50
+                        - text: –
+                        - time: 16:20
+                        - text: · Aris Tzoumas
+                      - list "Session topics":
+                        - listitem: Platform Engineering
+                        - listitem: AI, ML & Big Data
+                        - listitem: Cloud Native 101
+          - generic:
+            - generic:
+              - generic:
+                - generic:
+                  - button "View speaker profile for Linda Mohamed":
+                    - generic:
+                      - generic:
+                        - img "Linda Mohamed"
+              - group:
+                - 'generic "Correct on Average, Wrong by Design: How data taught AI that tech is male 16:30–17:00 · Linda Mohamed Session topics"':
+                  - generic:
+                    - generic:
+                      - 'heading "Correct on Average, Wrong by Design: How data taught AI that tech is male" [level=2]'
+                      - paragraph:
+                        - time: 16:30
+                        - text: –
+                        - time: 17:00
+                        - text: · Linda Mohamed
+                      - list "Session topics":
+                        - listitem: AI, ML & Big Data
+                        - listitem: People & Experiences
+            - generic:
+              - generic:
+                - generic:
+                  - generic:
+                    - generic:
+                      - heading "Keynote Stream" [level=2]
+                      - paragraph:
+                        - time: 16:30
+                        - text: –
+                        - time: 17:00
+          - generic:
+            - generic:
+              - generic:
+                - generic:
+                  - generic:
+                    - generic:
+                      - heading "Closing Day 1" [level=2]
+                      - paragraph:
+                        - time: 17:00
+                        - text: –
+                        - time: 17:20
+          - generic:
+            - generic:
+              - paragraph:
+                - text: Shuttle Service towards Evening Reception 🚌
+                - generic:
+                  - time: 17:30
+                  - text: –
+                  - time: 18:10
+    - complementary "Sponsors" [ref=e5]:
+      - generic "Our sponsors" [ref=e6]:
+        - list [ref=e7]:
+          - listitem:
+            - generic:
+              - img "WhizUs"
+          - listitem:
+            - generic:
+              - img "FullStacks"
+          - listitem:
+            - generic:
+              - img "Dynatrace"
+          - listitem:
+            - generic:
+              - img "Exoscale"
+        - list [ref=e8]:
+          - listitem:
+            - generic:
+              - img "Splunk"
+          - listitem:
+            - generic:
+              - img "iits"
+          - listitem:
+            - generic:
+              - img "next layer"
+          - listitem:
+            - generic:
+              - img "cloudWerkstatt"
+        - list [ref=e9]:
+          - listitem:
+            - generic:
+              - img "Bearingpoint"
+          - listitem:
+            - generic:
+              - img "Österreichische Post"
+          - listitem:
+            - generic:
+              - img "Datadog"
+          - listitem:
+            - generic:
+              - img "Red Hat"
+        - list [ref=e10]:
+          - listitem [ref=e11]:
+            - img "Dash0" [ref=e12]
+          - listitem:
+            - generic:
+              - img "Frequentis"
+          - listitem [ref=e13]:
+            - img "TSC Labs" [ref=e14]
+          - listitem:
+            - generic:
+              - img "willhaben"
+  - generic [ref=e17]:
+    - button [ref=e18]
+    - button [ref=e24]
+    - button [ref=e28]
+    - button [ref=e33]

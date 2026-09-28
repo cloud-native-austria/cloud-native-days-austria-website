@@ -1,0 +1,217 @@
+- generic [active] [ref=f1e1]:
+  - generic [ref=f1e2]:
+    - generic [ref=f1e3]:
+      - heading "Room 6" [level=1] [ref=f1e4]
+      - generic [ref=f1e5]:
+        - main:
+          - region "Room sessions":
+            - generic:
+              - paragraph:
+                - text: Checkin & Breakfast ☕
+                - generic:
+                  - time: 08:00
+                  - text: –
+                  - time: 09:00
+            - generic:
+              - paragraph:
+                - text: Welcome from the Host
+                - generic:
+                  - time: 09:00
+                  - text: –
+                  - time: 09:15
+            - generic:
+              - paragraph:
+                - text: Keynote Stream
+                - generic:
+                  - time: 09:20
+                  - text: –
+                  - time: 09:50
+            - generic:
+              - generic:
+                - time: 09:55
+                - generic:
+                  - button "View speaker profile for Aarno Aukia":
+                    - generic:
+                      - generic:
+                        - img "Aarno Aukia"
+              - generic:
+                - heading "Data Sovereignty Is Built, Not Bought" [level=2]
+                - paragraph: Aarno Aukia
+                - list "Session topics":
+                  - listitem: Kubernetes & Container
+                  - listitem: Network & Security
+                  - listitem: Platform Engineering
+                  - listitem: Developer Experience
+                  - listitem: Policy & Compliance
+            - generic:
+              - paragraph:
+                - text: Have a coffee and visit the sponsors! 👋
+                - generic:
+                  - time: 10:25
+                  - text: –
+                  - time: 10:55
+            - generic:
+              - generic:
+                - time: 10:55
+                - generic:
+                  - button "View speaker profile for Tom Graupner":
+                    - generic:
+                      - generic:
+                        - img "Tom Graupner"
+              - generic:
+                - 'heading "Beyond API Keys: Fine-Grained AI Agent Authorization for DevOps with OpenFGA" [level=2]'
+                - paragraph: Tom Graupner
+                - list "Session topics":
+                  - listitem: Platform Engineering
+                  - listitem: AI, ML & Big Data
+            - generic:
+              - generic:
+                - time: 11:45
+                - generic:
+                  - button "View speaker profile for Christian Schabetsberger":
+                    - generic:
+                      - generic:
+                        - img "Christian Schabetsberger"
+              - generic:
+                - heading "CRAcking Compliance - The EU Cyber Resilience Act" [level=2]
+                - paragraph: Christian Schabetsberger
+                - list "Session topics":
+                  - listitem: Network & Security
+                  - listitem: Policy & Compliance
+            - generic:
+              - paragraph:
+                - text: Lunch Break 🍽️
+                - generic:
+                  - time: 12:15
+                  - text: –
+                  - time: 13:00
+            - generic:
+              - generic:
+                - time: 13:15
+                - generic:
+                  - button "View speaker profile for Krisztián Papp":
+                    - generic:
+                      - generic:
+                        - img "Krisztián Papp"
+              - generic:
+                - heading "You Call That an AI Agent?" [level=2]
+                - paragraph: Krisztián Papp
+                - list "Session topics":
+                  - listitem: AI, ML & Big Data
+            - generic:
+              - generic:
+                - time: 13:50
+                - generic:
+                  - button "View speaker profile for Nico Meisenzahl":
+                    - generic:
+                      - generic:
+                        - img "Nico Meisenzahl"
+              - generic:
+                - 'heading "Agentic AI Under Attack: Live Demos of Exploits Through Autonomy and Trust" [level=2]'
+                - paragraph: Nico Meisenzahl
+                - list "Session topics":
+                  - listitem: Network & Security
+                  - listitem: AI, ML & Big Data
+            - generic:
+              - paragraph:
+                - text: More coffee, more networking 🛜
+                - generic:
+                  - time: 14:35
+                  - text: –
+                  - time: 15:00
+            - generic:
+              - generic:
+                - time: 15:00
+                - generic:
+                  - button "View speaker profile for Lukas Zainzinger":
+                    - generic:
+                      - generic:
+                        - img "Lukas Zainzinger"
+              - generic:
+                - 'heading "Blueprint for Independence: Reclaiming Data Sovereignty with Open-Source" [level=2]'
+                - paragraph: Lukas Zainzinger
+                - list "Session topics":
+                  - listitem: Kubernetes & Container
+                  - listitem: AI, ML & Big Data
+                  - listitem: OS & Cloud Native Infrastructure
+            - generic:
+              - generic:
+                - time: 15:50
+                - generic:
+                  - button "View speaker profile for Aris Tzoumas":
+                    - generic:
+                      - generic:
+                        - img "Aris Tzoumas"
+              - generic:
+                - heading "Hard-won lessons after processing 6.7T events through PostgreSQL queues" [level=2]
+                - paragraph: Aris Tzoumas
+                - list "Session topics":
+                  - listitem: Platform Engineering
+                  - listitem: AI, ML & Big Data
+                  - listitem: Cloud Native 101
+            - generic:
+              - paragraph:
+                - text: Keynote Stream
+                - generic:
+                  - time: 16:30
+                  - text: –
+                  - time: 17:00
+            - generic:
+              - paragraph:
+                - text: Closing Day 1
+                - generic:
+                  - time: 17:00
+                  - text: –
+                  - time: 17:20
+            - generic:
+              - paragraph:
+                - text: Shuttle Service towards Evening Reception 🚌
+                - generic:
+                  - time: 17:30
+                  - text: –
+                  - time: 18:10
+    - complementary "Sponsors" [ref=f1e6]:
+      - generic "Our sponsors" [ref=f1e7]:
+        - list [ref=f1e8]:
+          - listitem [ref=f1e9]:
+            - img "WhizUs" [ref=f1e11]
+          - listitem [ref=f1e12]:
+            - img "FullStacks" [ref=f1e14]
+          - listitem [ref=f1e15]:
+            - img "Dynatrace" [ref=f1e17]
+          - listitem [ref=f1e18]:
+            - img "Exoscale" [ref=f1e20]
+        - list [ref=f1e21]:
+          - listitem [ref=f1e22]:
+            - img "Splunk" [ref=f1e24]
+          - listitem [ref=f1e25]:
+            - img "iits" [ref=f1e27]
+          - listitem [ref=f1e28]:
+            - img "next layer" [ref=f1e30]
+          - listitem [ref=f1e31]:
+            - img "cloudWerkstatt" [ref=f1e33]
+        - list [ref=f1e34]:
+          - listitem [ref=f1e35]:
+            - img "Bearingpoint" [ref=f1e37]
+          - listitem [ref=f1e38]:
+            - img "Österreichische Post" [ref=f1e40]
+          - listitem [ref=f1e41]:
+            - img "Datadog" [ref=f1e43]
+          - listitem [ref=f1e44]:
+            - img "Red Hat" [ref=f1e46]
+        - list [ref=f1e47]:
+          - listitem [ref=f1e48]:
+            - img "Dash0" [ref=f1e49]
+          - listitem [ref=f1e50]:
+            - img "Frequentis" [ref=f1e52]
+          - listitem [ref=f1e53]:
+            - img "TSC Labs" [ref=f1e54]
+          - listitem [ref=f1e55]:
+            - img "willhaben" [ref=f1e57]
+  - banner [ref=f1e58]:
+    - img "Cloud Native Days Austria" [ref=f1e59]
+  - generic [ref=f1e62]:
+    - button [ref=f1e63]
+    - button [ref=f1e69]
+    - button [ref=f1e73]
+    - button [ref=f1e78]
