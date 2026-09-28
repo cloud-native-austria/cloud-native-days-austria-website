@@ -17,6 +17,10 @@ dist/
 
 .idea/
 
+# Browser automation snapshots and recorded videos
+.playwright-cli/
+recordings/
+
 # Yarn
 yarn-error.log
 .pnp/
