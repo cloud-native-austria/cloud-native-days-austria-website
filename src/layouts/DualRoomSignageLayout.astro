@@ -112,9 +112,15 @@ const { title, rotation } = Astro.props;
 		block-size: 100%;
 		overflow-y: auto;
 		padding-block: var(--space-8) var(--space-10);
+		padding-inline: var(--space-6);
 		scrollbar-width: none;
 		pointer-events: none;
 		user-select: none;
+	}
+
+	main > :global(*) {
+		max-inline-size: 860px;
+		margin-inline: auto;
 	}
 
 	main::-webkit-scrollbar {
