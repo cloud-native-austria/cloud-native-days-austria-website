@@ -81,6 +81,9 @@ const { title, rotation } = Astro.props;
 		/* The header image already ends in white, so the schedule starts flush */
 		padding: 0 var(--space-6) var(--space-10);
 		scrollbar-width: none;
+		/* Signage is view-only — suppress hover/focus visual noise during recording */
+		pointer-events: none;
+		user-select: none;
 	}
 
 	main::-webkit-scrollbar {

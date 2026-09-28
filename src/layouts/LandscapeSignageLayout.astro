@@ -1,0 +1,200 @@
+---
+import "@styles/global.css";
+import SponsorColumn from "@components/SponsorColumn.astro";
+import { Font } from "astro:assets";
+
+interface Props {
+	title: string;
+	roomName: string;
+	/** Time for one full sponsor rotation. Match to the recording length. */
+	rotation?: string;
+	/** Accent color for session titles, speaker rings, and the room heading. */
+	colorVariant?: "accent" | "pink";
+}
+
+const { title, roomName, rotation, colorVariant = "accent" } = Astro.props;
+---
+
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<!-- Signage is always on a lit screen, so keep it light regardless of the device -->
+		<meta name="color-scheme" content="light" />
+		<meta name="robots" content="noindex" />
+		<title>{title}</title>
+		<Font cssVariable="--font-plus-jakarta-sans" preload />
+		<Font cssVariable="--font-fira-code" preload />
+	</head>
+	<body data-color={colorVariant}>
+		<div class="content">
+			<div class="schedule-pane">
+				<h1 class="room-title">{roomName}</h1>
+				<div class="scroll-area">
+					<main><slot /></main>
+					<!-- Fades sit above the scrolling content so it appears to pass under the chrome -->
+					<span class="fade fade-top" aria-hidden="true"></span>
+					<span class="fade fade-bottom" aria-hidden="true"></span>
+				</div>
+			</div>
+
+			<aside class="sponsor-pane" aria-label="Sponsors">
+				<SponsorColumn rotation={rotation} />
+			</aside>
+		</div>
+	</body>
+</html>
+
+<script>
+	/*
+	 * Continuous autoscroll loop so the page can run live on signage screens
+	 * without a pre-recorded video.
+	 *
+	 * Timings (ms):
+	 *   HOLD_TOP    – pause at the top so viewers can read the opening sessions
+	 *   SCROLL_DOWN – slow descent through the full schedule
+	 *   HOLD_BOTTOM – brief pause at the bottom before jumping back
+	 *   SCROLL_UP   – fast return to the top
+	 */
+	const HOLD_TOP = 8_000;
+	const SCROLL_DOWN = 20_000;
+	const HOLD_BOTTOM = 3_000;
+	const SCROLL_UP = 1_200;
+
+	const main = document.querySelector("main") as HTMLElement;
+
+	const easeIn  = (t: number) => t * t;
+	const easeOut = (t: number) => 1 - (1 - t) * (1 - t);
+
+	function animateScroll(
+		from: number,
+		to: number,
+		duration: number,
+		ease: (t: number) => number,
+	): Promise<void> {
+		return new Promise((resolve) => {
+			const max = main.scrollHeight - main.clientHeight;
+			const start = performance.now();
+			function step(now: number) {
+				const t = Math.min(1, (now - start) / duration);
+				main.scrollTop = max * (from + (to - from) * ease(t));
+				if (t < 1) requestAnimationFrame(step);
+				else resolve();
+			}
+			requestAnimationFrame(step);
+		});
+	}
+
+	async function loop() {
+		while (true) {
+			main.scrollTop = 0;
+			await new Promise((r) => setTimeout(r, HOLD_TOP));
+			await animateScroll(0, 1, SCROLL_DOWN, easeIn);
+			await new Promise((r) => setTimeout(r, HOLD_BOTTOM));
+			await animateScroll(1, 0, SCROLL_UP, easeOut);
+		}
+	}
+
+	// scrollHeight is sampled inside animateScroll, so fonts ready is sufficient
+	document.fonts.ready.then(loop);
+</script>
+
+<style>
+	body {
+		display: grid;
+		grid-template-rows: minmax(0, 1fr);
+		block-size: 100svh;
+		margin: 0;
+		overflow: hidden;
+	}
+
+	.content {
+		display: grid;
+		grid-template-areas: "schedule sponsors";
+		grid-template-columns: 1fr var(--sponsor-col-width, 380px);
+		min-block-size: 0;
+	}
+
+	.schedule-pane {
+		grid-area: schedule;
+		display: grid;
+		grid-template-rows: auto minmax(0, 1fr);
+		min-block-size: 0;
+		overflow: hidden;
+		--room-color: var(--color-accent);
+	}
+
+	body[data-color="pink"] .schedule-pane {
+		--room-color: var(--color-pink);
+	}
+
+	.room-title {
+		font-family: var(--font-body);
+		font-size: var(--text-2xl);
+		font-weight: 700;
+		letter-spacing: -0.01em;
+		padding: var(--space-4) var(--space-6) var(--space-2);
+		margin: 0;
+		color: var(--room-color);
+	}
+
+	.scroll-area {
+		position: relative;
+		min-block-size: 0;
+	}
+
+	main {
+		block-size: 100%;
+		overflow-y: auto;
+		/* Top padding matches the fade height so the first item isn't obscured */
+		padding: var(--space-8) var(--space-6) var(--space-10);
+		scrollbar-width: none;
+		/* Signage is view-only — suppress hover/focus visual noise during recording */
+		pointer-events: none;
+		user-select: none;
+	}
+
+	main::-webkit-scrollbar {
+		display: none;
+	}
+
+	main :global(.timeline--room),
+	main :global(.timeline) {
+		padding-block-start: 0;
+	}
+
+	.fade {
+		position: absolute;
+		inset-inline: 0;
+		block-size: var(--space-8);
+		pointer-events: none;
+		z-index: 5;
+	}
+
+	.fade-top {
+		top: 0;
+		background: linear-gradient(to bottom, var(--color-white), transparent);
+	}
+
+	.fade-bottom {
+		bottom: 0;
+		background: linear-gradient(to top, var(--color-white), transparent);
+	}
+
+	.sponsor-pane {
+		grid-area: sponsors;
+		position: relative;
+		background: #fff;
+		color-scheme: light;
+	}
+
+	/* Brand-gradient rule on the left edge of the sponsor column */
+	.sponsor-pane::before {
+		content: "";
+		position: absolute;
+		inset-block: 0;
+		left: 0;
+		width: 3px;
+		background: var(--gradient-brand);
+	}
+</style>

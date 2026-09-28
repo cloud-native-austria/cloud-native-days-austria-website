@@ -6,9 +6,13 @@ import { getCollection } from "astro:content";
 interface Props {
 	/** Restrict the timeline to one conference day, as YYYY-MM-DD in Vienna time. */
 	day?: string;
+	/** When set, renders a single-room vertical list instead of the two-lane grid. */
+	roomId?: number;
+	/** Mirrors the single-room layout so the meta column (time + photo) is on the right. */
+	flip?: boolean;
 }
 
-const { day } = Astro.props;
+const { day, roomId, flip = false } = Astro.props;
 
 /** en-CA formats as YYYY-MM-DD, which matches the `day` prop. */
 function toViennaDay(startsAt: string | null): string | null {
@@ -41,9 +45,20 @@ const allSessions = (await getCollection("sessions"))
  * Lanes are derived from every session above, not just the visible day, so a
  * single-day view keeps the same two rooms in the same order as the full page.
  */
-const sessions = day
+const dayFiltered = day
 	? allSessions.filter((session) => toViennaDay(session.startsAt) === day)
 	: allSessions;
+
+/*
+ * In single-room mode, include only sessions from the specified room plus
+ * shared service sessions (breaks, food, shuttles) so the room schedule shows
+ * the full day rhythm, not just talks.
+ */
+const sessions = roomId !== undefined
+	? dayFiltered.filter((s) => s.roomId === roomId || s.isServiceSession)
+	: dayFiltered;
+
+const isSingleRoom = roomId !== undefined;
 
 const sessionSpeakerIds = new Set(
 	sessions.flatMap((session) => session.speakers.map((speaker) => speaker.id)),
@@ -129,6 +144,84 @@ for (const slot of timeSlots) {
 }---
 
 	{
+		isSingleRoom ? (
+			sessionsWithMeta.length > 0 ? (
+				<section class="timeline--room" aria-label="Room sessions" data-flip={flip || undefined}>
+					{sessionsWithMeta.map((session) =>
+						session.isServiceSession ? (
+							<div class="room-break-row">
+								<p class="room-break-card" id={session.anchorId}>
+									<span class="break-title">{session.title}</span>
+									{session.formattedTime && (
+										<span class="break-time">
+											{" "}<time datetime={session.startsAt!}>{session.formattedTime}</time>
+											{session.formattedEndTime && <>{"–"}<time datetime={session.endsAt!}>{session.formattedEndTime}</time></>}
+										</span>
+									)}
+								</p>
+							</div>
+						) : (
+							<div class="room-session" id={session.anchorId}>
+								<div class="room-session-meta">
+									{session.formattedTime && (
+										<time class="room-session-time" datetime={session.startsAt!}>{session.formattedTime}</time>
+									)}
+									{session.speakers.some((speaker) => speaker.profilePicture) ? (
+										<div class="room-speaker-cards">
+											{session.speakers.map(
+												(speaker) =>
+													speaker.profilePicture && (
+														<SpeakerDetailModal speaker={sessionSpeakers.find((s) => s.id === speaker.id)!} showSessions={false} />
+														<button
+															type="button"
+															commandfor={`speaker-${speaker.id}`}
+															command="show-modal"
+															data-speaker-target={`speaker-${speaker.id}`}
+															class="room-speaker-link"
+															aria-label={`View speaker profile for ${speaker.name}`}
+														>
+															<PersonCard
+																name={speaker.name}
+																image={speaker.profilePicture}
+																showMeta={false}
+																sizes="96px"
+															/>
+														</button>
+													),
+											)}
+										</div>
+									) : (
+										<span class="room-fallback-marker" aria-hidden="true" />
+									)}
+								</div>
+								<div class="room-session-card">
+									<h2>{session.title}</h2>
+									{session.speakers.length > 0 && (
+										<p class="room-session-speakers">
+											{session.speakers.map((speaker, index) => (
+												<>
+													{index > 0 && ", "}
+													<span>{speaker.name}</span>
+												</>
+											))}
+										</p>
+									)}
+									{session.topics.length > 0 && (
+										<ul class="session-meta" aria-label="Session topics">
+											{session.topics.map((topic) => (
+												<li>{topic}</li>
+											))}
+										</ul>
+									)}
+								</div>
+							</div>
+						)
+					)}
+				</section>
+			) : (
+				<p>No sessions are available at the moment.</p>
+			)
+		) : (
 		timeSlots.length > 0 ? (
 			<section class="timeline" aria-label="Conference sessions">
 				{dayGroups.map(({ day, slots }) => (
@@ -248,9 +341,150 @@ for (const slot of timeSlots) {
 		) : (
 			<p>No sessions are available at the moment.</p>
 		)
+		)
 	}
 
 <style>
+		/* ------------------------------------------------------------------ */
+		/* Single-room layout (used on landscape signage pages)               */
+		/* ------------------------------------------------------------------ */
+
+		.timeline--room {
+			--avatar-size: 72px;
+			display: flex;
+			flex-direction: column;
+			gap: var(--space-4);
+			padding-block: var(--space-4);
+		}
+
+		.room-session {
+			display: grid;
+			grid-template-columns: calc(var(--avatar-size) + var(--space-4)) 1fr;
+			gap: var(--space-4);
+			align-items: start;
+		}
+
+		.room-session-meta {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			gap: var(--space-2);
+		}
+
+		.room-session-time {
+			font-size: var(--text-base);
+			font-weight: 700;
+			color: var(--room-color, var(--color-accent));
+		}
+
+		.room-speaker-cards {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			width: var(--avatar-size);
+		}
+
+		.room-speaker-link {
+			--ring-width: 2px;
+			display: block;
+			width: var(--avatar-size);
+			height: var(--avatar-size);
+			padding: var(--ring-width);
+			clip-path: var(--shape-heptagon);
+			background: var(--room-color, var(--color-accent));
+			border: none;
+			appearance: none;
+			line-height: 0;
+		}
+
+		.room-speaker-link ~ .room-speaker-link {
+			margin-top: calc(var(--avatar-size) * -0.3);
+		}
+
+		.room-speaker-link :global(div) { text-align: left; }
+
+		.room-speaker-link :global(picture),
+		.room-speaker-link :global(img) {
+			display: block;
+			width: 100%;
+			height: 100%;
+			margin: 0;
+			filter: none;
+		}
+
+		.room-fallback-marker {
+			--dot-size: 32px;
+			display: block;
+			width: var(--dot-size);
+			height: var(--dot-size);
+			clip-path: var(--shape-heptagon);
+			background: var(--room-color, var(--color-accent));
+		}
+
+		.room-session-card {
+			border: 1px solid var(--color-gray);
+			border-radius: var(--radius);
+			padding: var(--space-4);
+			background: var(--color-white);
+		}
+
+		.room-session-card h2 {
+			font-size: var(--text-lg);
+			font-family: var(--font-body);
+			font-weight: 600;
+			color: var(--room-color, var(--color-accent));
+			margin: 0;
+			line-height: 1.3;
+		}
+
+		.room-session-speakers {
+			margin-top: var(--space-2);
+			color: var(--color-text-light);
+			font-size: var(--text-base);
+			font-weight: 700;
+		}
+
+		.room-break-row {
+			display: grid;
+			grid-template-columns: calc(var(--avatar-size) + var(--space-4)) 1fr;
+			gap: var(--space-4);
+		}
+
+		.room-break-card {
+			grid-column: 2;
+			margin: 0;
+			text-align: left;
+			font-size: 0.95rem;
+			color: var(--color-text-light);
+			background-color: var(--color-white);
+			background-image: linear-gradient(var(--color-bg-light), var(--color-bg-light));
+			border: 1px dashed var(--color-gray);
+			border-radius: var(--radius);
+			padding: var(--space-2) var(--space-4);
+			align-self: center;
+		}
+
+		/* Mirrored single-room layout: meta column moves to the right */
+		.timeline--room[data-flip] .room-session {
+			grid-template-columns: 1fr calc(var(--avatar-size) + var(--space-4));
+		}
+
+		.timeline--room[data-flip] .room-session-meta {
+			order: 1;
+		}
+
+		.timeline--room[data-flip] .room-break-row {
+			grid-template-columns: 1fr calc(var(--avatar-size) + var(--space-4));
+		}
+
+		.timeline--room[data-flip] .room-break-card {
+			grid-column: 1;
+		}
+
+		/* ------------------------------------------------------------------ */
+		/* Two-lane layout (default)                                          */
+		/* ------------------------------------------------------------------ */
+
 		.timeline {
 			--marker-col: 60px;
 			--center-gap: 8px;

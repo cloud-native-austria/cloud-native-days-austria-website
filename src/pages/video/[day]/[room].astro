@@ -1,0 +1,75 @@
+---
+import SessionTimeline from "@components/SessionTimeline.astro";
+import LandscapeSignageLayout from "@layouts/LandscapeSignageLayout.astro";
+import { getCollection } from "astro:content";
+
+/**
+ * Must match ROTATION in scripts/record-room-video.mjs and the total recording
+ * length so the sponsor column completes exactly one rotation and loops cleanly.
+ */
+const ROTATION = "23s";
+
+export async function getStaticPaths() {
+	const sessions = await getCollection("sessions");
+	const allRooms = await getCollection("rooms");
+
+	const days = [
+		...new Set(
+			sessions
+				.map((session) =>
+					session.data.startsAt
+						? new Date(session.data.startsAt).toLocaleDateString("en-CA", {
+								timeZone: "Europe/Vienna",
+							})
+						: null,
+				)
+				.filter((day): day is string => day !== null),
+		),
+	].sort();
+
+	const talkRoomIds = new Set(
+		sessions
+			.filter((s) => !s.data.isServiceSession)
+			.map((s) => s.data.roomId)
+			.filter((id): id is number => id !== null),
+	);
+
+	const talkRooms = allRooms
+		.map((r) => r.data)
+		.sort((a, b) => a.sort - b.sort)
+		.filter((r) => talkRoomIds.has(r.roomId));
+
+	return days.flatMap((day) =>
+		talkRooms.map((room, index) => ({
+			params: {
+				day,
+				room: room.name.toLowerCase().replace(/\s+/g, "-"),
+			},
+			props: {
+				day,
+				roomId: room.roomId,
+				roomName: room.name,
+				colorVariant: (index === 0 ? "accent" : "pink") as "accent" | "pink",
+			},
+		})),
+	);
+}
+
+const { day, roomId, roomName, colorVariant } = Astro.props;
+
+const label = new Date(`${day}T12:00:00Z`).toLocaleDateString("en-AT", {
+	weekday: "long",
+	day: "numeric",
+	month: "long",
+	timeZone: "Europe/Vienna",
+});
+---
+
+<LandscapeSignageLayout
+	title={`${roomName} – Schedule ${label} | Cloud Native Days Austria`}
+	rotation={ROTATION}
+	colorVariant={colorVariant}
+	roomName={roomName}
+>
+	<SessionTimeline day={day} roomId={roomId} />
+</LandscapeSignageLayout>
