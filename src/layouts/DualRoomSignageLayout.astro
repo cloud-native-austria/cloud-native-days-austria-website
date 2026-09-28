@@ -90,8 +90,19 @@ const { title, rotation } = Astro.props;
 	const marker = document.querySelector(".now-marker") as HTMLElement;
 	const label  = marker.querySelector(".now-label") as HTMLElement;
 
+	function currentTime(): number {
+		const param = new URLSearchParams(location.search).get("now");
+		if (param) {
+			const dayMatch = location.pathname.match(/(\d{4}-\d{2}-\d{2})/);
+			const date = dayMatch ? dayMatch[1] : new Date().toISOString().slice(0, 10);
+			// Treat HH:MM as Vienna time (CEST = UTC+2)
+			return new Date(`${date}T${param}:00+02:00`).getTime();
+		}
+		return Date.now();
+	}
+
 	function updateNowMarker() {
-		const now = Date.now();
+		const now = currentTime();
 		const slots = [...document.querySelectorAll<HTMLElement>(".time-slot[data-starts-at]")];
 		if (!slots.length) return;
 
@@ -123,7 +134,7 @@ const { title, rotation } = Astro.props;
 		marker.style.top = `${top}px`;
 		marker.classList.add("visible");
 
-		const time = new Date().toLocaleTimeString("en-AT", { hour: "2-digit", minute: "2-digit", timeZone: "Europe/Vienna" });
+		const time = new Date(now).toLocaleTimeString("en-AT", { hour: "2-digit", minute: "2-digit", timeZone: "Europe/Vienna" });
 		label.textContent = time;
 	}
 
