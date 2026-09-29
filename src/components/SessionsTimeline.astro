@@ -916,7 +916,8 @@ const { dayGroups, sessionSpeakers, leftRoom, rightRoom, liveMode = false } = As
 						.map((c) => (c.dataset.startsAt ? new Date(c.dataset.startsAt).getTime() : Infinity))
 						.filter((t) => isFinite(t)),
 				);
-				const preConference = isFinite(firstSessionMs) && nowMs < firstSessionMs;
+				const firstConferenceDay = isFinite(firstSessionMs) ? new Date(firstSessionMs).toDateString() : null;
+				const preConference = isFinite(firstSessionMs) && nowMs < firstSessionMs && todayStr !== firstConferenceDay;
 				if (preConference) futureBoundaries.push(firstSessionMs);
 
 				const endOfDay = todayHasSessions && !hasAnyFutureSessionToday && !hasAnyVisible;
