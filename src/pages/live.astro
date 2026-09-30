@@ -45,6 +45,11 @@ const laneRooms = (await getCollection("rooms"))
 const leftRoom = laneRooms[0] ?? null;
 const rightRoom = laneRooms[1] ?? null;
 
+const roomFeedbackUrls: Record<number, string> = {
+	75184: "https://sfeedback.com/74jyE_",
+	75185: "https://sfeedback.com/X8jyF_",
+};
+
 function getRoomSide(roomId: number | null): "left" | "right" | "center" {
 	if (roomId !== null && roomId === leftRoom?.roomId) return "left";
 	if (roomId !== null && roomId === rightRoom?.roomId) return "right";
@@ -122,6 +127,19 @@ for (const slot of timeSlots) {
 			/>
 			<div class="sessions-button-wrap">
 				<Button href="https://cloud-native-days-austria-2026.sessionize.com/schedule" external>Pick your favorite talks</Button>
+			</div>
+			<div class="feedback-wrap">
+				<p class="feedback-heading">Provide feedback</p>
+				<div class="feedback-buttons">
+					{([[leftRoom, "--color-accent"], [rightRoom, "--color-pink"]] as const).map(([room, colorVar]) => {
+						const url = room && roomFeedbackUrls[room.roomId];
+						return url ? (
+							<span style={`--gradient-brand: linear-gradient(var(${colorVar}), var(${colorVar}))`}>
+								<Button href={url} external>Talks of {room!.name}</Button>
+							</span>
+						) : null;
+					})}
+				</div>
 			</div>
 		</section>
 
@@ -234,6 +252,33 @@ for (const slot of timeSlots) {
 		margin-top: var(--space-6);
 		position: relative;
 		z-index: 1;
+	}
+
+	.feedback-wrap {
+		margin-top: var(--space-6);
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: var(--space-3);
+		position: relative;
+		z-index: 1;
+	}
+
+	.feedback-heading {
+		font-family: var(--font-heading);
+		font-size: var(--text-sm);
+		font-weight: 600;
+		color: var(--color-text-light);
+		text-transform: uppercase;
+		letter-spacing: 0.08em;
+		margin: 0;
+	}
+
+	.feedback-buttons {
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: center;
+		gap: var(--space-3);
 	}
 
 	section h2 {
