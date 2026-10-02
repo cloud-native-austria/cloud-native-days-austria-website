@@ -17,7 +17,13 @@ const floors = [
 		<div class="fp-layers">
 			{floors.map(({ image, level, title }, i) => (
 				<figure class="fp-layer">
-					<Picture src={image} alt={`${level} ${title}`} formats={["avif", "webp"]} />
+					<Picture
+							src={image}
+							alt={`${level} ${title}`}
+							formats={["avif", "webp"]}
+							widths={[640, 960, 1600]}
+							sizes="(max-width: 900px) 100vw, 800px"
+						/>
 					{i > 0 && (
 						<button class="fp-hotspot fp-hotspot-top" data-target={i - 1} aria-hidden="true" tabindex="-1"></button>
 					)}
