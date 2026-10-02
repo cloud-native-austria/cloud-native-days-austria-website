@@ -9,7 +9,8 @@ interface Props {
 const { homepage = false } = Astro.props;
 
 const menuItems = [
-	{ text: "Live", to: "/live", id: "live" },
+	// { text: "Live", to: "/live", id: "live" },
+	{ text: "Previous Events", to: "/#previous", homeTo: "/", id: "past-events" },
 	{ text: "Sessions", to: "/sessions", id: "sessions" },
 	{ text: "Venue", to: "/#venue", homeTo: "/", id: "venue" },
 	{ text: "Sponsors", to: "/#sponsors", homeTo: "/", id: "sponsors" },
