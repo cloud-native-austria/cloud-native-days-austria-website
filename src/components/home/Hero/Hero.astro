@@ -1,19 +1,19 @@
 ---
 import { Picture } from "astro:assets";
-import adrianajosh from "./images/adriana-josh.webp";
-import crowd from "./images/crowd.webp";
-import hands from "./images/hands.webp";
-import orgs from "./images/orgs.webp";
+import cinema from "./images/cinema.webp";
+import organizers from "./images/organizers.webp";
+import paul from "./images/paul.webp";
+import people from "./images/people.webp";
 ---
 
 <section>
 	<div>
 		<h1>Cloud Native Days Austria</h1>
 		<p>
-			<strong class="highlight-purple">Mark your calendars!</strong>
+			<strong class="highlight-purple">Thanks for coming!</strong>
 			<br />
 			On September <strong class="highlight-pink">29th and 30th</strong>, 2026 the Cloud Native
-			community will gather in Vienna, Austria. We will spend two days filled with exciting talks,
+			community gathered in Vienna, Austria. We spent two days filled with exciting talks,
 			networking and partying.
 		</p>
 		<p>
@@ -23,37 +23,45 @@ import orgs from "./images/orgs.webp";
 	</div>
 
 	<a
-		href="https://www.picdrop.com/giselataschner-carl-hohenbalken/bzmm9YBJW2"
+		href="https://www.picdrop.com/giselataschner-carl-hohenbalken/Pwr99M5ypd"
 		target="_blank"
 		rel="noopener noreferrer"
 		class="slideshow"
 		aria-label="View photos from previous events"
 	>
 		<Picture
-			src={adrianajosh}
-			alt="Two speakers giving a talk"
+			src={paul}
+			alt="Two speakers chatting on stage in front of the conference banner"
 			formats={["avif", "webp"]}
+			widths={[500, 1000]}
+			sizes="(max-width: 768px) 100vw, 500px"
 			fetchpriority="high"
 			loading="eager"
 		/>
 		<Picture
-			src={hands}
-			alt="The audience answering a speaker's question by a show of hands"
+			src={cinema}
+			alt="Attendees applauding in the cinema hall during a talk"
 			formats={["avif", "webp"]}
+			widths={[500, 1000]}
+			sizes="(max-width: 768px) 100vw, 500px"
 			fetchpriority="high"
 			loading="eager"
 		/>
 		<Picture
-			src={orgs}
-			alt="The organizers of the event"
+			src={organizers}
+			alt="Two organizers on stage at the evening event"
 			formats={["avif", "webp"]}
+			widths={[500, 1000]}
+			sizes="(max-width: 768px) 100vw, 500px"
 			fetchpriority="high"
 			loading="eager"
 		/>
 		<Picture
-			src={crowd}
-			alt="Attendees networking and talking to each other"
+			src={people}
+			alt="Attendees mingling in the foyer between sessions"
 			formats={["avif", "webp"]}
+			widths={[500, 1000]}
+			sizes="(max-width: 768px) 100vw, 500px"
 			fetchpriority="high"
 			loading="eager"
 		/>
