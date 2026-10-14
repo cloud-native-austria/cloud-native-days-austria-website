@@ -7,67 +7,31 @@
 	<div class="timeline">
 		<div class="commits">
 			<div class="row">
-				<span class="dot" aria-hidden="true"></span>
-				<a href="https://www.picdrop.com/giselataschner-carl-hohenbalken/Pwr99M5ypd" target="_blank" rel="noopener noreferrer">
-					<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-						<path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
-						<circle cx="12" cy="13" r="4"/>
-					</svg>
-					Photos of Cloud Native Days Austria 2026
-				</a>
-			</div>
-
-			<div class="row">
-				<span class="dot" aria-hidden="true"></span>
 				<span class="combined">
-					<a href="https://www.picdrop.com/giselataschner-carl-hohenbalken/bzmm9YBJW2" target="_blank" rel="noopener noreferrer">
-						<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-							<path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
-							<circle cx="12" cy="13" r="4"/>
-						</svg>
-						Photos
-					</a>
+					<a data-icon="photos" href="https://www.picdrop.com/giselataschner-carl-hohenbalken/Pwr99M5ypd" target="_blank" rel="noopener noreferrer">Photos</a>
 					and
-					<a href="https://youtube.com/playlist?list=PLtLBTEzR4SqU9GwgWiaDt10-yOVIN0nzM&si=yQP0zXuHcyH01bHq" target="_blank" rel="noopener noreferrer">
-						<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-							<polygon points="23 7 16 12 23 17 23 7"/>
-							<rect x="1" y="5" width="15" height="14" rx="2" ry="2"/>
-						</svg>
-						Recordings of Cloud Native Days Austria 2025
-					</a>
+					<a data-icon="video" href="https://youtube.com/playlist?list=PLcMwH4f9MXB4&si=wdTj1VJVmI0cG_FX" target="_blank" rel="noopener noreferrer">Recordings of Cloud Native Days Austria 2026</a>
 				</span>
 			</div>
 
 			<div class="row">
-				<span class="dot" aria-hidden="true"></span>
-				<a href="https://www.youtube.com/playlist?list=PLtLBTEzR4SqXICiZEESHcElCqQYgjmfYR" target="_blank" rel="noopener noreferrer">
-					<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-						<polygon points="23 7 16 12 23 17 23 7"/>
-						<rect x="1" y="5" width="15" height="14" rx="2" ry="2"/>
-					</svg>
-					Recordings of Kubernetes Community Days Austria 2024
-				</a>
+				<span class="combined">
+					<a data-icon="photos" href="https://www.picdrop.com/giselataschner-carl-hohenbalken/bzmm9YBJW2" target="_blank" rel="noopener noreferrer">Photos</a>
+					and
+					<a data-icon="video" href="https://youtube.com/playlist?list=PLtLBTEzR4SqU9GwgWiaDt10-yOVIN0nzM&si=yQP0zXuHcyH01bHq" target="_blank" rel="noopener noreferrer">Recordings of Cloud Native Days Austria 2025</a>
+				</span>
 			</div>
 
 			<div class="row">
-				<span class="dot" aria-hidden="true"></span>
-				<a href="https://youtube.com/playlist?list=PLtLBTEzR4SqWKGuUBiRm_IuRZf2--CCDt&si=7ZkAV333DhWSpHp0" target="_blank" rel="noopener noreferrer">
-					<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-						<polygon points="23 7 16 12 23 17 23 7"/>
-						<rect x="1" y="5" width="15" height="14" rx="2" ry="2"/>
-					</svg>
-					Recordings of Kubernetes Community Days Austria 2023
-				</a>
+				<a data-icon="video" href="https://www.youtube.com/playlist?list=PLtLBTEzR4SqXICiZEESHcElCqQYgjmfYR" target="_blank" rel="noopener noreferrer">Recordings of Kubernetes Community Days Austria 2024</a>
+			</div>
+
+			<div class="row">
+				<a data-icon="video" href="https://youtube.com/playlist?list=PLtLBTEzR4SqWKGuUBiRm_IuRZf2--CCDt&si=7ZkAV333DhWSpHp0" target="_blank" rel="noopener noreferrer">Recordings of Kubernetes Community Days Austria 2023</a>
 			</div>
 		</div>
 
 		<div class="row origin">
-			<span class="dot" aria-hidden="true">
-				<svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-					<circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="3"/>
-					<circle cx="12" cy="12" r="4"/>
-				</svg>
-			</span>
 			<span>origin</span>
 		</div>
 	</div>
@@ -115,35 +79,18 @@
 		padding-block: var(--space-3);
 	}
 
-	.dot {
-		flex-shrink: 0;
-		width: var(--dot-col);
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		position: relative;
-		z-index: 1;
-	}
-
-	.dot::after {
+	/* The dot sits in a fixed-width column so the timeline line can run through its center */
+	.row::before {
 		content: "";
+		flex-shrink: 0;
+		box-sizing: border-box;
 		width: 12px;
 		height: 12px;
+		margin-inline: calc((var(--dot-col) - 12px) / 2);
 		border-radius: 50%;
 		background: var(--color-accent);
-		display: block;
-	}
-
-	.origin .dot::after {
-		display: none;
-	}
-
-	.origin .dot {
-		color: var(--color-accent);
-	}
-
-	.origin .dot svg {
-		display: block;
+		position: relative;
+		z-index: 1;
 	}
 
 	.origin {
@@ -153,8 +100,14 @@
 		color: var(--color-text-light);
 	}
 
-	/* Draws the line from the top of the origin row to its dot center */
+	/* Ring with a center dot marks the start of the timeline */
 	.origin::before {
+		border: 2px solid var(--color-accent);
+		background: radial-gradient(circle, var(--color-accent) 35%, transparent 40%);
+	}
+
+	/* Draws the line from the top of the origin row to its dot center */
+	.origin::after {
 		content: "";
 		position: absolute;
 		left: calc(var(--dot-col) / 2 - 1px);
@@ -180,9 +133,23 @@
 		transition: color var(--transition-fast);
 	}
 
-	.row a svg {
+	/* Icons are masks so they inherit the link's text color, including on hover */
+	.row a[data-icon]::before {
+		content: "";
 		flex-shrink: 0;
-		display: block;
+		width: 14px;
+		height: 14px;
+		background-color: currentColor;
+		-webkit-mask: var(--icon) center / contain no-repeat;
+		mask: var(--icon) center / contain no-repeat;
+	}
+
+	.row a[data-icon="photos"] {
+		--icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z'/%3E%3Ccircle cx='12' cy='13' r='4'/%3E%3C/svg%3E");
+	}
+
+	.row a[data-icon="video"] {
+		--icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolygon points='23 7 16 12 23 17 23 7'/%3E%3Crect x='1' y='5' width='15' height='14' rx='2' ry='2'/%3E%3C/svg%3E");
 	}
 
 	.row a:hover {
